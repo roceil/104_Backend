@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon app.ts",
+    "dev": "tsx app.ts",
     "lint": "eslint src/**/*.ts app.ts",
     "format": "eslint src/**/*.ts app.ts --fix",
     "prepare": "husky install"
@@ -21,7 +21,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "tsx": "^4.7.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
