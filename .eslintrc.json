@@ -17,6 +17,7 @@
         "no-implicit-coercion": "error", // 禁止使用短語法進行類型轉換
         "prefer-const": ["error", { "destructuring": "all" }], // 如果變量未重新賦值，則建議使用 const 聲明
         "@typescript-eslint/no-non-null-assertion": "error", // 禁止使用非空斷言（!）
-        "@typescript-eslint/quotes": ["error", "double", { "allowTemplateLiterals": true }] // 強制使用雙引號，但允許模板字面值
+        "@typescript-eslint/quotes": ["error", "double", { "allowTemplateLiterals": true }], // 強制使用雙引號，但允許模板字面值
+        "@typescript-eslint/explicit-function-return-type": "off"
     }
 }
