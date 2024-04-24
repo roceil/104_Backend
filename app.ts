@@ -2,7 +2,7 @@ import express, { type Express } from "express"
 import connectDB from "./configs/dbConn"
 import dotenv from "dotenv"
 
-import healthyCheckRouter from "./src/routes/healthyCheck"
+import healthyCheckRouter from "@/routes/healthyCheck"
 dotenv.config({ path: ".env.local" })
 
 const app: Express = express()

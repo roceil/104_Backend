@@ -1,0 +1,86 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run ESLint
+        run: pnpm run lint
+    outputs:
+      status: ${{ job.status }}
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Check TypeScript types
+        run: pnpm run type-check
+    outputs:
+      status: ${{ job.status }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [eslint, type-check]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+    outputs:
+      status: ${{ job.status }}
+
+  # notify:
+  #   runs-on: ubuntu-latest
+  #   needs: [eslint, type-check, build]
+  #   if: always()
+  #   steps:
+  #     - name: Notify LINE
+  #       env:
+  #         LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
+  #         ESLINT_STATUS: ${{ needs.eslint.outputs.status }}
+  #         TYPE_CHECK_STATUS: ${{ needs.type-check.outputs.status }}
+  #         BUILD_STATUS: ${{ needs.build.outputs.status }}
+  #       run: |
+  #         export TZ='Asia/Taipei'
+  #         Message=""
+
+  #         if [ "$ESLINT_STATUS" == "success" ] && [ "$TYPE_CHECK_STATUS" == "success" ] && [ "$BUILD_STATUS" == "success" ]; then
+  #         MESSAGE="
+  #         －【🥳  CICD 部署成功】
+  #         專案名稱：${GITHUB_REPOSITORY}
+  #         分支名稱：${GITHUB_REF_NAME}
+  #         提交訊息：${{ github.event.head_commit.message }}
+  #         部署日期：$(date +'%Y-%m-%d %H:%M:%S')"
+  #         else
+  #         MESSAGE="
+  #         －【🥲  CICD 部署失敗】
+  #         專案名稱：${GITHUB_REPOSITORY}
+  #         分支名稱：${GITHUB_REF_NAME}
+  #         提交訊息：${{ github.event.head_commit.message }}
+  #         部署結果：CICD 部署失敗
+  #         部署日期：$(date +'%Y-%m-%d %H:%M:%S')"
+  #         fi
+  #         curl -X POST -H "Authorization: Bearer $LINE_TOKEN" -F "message=${MESSAGE}" https://notify-api.line.me/api/notify

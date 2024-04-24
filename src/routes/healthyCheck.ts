@@ -1,5 +1,5 @@
 import { type RequestHandler, Router } from "express"
-import healthyCheckController from "../controllers/healthyCheckController"
+import healthyCheckController from "@/controllers/healthyCheckController"
 
 const router = Router()
 
