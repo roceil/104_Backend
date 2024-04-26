@@ -4,6 +4,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import connectDB from "./configs/dbConn"
 import { corsOptions } from "./configs/corsOptions"
+import { credentials } from "@/middlewares/credentials"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
@@ -14,6 +15,7 @@ const app: Express = express()
 const port = process.env.PORT ?? 3001
 
 /* CORS */
+app.use(credentials)
 app.use(cors(corsOptions))
 
 /* Cookie */
