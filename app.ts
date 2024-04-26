@@ -1,7 +1,9 @@
 import express, { type Express } from "express"
 import dotenv from "dotenv"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 import connectDB from "./configs/dbConn"
+import { corsOptions } from "./configs/corsOptions"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
@@ -12,13 +14,10 @@ const app: Express = express()
 const port = process.env.PORT ?? 3001
 
 /* CORS */
-const corsOptions = {
-  origin: "http://localhost:3001",
-  optionsSuccessStatus: 200,
-  credentials: true
-}
-
 app.use(cors(corsOptions))
+
+/* Cookie */
+app.use(cookieParser())
 
 /* 解析 Body */
 app.use(express.json())
