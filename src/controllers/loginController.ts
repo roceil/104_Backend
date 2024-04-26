@@ -120,9 +120,16 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
   resObj.status = "success"
   resObj.message = "登入成功"
-  resObj.data = {
-    token
-  }
+  // resObj.data = {
+  //   token
+  // }
+
+  // token 寫入 cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+  })
 
   res.status(200).json(resObj)
 }
@@ -134,7 +141,9 @@ const verifyToken = (req: Request, res: Response): void => {
     data: {}
   }
 
-  const token = req.headers.authorization
+  console.log(req.cookies.token)
+
+  const token = req.cookies.token as string
 
   if (!token) {
     resObj.status = "error"
