@@ -5,7 +5,6 @@ interface IPersonalInfo {
   gender: string
   birthday: string
 }
-
 interface IUserSchema {
   _id: Types.ObjectId
   personalInfo: IPersonalInfo
@@ -22,10 +21,11 @@ interface IUserSchema {
 
 const userSchema = new Schema<IUserSchema>(
   {
-    _id: {
-      type: Schema.Types.ObjectId,
-      required: [true, "userId is required"]
-    },
+    // _id: {
+    //   type: Schema.Types.ObjectId,
+    //   default: new Types.ObjectId()
+    //   required: [true, "userId is required"]
+    // },
     personalInfo: {
       type: {
         username: {
@@ -75,13 +75,13 @@ const userSchema = new Schema<IUserSchema>(
     },
     createdAt: {
       type: Date,
-      default: Date.now,
-      required: [true, "createdAt is required"]
+      default: Date.now
+      // required: [true, "createdAt is required"]
     },
     updatedAt: {
       type: Date,
-      default: Date.now,
-      required: [true, "updatedAt is required"]
+      default: Date.now
+      // required: [true, "updatedAt is required"]
     }
   },
   { versionKey: false }
@@ -89,4 +89,4 @@ const userSchema = new Schema<IUserSchema>(
 
 const User = model<IUserSchema>("user", userSchema)
 
-export default User
+export { User, type IUserSchema, type IPersonalInfo }
