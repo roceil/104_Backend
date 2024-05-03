@@ -8,6 +8,7 @@ import { credentials } from "@/middlewares/credentials"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
+import userRouter from "@/routes/userRoute"
 
 dotenv.config({ path: ".env.local" })
 
@@ -31,7 +32,7 @@ void connectDB()
 /* Router */
 app.use("/api", healthyCheckRouter)
 app.use("/api", loginRouter)
-
+app.use("/api/v1/user-data", userRouter)
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`)
 })
