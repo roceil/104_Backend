@@ -141,8 +141,6 @@ const verifyToken = (req: Request, res: Response): void => {
     data: {}
   }
 
-  console.log(req.cookies.token)
-
   const token = req.cookies.token as string
 
   if (!token) {

@@ -3,7 +3,6 @@ import allowOrigin from "./allowOrigins"
 
 export const corsOptions: CorsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    console.log(origin)
     if ((origin && allowOrigin.includes(origin)) ?? !origin) {
       callback(null, true)
     } else {
