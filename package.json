@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/app.js",
-    "dev": "tsx watch app.ts",
+    "dev": "NODE_ENV=dev tsx watch app.ts",
     "lint": "eslint src/**/*.ts app.ts",
     "format": "eslint src/**/*.ts app.ts --fix",
     "type-check": "tsc --noEmit",
