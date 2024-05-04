@@ -1,16 +1,17 @@
 import { type NextFunction, type Request, type Response } from "express"
 import { User, type IUserSchema } from "@/models/user"
-import appErrorHandler from "@/services/appErrorHandler"
+import appErrorHandler from "@/utils/appErrorHandler"
+import appSuccessHandler from "@/utils/appSuccessHandler"
 
 /**
  * 取得所有使用者
  */
-const getUsers = async (req: Request, res: Response): Promise<void> => {
+const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const users = await User.find()
   if (!users || users.length === 0) {
-    res.status(404).json({ status: false, message: "No user found" })
+    appErrorHandler(404, "No user found", next)
   } else {
-    res.status(200).json({ status: true, data: users })
+    appSuccessHandler(200, "查詢成功", users, res)
   }
 }
 
@@ -18,13 +19,13 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
  * 取得特定使用者
  * @param req.params.userID Request
  */
-const getUserById = async (req: Request, res: Response): Promise<void> => {
+const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const user = await User.findById(id)
   if (!user) {
-    res.status(404).json({ status: false, message: "No user found" })
+    appErrorHandler(404, "No user found", next)
   } else {
-    res.status(200).json({ status: true, data: user })
+    appSuccessHandler(200, "查詢成功", user, res)
   }
 }
 
@@ -33,12 +34,15 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
  * @param req.body Request
  */
 const postUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  if (!req.body) {
+  // NOTE:這邊要擋的內容需要再調整
+  const { name, email, password } = req.body
+
+  if (!name || !email || !password) {
     appErrorHandler(400, "缺少必要欄位", next); return
   }
 
   const userPost = await User.create(req.body)
-  res.status(201).json({ status: true, data: userPost })
+  appSuccessHandler(201, "用戶新增成功", userPost, res)
 }
 
 /**
@@ -54,7 +58,7 @@ const putUser = async (req: Request, res: Response, next: NextFunction): Promise
   const { id } = req.params
   const userPut = await User.findByIdAndUpdate(id, req.body as IUserSchema
   )
-  res.status(200).json({ status: true, data: userPut })
+  appSuccessHandler(200, "用戶修改成功", userPut, res)
 }
 
 /**
@@ -64,7 +68,7 @@ const putUser = async (req: Request, res: Response, next: NextFunction): Promise
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params
   const userDelete = await User.findByIdAndDelete(id)
-  res.status(200).json({ status: true, data: userDelete })
+  appSuccessHandler(200, "用戶刪除成功", userDelete, res)
 }
 
 export { getUsers, getUserById, postUser, putUser, deleteUser }

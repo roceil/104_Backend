@@ -9,8 +9,6 @@ const appError = (httpStatus: number, errMessage: string, next: NextFunction): v
   const error = new Error(errMessage) as CustomError
   error.statusCode = httpStatus
   error.isOperational = true
-
-  console.log("appError")
   next(error)
 }
 

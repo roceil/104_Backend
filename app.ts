@@ -31,8 +31,8 @@ app.use(express.urlencoded({ extended: true }))
 void connectDB()
 
 /* Router */
-app.use("/api", healthyCheckRouter)
-app.use("/api", loginRouter)
+app.use("/api/v1", healthyCheckRouter)
+app.use("/api/v1", loginRouter)
 app.use("/api/v1/user-data", userRouter)
 
 /* 404 Handler */

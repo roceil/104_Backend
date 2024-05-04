@@ -71,7 +71,8 @@ jobs:
           MESSAGE="
           - 後端｜🥳 CICD 部署成功
           專案名稱：${GITHUB_REPOSITORY}
-          分支名稱：${{ github.event.pull_request.head.ref }}
+          目標分支名稱：${{ github.event.pull_request.base.ref }}
+          來源分支名稱：${{ github.event.pull_request.head.ref }}
           提交訊息：${{ github.event.pull_request.title }}  
           部署人員：${{ github.actor }}
           部署日期：$(date +'%Y-%m-%d %H:%M:%S')"
@@ -79,7 +80,8 @@ jobs:
           MESSAGE="
           － 後端｜🥲  CICD 部署失敗
           專案名稱：${GITHUB_REPOSITORY}
-          分支名稱：${{ github.event.pull_request.head.ref }}
+          目標分支名稱：${{ github.event.pull_request.base.ref }}
+          來源分支名稱：${{ github.event.pull_request.head.ref }}
           提交訊息：${{ github.event.pull_request.title }}  
           部署結果：CICD 部署失敗
           部署人員：${{ github.actor }}
