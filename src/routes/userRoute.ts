@@ -1,10 +1,17 @@
 import { type RequestHandler, Router } from "express"
-import { getUsers, getUserById, postUser, putUser, deleteUser } from "../controllers/userController"
+import { getUsers, getUserById, postUser, putUser, deleteUser } from "@/controllers/userController"
+import handleErrorAsync from "@/middlewares/asyncErrorHandler"
+
 const router = Router()
 
-router.get("/", getUsers as RequestHandler)
-router.get("/:id", getUserById as RequestHandler)
-router.post("/", postUser as RequestHandler)
-router.put("/:id", putUser as RequestHandler)
-router.delete("/:id", deleteUser as RequestHandler)
+router.get("/", handleErrorAsync(getUsers) as RequestHandler)
+
+router.get("/:id", handleErrorAsync(getUserById) as RequestHandler)
+
+router.post("/", handleErrorAsync(postUser) as RequestHandler)
+
+router.put("/:id", handleErrorAsync(putUser) as RequestHandler)
+
+router.delete("/:id", handleErrorAsync(deleteUser) as RequestHandler)
+
 export default router

@@ -2,7 +2,6 @@ import mongoose from "mongoose"
 
 const connectDB = async (): Promise<void> => {
   try {
-    console.log("uri", process.env.DATABASE_URI)
     await mongoose.connect(process.env.DATABASE_URI as unknown as string)
     console.log("MongoDB 連線成功")
   } catch (error) {
