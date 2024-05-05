@@ -3,10 +3,10 @@ interface IPersonalInfo {
   username: string
   email: string
   gender: string
+  sex: string
   birthday: string
 }
 interface IUserSchema {
-  _id: Types.ObjectId
   personalInfo: IPersonalInfo
   preferences: object // 資料代訂，不確定型別
   isSubscribe: boolean
@@ -21,11 +21,6 @@ interface IUserSchema {
 
 const userSchema = new Schema<IUserSchema>(
   {
-    // _id: {
-    //   type: Schema.Types.ObjectId,
-    //   default: new Types.ObjectId()
-    //   required: [true, "userId is required"]
-    // },
     personalInfo: {
       type: {
         username: {
@@ -38,7 +33,13 @@ const userSchema = new Schema<IUserSchema>(
         },
         gender: {
           type: String,
+          enum: ["female", "male"],
           required: [true, "gender is required"]
+        },
+        sex: {
+          type: String,
+          enum: ["female", "male"],
+          required: [true, "sex is required"]
         },
         birthday: {
           type: String,
@@ -76,15 +77,13 @@ const userSchema = new Schema<IUserSchema>(
     createdAt: {
       type: Date,
       default: Date.now
-      // required: [true, "createdAt is required"]
     },
     updatedAt: {
       type: Date,
       default: Date.now
-      // required: [true, "updatedAt is required"]
     }
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 )
 
 const User = model<IUserSchema>("user", userSchema)
