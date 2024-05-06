@@ -1,67 +1,47 @@
-import { type Request, type Response } from "express"
+import { type NextFunction, type Request, type Response } from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { User, type IPersonalInfo } from "@/models/user"
+import appErrorHandler from "@/utils/appErrorHandler"
+import appSuccessHandler from "@/utils/appSuccessHandler"
 
-interface User {
-  password: string
-  name: string
-}
+/**
+ * 用戶註冊
+ */
+const signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { personalInfo, confirmPassword } = req.body as { personalInfo: IPersonalInfo, confirmPassword: string }
 
-// 使用索引簽名，表示每個 string 鍵都將映射到一個 User 類型的對象
-const user: Record<string, User> = {
-  "test123@gmail.com": {
-    password: "test123",
-    name: "test"
+  // 檢查必填欄位
+  if (!personalInfo.username || !personalInfo.email || !personalInfo.password || !personalInfo.gender || !personalInfo.birthday) {
+    appErrorHandler(400, "缺少必要欄位", next)
+    return
   }
-}
-
-interface SignUpBody {
-  account: string
-  password: string
-  confirmPassword: string
-}
-
-const signUp = async (req: Request, res: Response): Promise<void> => {
-  const resObj = {
-    status: "",
-    message: "",
-    data: {}
-  }
-
-  const { account, password, confirmPassword }: SignUpBody = req.body
 
   // 檢查密碼是否相同
-  if (password !== confirmPassword) {
-    resObj.status = "error"
-    resObj.message = "兩次密碼不一致"
-
-    res.status(400).json(resObj)
+  if (personalInfo.password !== confirmPassword) {
+    appErrorHandler(400, "兩次密碼不一致", next)
     return
   }
 
   // 檢查帳號是否重複
-  if (account in user) {
-    resObj.status = "error"
-    resObj.message = "帳號已存在"
-
-    res.status(400).json(resObj)
+  const isEmailExist = await User.findOne({ email: personalInfo.email })
+  if (isEmailExist) {
+    appErrorHandler(400, "帳號已存在", next)
     return
   }
 
   // 密碼加密
-  const hashPassword = await bcrypt.hash(password, 10)
+  const hashPassword = await bcrypt.hash(personalInfo.password, 10)
 
-  // 儲存帳號密碼
-  user[account] = {
-    password: hashPassword,
-    name: account
-  }
+  // 新增使用者
+  await User.create({
+    personalInfo: {
+      ...personalInfo,
+      password: hashPassword
+    }
+  })
 
-  resObj.status = "success"
-  resObj.message = "註冊成功"
-  resObj.data = user
-
-  res.status(200).json(resObj)
+  appSuccessHandler(201, "用戶新增成功", null, res)
 }
 
 interface LoginBody {
@@ -134,7 +114,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
   res.status(200).json(resObj)
 }
 
-const verifyToken = (req: Request, res: Response): void => {
+const verifyToken = async (req: Request, res: Response): Promise<void> => {
   const resObj = {
     status: "",
     message: "",

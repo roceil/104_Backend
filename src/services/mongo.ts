@@ -3,7 +3,7 @@ import { type CustomError } from "@/types/errors"
 import resErrorDev from "@/utils/resErrorDev"
 import resErrorProd from "@/utils/resErrorProd"
 
-const errorHandler = (err: CustomError, req: Request, res: Response, _next: NextFunction) => {
+const errorHandler = (err: CustomError, req: Request, res: Response, _next: NextFunction): void => {
   const statusCode = err.statusCode ?? 500
   err.statusCode = statusCode // 更新 err 內的 statusCode
 
