@@ -2,46 +2,72 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData, type LoginBody } from "@/types/login"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { User, type IPersonalInfo } from "@/models/user"
+import validator from "validator"
+import { User } from "@/models/user"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
+import validatePassword from "@/utils/validatePassword"
+
+interface SignUpReqBody {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+  gender: string
+  birthday: string
+}
 
 /**
  * 使用者註冊
  */
 const signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { personalInfo, confirmPassword } = req.body as { personalInfo: IPersonalInfo, confirmPassword: string }
+  const { username, email, password, confirmPassword, gender, birthday }: SignUpReqBody = req.body
 
   // 檢查必填欄位
-  const missingFields = checkMissingFields({ ...personalInfo, confirmPassword })
+  const missingFields = checkMissingFields({ username, email, password, confirmPassword, gender, birthday })
   if (missingFields.length > 0) {
     const missingFieldsMsg = `缺少必要欄位: ${missingFields.join(", ")}`
     appErrorHandler(400, missingFieldsMsg, next)
     return
   }
 
+  // 檢查 email 格式
+  if (!validator.isEmail(email)) {
+    appErrorHandler(400, "email 格式錯誤", next)
+    return
+  }
+
+  // 檢查密碼長度
+  if (!validatePassword(password)) {
+    appErrorHandler(400, "密碼格式為至少 1 碼英文及 7 碼數字", next)
+    return
+  }
+
   // 檢查密碼是否相同
-  if (personalInfo.password !== confirmPassword) {
+  if (password !== confirmPassword) {
     appErrorHandler(400, "兩次密碼不一致", next)
     return
   }
 
   // 檢查帳號是否重複
-  const isEmailExist = await User.findOne({ "personalInfo.email": personalInfo.email })
+  const isEmailExist = await User.findOne({ "personalInfo.email": email })
   if (isEmailExist) {
     appErrorHandler(400, "帳號已存在", next)
     return
   }
 
   // 密碼加密
-  const hashPassword = await bcrypt.hash(personalInfo.password, 10)
+  const hashPassword = await bcrypt.hash(password, 10)
 
   // 新增使用者
   await User.create({
     personalInfo: {
-      ...personalInfo,
-      password: hashPassword
+      username,
+      email,
+      password: hashPassword,
+      gender,
+      birthday
     }
   })
 
@@ -49,7 +75,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
 
   // Note: 開發環境下，回傳使用者資料
   if (process.env.NODE_ENV === "dev") {
-    resUserData = await User.findOne({ "personalInfo.email": personalInfo.email }).select("-personalInfo.password")
+    resUserData = await User.findOne({ "personalInfo.email": email }).select("-personalInfo.password")
   }
 
   appSuccessHandler(201, "用戶新增成功", resUserData, res)
@@ -66,6 +92,18 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   if (missingFields.length > 0) {
     const missingFieldsMsg = `缺少必要欄位: ${missingFields.join(", ")}`
     appErrorHandler(400, missingFieldsMsg, next)
+    return
+  }
+
+  // 檢查 email 格式
+  if (!validator.isEmail(account)) {
+    appErrorHandler(400, "email 格式錯誤", next)
+    return
+  }
+
+  // 檢查密碼長度
+  if (!validatePassword(password)) {
+    appErrorHandler(400, "密碼格式為至少 1 碼英文及 7 碼數字", next)
     return
   }
 
@@ -138,6 +176,18 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
     return
   }
 
+  // 檢查密碼長度
+  if (!validatePassword(newPassword)) {
+    appErrorHandler(400, "密碼格式為至少 1 碼英文及 7 碼數字", next)
+    return
+  }
+
+  // 檢查密碼是否相同
+  if (newPassword !== confirmNewPassword) {
+    appErrorHandler(400, "兩次密碼不一致", next)
+    return
+  }
+
   // 取得使用者資料
   const userQueryResult = await User.findById(userData.userId, "personalInfo.password")
   const userPasswordInDB = userQueryResult?.personalInfo.password
@@ -145,12 +195,6 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
   // 檢查使用者是否存在
   if (!userPasswordInDB) {
     appErrorHandler(400, "用戶不存在", next)
-    return
-  }
-
-  // 檢查密碼是否相同
-  if (newPassword !== confirmNewPassword) {
-    appErrorHandler(400, "兩次密碼不一致", next)
     return
   }
 
