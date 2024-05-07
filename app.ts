@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser"
 import connectDB from "./configs/dbConn"
 import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
-import { mongoDB } from "@/services/mongo"
+import globalErrorHandler from "@/utils/globalErrorHandler"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
@@ -48,7 +48,7 @@ app.use((_, res) => {
 // })
 
 /* Mongo 錯誤處理 */
-app.use(mongoDB.errorHandler)
+app.use(globalErrorHandler)
 
 /* 未捕捉的 Promise */
 process.on("unhandledRejection", (err, promise) => {
