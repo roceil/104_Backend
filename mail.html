@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Email Template</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        background-color: #fff2f2;
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 600px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: #52525b;
+      }
+      .button {
+        background: linear-gradient(96.66deg, #fe839a 9.67%, #4a72ff 112.21%);
+        display: block; /* Change to block */
+        width: fit-content;
+        padding: 10px 20px;
+        margin: 20px auto; /* Auto margins for centering */
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 99999px;
+      }
+      .button:hover {
+        transform: scale(1.05);
+      }
+      table {
+        width: 100%;
+      }
+      .centered-content {
+        text-align: center; /* Center the content in the cell */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        <img
+          src="./public/logo.png"
+          alt="logo"
+        />
+      </h1>
+      <p>
+        這是一封<strong>重設密碼</strong>的確認信件，如果需要重設密碼，請點擊下方按鈕立即跳轉！
+      </p>
+      <p>如果不記得有申請重設密碼，請忽略此信件。</p>
+      <table>
+        <tr>
+          <td class="centered-content">
+            <img
+              src="./public/decorate.png"
+              alt="裝飾用圖片"
+            />
+          </td>
+        </tr>
+      </table>
+      <a
+        href="#"
+        class="button"
+        >重設密碼</a
+      >
+    </div>
+  </body>
+</html>

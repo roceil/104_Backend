@@ -8,6 +8,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
 import validatePassword from "@/utils/validatePassword"
+import sendEmail from "@/utils/sendEmail"
 
 interface SignUpReqBody {
   username: string
@@ -216,6 +217,39 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
 }
 
 /**
+ * 忘記密碼
+ */
+const forgetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { email } = req.body as { email: string }
+
+  // 檢查必填欄位
+  const missingFields = checkMissingFields({ email })
+  if (missingFields.length > 0) {
+    const missingFieldsMsg = `缺少必要欄位: ${missingFields.join(", ")}`
+    appErrorHandler(400, missingFieldsMsg, next)
+    return
+  }
+
+  // 檢查 email 格式
+  if (!validator.isEmail(email)) {
+    appErrorHandler(400, "email 格式錯誤", next)
+    return
+  }
+
+  // 檢查帳號是否存在
+  const user = await User.findOne({ "personalInfo.email": email })
+  if (!user) {
+    appErrorHandler(400, "帳號不存在", next)
+    return
+  }
+
+  // 寄出重設密碼信件
+  await sendEmail(email)
+
+  appSuccessHandler(200, "郵件寄送成功", null, res)
+}
+
+/**
  * 驗證 token 後回傳使用者資料
  */
 const verifyToken = async (req: Request, res: Response): Promise<void> => {
@@ -228,6 +262,7 @@ const loginController = {
   signUp,
   login,
   resetPassword,
+  forgetPassword,
   verifyToken
 }
 
