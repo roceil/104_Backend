@@ -1,6 +1,7 @@
-import { type RequestHandler, Router } from "express"
+import { type RequestHandler, Router, type Handler } from "express"
 import loginController from "@/controllers/loginController"
 import asyncErrorHandler from "@/middlewares/asyncErrorHandler"
+import isAuth from "@/middlewares/isAuth"
 
 const router = Router()
 
@@ -8,6 +9,8 @@ router.post("/sign-up", asyncErrorHandler(loginController.signUp) as RequestHand
 
 router.post("/login", asyncErrorHandler(loginController.login) as RequestHandler)
 
-router.post("/verify-token", asyncErrorHandler(loginController.verifyToken) as RequestHandler)
+router.put("/reset-password", isAuth as Handler, asyncErrorHandler(loginController.resetPassword) as RequestHandler)
+
+router.get("/verify", isAuth as Handler, asyncErrorHandler(loginController.verifyToken) as RequestHandler)
 
 export default router
