@@ -39,8 +39,7 @@ const userSchema = new Schema<IUserSchema>(
         },
         gender: {
           type: String,
-          enum: ["female", "male"],
-          required: [true, "gender is required"]
+          enum: ["female", "male"]
         },
         // NOTE:似乎重複了
         // sex: {
@@ -49,8 +48,7 @@ const userSchema = new Schema<IUserSchema>(
         //   required: [true, "sex is required"]
         // },
         birthday: {
-          type: String,
-          required: [true, "birthday is required"]
+          type: String
         }
       }
     },
