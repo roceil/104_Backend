@@ -2,11 +2,12 @@ import { Schema, model, type Types } from "mongoose"
 interface IPersonalInfo {
   username: string
   email: string
+  password: string
   gender: string
+  sex: string
   birthday: string
 }
 interface IUserSchema {
-  _id: Types.ObjectId
   personalInfo: IPersonalInfo
   preferences: object // 資料代訂，不確定型別
   isSubscribe: boolean
@@ -21,11 +22,6 @@ interface IUserSchema {
 
 const userSchema = new Schema<IUserSchema>(
   {
-    // _id: {
-    //   type: Schema.Types.ObjectId,
-    //   default: new Types.ObjectId()
-    //   required: [true, "userId is required"]
-    // },
     personalInfo: {
       type: {
         username: {
@@ -36,10 +32,22 @@ const userSchema = new Schema<IUserSchema>(
           type: String,
           required: [true, "email is required"]
         },
+        password: {
+          type: String,
+          select: false,
+          required: [true, "password is required"]
+        },
         gender: {
           type: String,
+          enum: ["female", "male"],
           required: [true, "gender is required"]
         },
+        // NOTE:似乎重複了
+        // sex: {
+        //   type: String,
+        //   enum: ["female", "male"],
+        //   required: [true, "sex is required"]
+        // },
         birthday: {
           type: String,
           required: [true, "birthday is required"]
@@ -57,13 +65,11 @@ const userSchema = new Schema<IUserSchema>(
     },
     resetPasswordToken: {
       type: String,
-      default: "",
-      required: [true, "resetPasswordToken is required"]
+      default: ""
     },
     isActive: {
       type: Boolean,
-      default: true,
-      required: [true, "isActive is required"]
+      default: true // NOTE: 這邊預設值是 true，但是在實際應用中，可能需要改成 false
     },
     blockedUsers: {
       type: [Schema.Types.ObjectId],
@@ -76,15 +82,13 @@ const userSchema = new Schema<IUserSchema>(
     createdAt: {
       type: Date,
       default: Date.now
-      // required: [true, "createdAt is required"]
     },
     updatedAt: {
       type: Date,
       default: Date.now
-      // required: [true, "updatedAt is required"]
     }
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 )
 
 const User = model<IUserSchema>("user", userSchema)

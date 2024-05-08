@@ -2,10 +2,11 @@ import express, { type Express } from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import googleService from "@/services/google"
 import connectDB from "./configs/dbConn"
 import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
-import { mongoDB } from "@/services/mongo"
+import globalErrorHandler from "@/utils/globalErrorHandler"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
@@ -31,9 +32,12 @@ app.use(express.urlencoded({ extended: true }))
 void connectDB()
 
 /* Router */
-app.use("/api", healthyCheckRouter)
-app.use("/api", loginRouter)
+app.use("/api/v1", healthyCheckRouter)
+app.use("/api/v1", loginRouter)
 app.use("/api/v1/user-data", userRouter)
+
+/* Google OAuth */
+googleService.setupGoogleStrategy()
 
 /* 404 Handler */
 app.use((_, res) => {
@@ -48,7 +52,7 @@ app.use((_, res) => {
 // })
 
 /* Mongo 錯誤處理 */
-app.use(mongoDB.errorHandler)
+app.use(globalErrorHandler)
 
 /* 未捕捉的 Promise */
 process.on("unhandledRejection", (err, promise) => {

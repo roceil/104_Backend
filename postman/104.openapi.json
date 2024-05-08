@@ -1,0 +1,601 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "104",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "User"
+    },
+    {
+      "name": "Login"
+    }
+  ],
+  "paths": {
+    "/api/healthy-check": {
+      "get": {
+        "summary": "健康度檢查",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-167141652-run"
+      }
+    },
+    "/api/v1/sign-up": {
+      "post": {
+        "summary": "註冊",
+        "x-apifox-folder": "Login",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Login"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              },
+              "example": {
+                "username": "{% mock 'cname' %}",
+                "email": "{% mock 'email' %}",
+                "password": "a1111111",
+                "confirmPassword": "a1111111",
+                "gender": "male",
+                "birthday": "{% mock 'date' %}"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "personalInfo": {
+                          "type": "object",
+                          "properties": {
+                            "username": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "birthday": {
+                              "type": "string"
+                            },
+                            "_id": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "username",
+                            "email",
+                            "gender",
+                            "birthday",
+                            "_id"
+                          ],
+                          "x-apifox-orders": [
+                            "username",
+                            "email",
+                            "gender",
+                            "birthday",
+                            "_id"
+                          ],
+                          "x-apifox-ignore-properties": []
+                        },
+                        "isSubscribe": {
+                          "type": "boolean"
+                        },
+                        "points": {
+                          "type": "integer"
+                        },
+                        "resetPasswordToken": {
+                          "type": "string"
+                        },
+                        "isActive": {
+                          "type": "boolean"
+                        },
+                        "blockedUsers": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "notifications": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "personalInfo",
+                        "isSubscribe",
+                        "points",
+                        "resetPasswordToken",
+                        "isActive",
+                        "blockedUsers",
+                        "notifications",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "x-apifox-orders": [
+                        "personalInfo",
+                        "isSubscribe",
+                        "points",
+                        "resetPasswordToken",
+                        "isActive",
+                        "blockedUsers",
+                        "notifications",
+                        "createdAt",
+                        "updatedAt"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": true,
+                      "message": "用戶新增成功",
+                      "data": {
+                        "personalInfo": {
+                          "username": "潘涛",
+                          "email": "f.evokimy@stkfnr.yu",
+                          "gender": "male",
+                          "birthday": "2001-05-11",
+                          "_id": "66397c0a33a40f9c32e506c5"
+                        },
+                        "isSubscribe": false,
+                        "points": 0,
+                        "resetPasswordToken": "",
+                        "isActive": true,
+                        "blockedUsers": [],
+                        "notifications": [],
+                        "createdAt": "2024-05-07T00:55:38.466Z",
+                        "updatedAt": "2024-05-07T00:55:38.466Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-168304079-run"
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "summary": "登入",
+        "x-apifox-folder": "Login",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Login"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              },
+              "example": {
+                "account": "{{account}}",
+                "password": "a1111111"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "additionalProperties": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "additionalProperties": false
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "string",
+                          "additionalProperties": false
+                        },
+                        "email": {
+                          "type": "string",
+                          "additionalProperties": false
+                        },
+                        "name": {
+                          "type": "string",
+                          "additionalProperties": false
+                        },
+                        "gender": {
+                          "type": "string",
+                          "additionalProperties": false
+                        },
+                        "birthday": {
+                          "type": "string",
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "userId",
+                        "email",
+                        "name",
+                        "gender",
+                        "birthday"
+                      ],
+                      "x-apifox-orders": [
+                        "userId",
+                        "email",
+                        "name",
+                        "gender",
+                        "birthday"
+                      ],
+                      "x-apifox-ignore-properties": []
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": true,
+                      "message": "登入成功",
+                      "data": {
+                        "userId": "66397fcbfb654d7140fb7357",
+                        "email": "l.sovxwm@hswv.gov.cn",
+                        "name": "龚涛",
+                        "gender": "male",
+                        "birthday": "1977-08-14"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-168304091-run"
+      }
+    },
+    "/api/v1/verify": {
+      "get": {
+        "summary": "驗證登入狀態",
+        "x-apifox-folder": "Login",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Login"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{token}}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-168329511-run"
+      }
+    },
+    "/api/v1/user-data": {
+      "get": {
+        "summary": "取得所有用戶",
+        "x-apifox-folder": "User",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-170631595-run"
+      },
+      "post": {
+        "summary": "新增用戶",
+        "x-apifox-folder": "User",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-170631888-run"
+      }
+    },
+    "/api/v1/user-data/ddsdsa": {
+      "put": {
+        "summary": "編輯用戶",
+        "x-apifox-folder": "User",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-170636060-run"
+      }
+    },
+    "/api/v1/reset-password": {
+      "put": {
+        "summary": "重設密碼",
+        "x-apifox-folder": "Login",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Login"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "cookie",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              },
+              "example": {
+                "password": "1111111",
+                "newPassword": "222222",
+                "confirmNewPassword": "222222"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-171184080-run"
+      }
+    },
+    "/api/v1/forget-password": {
+      "post": {
+        "summary": "寄送重設密碼信件",
+        "x-apifox-folder": "Login",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Login"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              },
+              "example": {
+                "email": "a0978006326@gmail.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://apifox.com/web/project/4369054/apis/api-171455108-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "开发环境"
+    },
+    {
+      "url": "http://test-cn.your-api-server.com",
+      "description": "测试环境"
+    },
+    {
+      "url": "http://prod-cn.your-api-server.com",
+      "description": "正式环境"
+    }
+  ]
+}
