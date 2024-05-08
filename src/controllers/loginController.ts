@@ -1,7 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express"
-import { type LoginResData, type LoginBody } from "@/types/login"
+import { type LoginResData, type LoginBody, type SignUpReqBody } from "@/types/login"
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
 import validator from "validator"
 import { User } from "@/models/user"
 import appErrorHandler from "@/utils/appErrorHandler"
@@ -9,15 +8,7 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
 import validatePassword from "@/utils/validatePassword"
 import sendEmail from "@/utils/sendEmail"
-
-interface SignUpReqBody {
-  username: string
-  email: string
-  password: string
-  confirmPassword: string
-  gender: string
-  birthday: string
-}
+import generateJWT from "@/utils/generateJWT"
 
 /**
  * 使用者註冊
@@ -123,15 +114,6 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     return
   }
 
-  // 提取 JWT 必要環境變數
-  const key = process.env.JWT_SECRET
-  const expiresIn = process.env.JWT_EXPIRES_TIME
-
-  if (!key || !expiresIn) {
-    appErrorHandler(500, "缺少必要環境變數", next)
-    return
-  }
-
   // JWT payload
   let jwtPayload: LoginResData = {
     userId: user._id,
@@ -142,7 +124,7 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   }
 
   // 產生 token
-  const token = jwt.sign(jwtPayload, key, { expiresIn })
+  const token = generateJWT(jwtPayload)
 
   // token 寫入 cookie
   res.cookie("token", token, {

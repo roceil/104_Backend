@@ -1,5 +1,6 @@
 import { type RequestHandler, Router, type Handler } from "express"
 import loginController from "@/controllers/loginController"
+import googleService from "@/services/google"
 import asyncErrorHandler from "@/middlewares/asyncErrorHandler"
 import isAuth from "@/middlewares/isAuth"
 
@@ -14,5 +15,10 @@ router.put("/reset-password", isAuth as Handler, asyncErrorHandler(loginControll
 router.post("/forget-password", asyncErrorHandler(loginController.forgetPassword) as RequestHandler)
 
 router.get("/verify", isAuth as Handler, asyncErrorHandler(loginController.verifyToken) as RequestHandler)
+
+/* Google Login */
+router.get("/google", asyncErrorHandler(googleService.googleAuthenticate) as RequestHandler)
+
+router.get("/google/callback", asyncErrorHandler(googleService.googleCallback) as RequestHandler)
 
 export default router

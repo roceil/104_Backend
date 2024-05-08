@@ -19,3 +19,15 @@ export interface LoginResData {
   birthday: string
   token?: string
 }
+
+/**
+ * 註冊請求資料型別
+ */
+export interface SignUpReqBody {
+  username: string
+  email: string
+  password: string
+  confirmPassword: string
+  gender: string
+  birthday: string
+}
