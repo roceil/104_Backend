@@ -1,4 +1,5 @@
-import { Schema, model, mongo, type Types } from "mongoose"
+import { Schema, model, mongo } from "mongoose"
+import { type IUserId } from "../interface/userInterface"
 interface IPhotoDetails {
   photo: string
   isShow: boolean
@@ -23,12 +24,6 @@ interface ILineDetails {
   lineId: string
   isShow: boolean
 }
-
-interface IUserId {
-  userId: Types.ObjectId
-  ref: string
-}
-
 interface IPersonalInfo {
   userId: IUserId
   photoDetails: IPhotoDetails
