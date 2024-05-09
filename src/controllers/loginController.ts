@@ -123,8 +123,8 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     birthday: user.personalInfo.birthday
   }
 
-  // 產生 token
-  const token = generateJWT(jwtPayload)
+  // 產生 token並加上 Bearer
+  const token = `Bearer ${generateJWT(jwtPayload)}`
 
   // token 寫入 cookie
   res.cookie("token", token, {
