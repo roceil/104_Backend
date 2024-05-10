@@ -108,6 +108,9 @@ const paringSchema = new Schema<IParing>({
       }
     }
   }
+}, {
+  timestamps: true,
+  versionKey: false
 })
 
 const Paring = model<IParing>("paring", paringSchema)

@@ -4,5 +4,4 @@ interface IUserId {
   userId: Types.ObjectId
   ref: string
 }
-
 export { type IUserId }
