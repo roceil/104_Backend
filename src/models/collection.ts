@@ -24,6 +24,9 @@ const collecetionSchema = new Schema<ICollecetion>({
     type: Date,
     default: Date.now
   }
+}, {
+  timestamps: true,
+  versionKey: false
 })
 const Collection = model<ICollecetion>("collection", collecetionSchema)
 

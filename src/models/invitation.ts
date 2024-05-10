@@ -41,6 +41,9 @@ const invitationSchema = new Schema<IInvitation>({
     type: Date,
     default: Date.now
   }
+}, {
+  timestamps: true,
+  versionKey: false
 })
 
 const Invitation = model<IInvitation>("invitation", invitationSchema)
