@@ -1,14 +1,22 @@
-import { Schema, model, mongo } from "mongoose"
+import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../interface/userInterface"
-interface IInvitation {
+
+interface IInvitation extends Document {
   userId: IUserId
   invitedUserId: string
-  message: string
+  message: {
+    userId: mongo.ObjectId
+    title: string
+    message: string
+    createdAt: Date
+    updatedAt: Date
+  }
   date: Date
-  status: string
+  status: "accepted" | "rejected"
   createdAt: Date
   updatedAt: Date
 }
+
 const invitationSchema = new Schema<IInvitation>({
   userId: {
     type: mongo.ObjectId,
@@ -17,12 +25,29 @@ const invitationSchema = new Schema<IInvitation>({
   },
   invitedUserId: {
     type: String,
-    requiredPaths: [true, "需要邀請使用者id"]
+    required: [true, "需要邀請使用者id"]
   },
   message: {
-    type: String,
-    default: "",
-    required: [true, "需要邀請訊息"]
+    userId: {
+      type: mongo.ObjectId,
+      required: [true, "需要使用者id"]
+    },
+    title: {
+      type: String,
+      required: [true, "需要標題"]
+    },
+    message: {
+      type: String,
+      required: [true, "需要訊息"]
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now
+    }
   },
   date: {
     type: Date,
@@ -30,8 +55,8 @@ const invitationSchema = new Schema<IInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected"], // 可以加到defaultParams
-    require: [true, "需要邀請狀態"]
+    enum: ["accepted", "rejected"],
+    required: [true, "需要邀請狀態"]
   },
   createdAt: {
     type: Date,
