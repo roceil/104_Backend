@@ -123,8 +123,8 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     birthday: user.personalInfo.birthday
   }
 
-  // 產生 token
-  const token = generateJWT(jwtPayload)
+  // 產生 token並加上 Bearer
+  const token = `Bearer ${generateJWT(jwtPayload)}`
 
   // token 寫入 cookie
   res.cookie("token", token, {
@@ -149,10 +149,10 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
  */
 const resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const userData = req.user as LoginResData
-  const { password, newPassword, confirmNewPassword } = req.body as { password: string, newPassword: string, confirmNewPassword: string }
+  const { newPassword, confirmNewPassword } = req.body as { newPassword: string, confirmNewPassword: string }
 
   // 檢查必填欄位
-  const missingFields = checkMissingFields({ password, newPassword, confirmNewPassword })
+  const missingFields = checkMissingFields({ newPassword, confirmNewPassword })
   if (missingFields.length > 0) {
     const missingFieldsMsg = `缺少必要欄位: ${missingFields.join(", ")}`
     appErrorHandler(400, missingFieldsMsg, next)
@@ -178,14 +178,6 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction): P
   // 檢查使用者是否存在
   if (!userPasswordInDB) {
     appErrorHandler(400, "用戶不存在", next)
-    return
-  }
-
-  // 檢查原本密碼是否正確
-  const isPasswordCorrect = await bcrypt.compare(password, userPasswordInDB)
-
-  if (!isPasswordCorrect) {
-    appErrorHandler(400, "原密碼錯誤", next)
     return
   }
 
