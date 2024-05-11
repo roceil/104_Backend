@@ -17,6 +17,12 @@ dotenv.config({ path: ".env.local" })
 const app: Express = express()
 const port = process.env.PORT ?? 3001
 
+/* 未捕捉的 Error */
+process.on("uncaughtException", (err: Error) => {
+  console.error(`[server]：捕獲到 uncaughtException: ${err.message}`)
+  process.exit(1)
+})
+
 /* CORS */
 app.use(credentials)
 app.use(cors(corsOptions))
@@ -57,12 +63,6 @@ app.use(globalErrorHandler)
 /* 未捕捉的 Promise */
 process.on("unhandledRejection", (err, promise) => {
   console.error("[server]：捕獲到 rejection：", promise, "原因：", err)
-  process.exit(1)
-})
-
-/* 未捕捉的 Error */
-process.on("uncaughtException", (err: Error) => {
-  console.error(`[server]：捕獲到 uncaughtException: ${err.message}`)
   process.exit(1)
 })
 
