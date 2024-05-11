@@ -39,16 +39,12 @@ const userSchema = new Schema<IUserSchema>(
         },
         gender: {
           type: String,
-          enum: ["female", "male"]
+          enum: ["female", "male"],
+          default: null
         },
-        // NOTE:似乎重複了
-        // sex: {
-        //   type: String,
-        //   enum: ["female", "male"],
-        //   required: [true, "sex is required"]
-        // },
         birthday: {
-          type: String
+          type: String,
+          default: null
         }
       }
     },

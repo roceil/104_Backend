@@ -14,10 +14,10 @@ import generateJWT from "@/utils/generateJWT"
  * 使用者註冊
  */
 const signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { username, email, password, confirmPassword, gender, birthday }: SignUpReqBody = req.body
+  const { username, email, password, confirmPassword }: SignUpReqBody = req.body
 
   // 檢查必填欄位
-  const missingFields = checkMissingFields({ username, email, password, confirmPassword, gender, birthday })
+  const missingFields = checkMissingFields({ username, email, password, confirmPassword })
   if (missingFields.length > 0) {
     const missingFieldsMsg = `缺少必要欄位: ${missingFields.join(", ")}`
     appErrorHandler(400, missingFieldsMsg, next)
@@ -57,9 +57,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
     personalInfo: {
       username,
       email,
-      password: hashPassword,
-      gender,
-      birthday
+      password: hashPassword
     }
   })
 
