@@ -6,7 +6,6 @@ import googleService from "@/services/google"
 import connectDB from "./configs/dbConn"
 import swaggerUI from "swagger-ui-express"
 import swaggerFile from "./swagger-output.json"
-import { type JsonObject } from "type-fest"
 import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
 import globalErrorHandler from "@/utils/globalErrorHandler"
@@ -15,7 +14,6 @@ import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
 import profileRouter from "@/routes/profileRoute"
 dotenv.config({ path: ".env.local" })
-
 const app: Express = express()
 const port = process.env.PORT ?? 3001
 
@@ -49,19 +47,24 @@ googleService.setupGoogleStrategy()
 
 /* Swagger */
 
-app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile as JsonObject | undefined))
+interface ISwaggerFile {
+  swagger: string
+  info: {
+    title: string
+    description: string
+    version: string
+  }
+  host: string
+  basePath: string
+  schemes: string[]
+}
+
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile as ISwaggerFile))
 
 /* 404 Handler */
 app.use((_, res) => {
   res.status(404).send("404 Not Found")
 })
-
-/* Error Handler 簡單版 */
-// app.use((err: Error, req: Request, res: Response, _next: NextFunction): void => {
-//   console.log("errorHandler")
-//   console.error("nodeJs出錯啦", err)
-//   res.status(500).json({ status: false, message: err })
-// })
 
 /* Mongo 錯誤處理 */
 app.use(globalErrorHandler)
