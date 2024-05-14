@@ -10,7 +10,7 @@ import globalErrorHandler from "@/utils/globalErrorHandler"
 
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
-import userRouter from "@/routes/userRoute"
+import profileRouter from "@/routes/profileRoute"
 
 dotenv.config({ path: ".env.local" })
 
@@ -40,7 +40,7 @@ void connectDB()
 /* Router */
 app.use("/api/v1", healthyCheckRouter)
 app.use("/api/v1", loginRouter)
-app.use("/api/v1/user-data", userRouter)
+app.use("/api/v1/user-data", profileRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()

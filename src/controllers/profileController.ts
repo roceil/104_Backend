@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from "express"
-import { User, type IUserSchema } from "@/models/user"
+import { Profile, type IPersonalInfo } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 
@@ -7,7 +7,7 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
  * 取得所有使用者
  */
 const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const users = await User.find()
+  const users = await Profile.find()
   if (!users || users.length === 0) {
     appErrorHandler(404, "No user found", next)
   } else {
@@ -21,7 +21,7 @@ const getUsers = async (req: Request, res: Response, next: NextFunction): Promis
  */
 const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const user = await User.findById(id)
+  const user = await Profile.findById(id)
   if (!user) {
     appErrorHandler(404, "No user found", next)
   } else {
@@ -34,15 +34,14 @@ const getUserById = async (req: Request, res: Response, next: NextFunction): Pro
  * @param req.body Request
  */
 const postUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  // NOTE:這邊要擋的內容需要再調整
-  const { name, email, password } = req.body
+  const { userId } = req.body
 
-  if (!name || !email || !password) {
-    appErrorHandler(400, "缺少必要欄位", next); return
+  if (!userId) {
+    appErrorHandler(400, "缺少使用者id", next); return
   }
 
-  const userPost = await User.create(req.body)
-  appSuccessHandler(201, "用戶新增成功", userPost, res)
+  const userPost = await Profile.create(req.body)
+  appSuccessHandler(201, "用戶新增資料成功", userPost, res)
 }
 
 /**
@@ -51,14 +50,18 @@ const postUser = async (req: Request, res: Response, next: NextFunction): Promis
  * @param req.body Request
  */
 const putUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  if (!req.params.userID) {
-    appErrorHandler(400, "缺少使用者 ID", next); return
+  if (!req.body.id) {
+    appErrorHandler(400, "缺少Id", next); return
   }
 
-  const { id } = req.params
-  const userPut = await User.findByIdAndUpdate(id, req.body as IUserSchema
+  const { id } = req.body
+  const userPut = await Profile.findByIdAndUpdate(id, req.body as IPersonalInfo, { new: true }
   )
-  appSuccessHandler(200, "用戶修改成功", userPut, res)
+  if (!userPut) {
+    appErrorHandler(400, "找不到使用者資料Id，請稍後在試", next)
+  } else {
+    appSuccessHandler(200, "用戶修改成功", userPut, res)
+  }
 }
 
 /**
@@ -67,7 +70,7 @@ const putUser = async (req: Request, res: Response, next: NextFunction): Promise
  */
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params
-  const userDelete = await User.findByIdAndDelete(id)
+  const userDelete = await Profile.findByIdAndDelete(id)
   appSuccessHandler(200, "用戶刪除成功", userDelete, res)
 }
 
