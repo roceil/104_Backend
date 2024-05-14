@@ -17,6 +17,8 @@ RUN pnpm install --frozen-lockfile
 COPY tsconfig.json ./
 COPY app.ts ./
 COPY configs ./configs
+COPY ./swagger-output.json /app/
+
 
 # 複製源代碼
 COPY src ./src
