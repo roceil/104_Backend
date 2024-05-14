@@ -4,6 +4,9 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import googleService from "@/services/google"
 import connectDB from "./configs/dbConn"
+import swaggerUI from "swagger-ui-express"
+import swaggerFile from "./swagger-output.json"
+import { type JsonObject } from "type-fest"
 import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
 import globalErrorHandler from "@/utils/globalErrorHandler"
@@ -11,7 +14,6 @@ import globalErrorHandler from "@/utils/globalErrorHandler"
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
 import profileRouter from "@/routes/profileRoute"
-
 dotenv.config({ path: ".env.local" })
 
 const app: Express = express()
@@ -44,6 +46,10 @@ app.use("/api/v1/user-data", profileRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()
+
+/* Swagger */
+
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile as JsonObject | undefined))
 
 /* 404 Handler */
 app.use((_, res) => {
