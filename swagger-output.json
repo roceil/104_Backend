@@ -1,0 +1,606 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "104_Backend",
+    "description": "the backend",
+    "version": "1.0.0"
+  },
+  "host": "backend.zeabur.internal:8080",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "cookie",
+      "name": "authorization",
+      "description": "請加上API Token"
+    }
+  },
+  "paths": {
+    "/api/v1/healthy-check": {
+      "get": {
+        "tags": [
+          "healthy-check-系統健康度檢查"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/sign-up": {
+      "post": {
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/reset-password": {
+      "put": {
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/forget-password": {
+      "post": {
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/verify": {
+      "get": {
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/google": {
+      "get": {
+        "tags": [
+          "第三方登入"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/google/callback": {
+      "get": {
+        "tags": [
+          "第三方登入"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user-data/": {
+      "get": {
+        "tags": [
+          "Profile-會員資料"
+        ],
+        "description": "取得會員資料",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "註冊資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6642c1504ff7d57fb94d9115"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "6642bfaec60d4f7c475d8401"
+                    },
+                    "nickNameDetails": {
+                      "type": "object",
+                      "properties": {
+                        "nickName": {
+                          "type": "string",
+                          "example": "Eason"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:41:36.960Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-14T02:10:50.806Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Profile-會員資料"
+        ],
+        "description": "新增會員資料",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "6642bfaec60d4f7c475d8401"
+                },
+                "nickNameDetails": {
+                  "type": "object",
+                  "properties": {
+                    "nickName": {
+                      "type": "string",
+                      "example": "Jack"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "required": [
+                "userId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "註冊資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "用戶新增成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6642bfaec60d4f7c475d8401"
+                    },
+                    "personalInfo": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "a444455555@hotmail.com"
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "咚咚"
+                        },
+                        "gender": {},
+                        "birthday": {}
+                      }
+                    },
+                    "isSubscribe": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "points": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "resetPasswordToken": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "blockedUsers": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "notifications": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:34:38.298Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:34:38.298Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Profile-會員資料"
+        ],
+        "description": "修改會員資料",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "資料格式",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "6642bfaec60d4f7c475d8401"
+                },
+                "nickNameDetails": {
+                  "type": "object",
+                  "properties": {
+                    "nickName": {
+                      "type": "string",
+                      "example": "Jack"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "required": [
+                "userId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "修改使用者資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "修改資料成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6642bfaec60d4f7c475d8401"
+                    },
+                    "personalInfo": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "a444455555@hotmail.com"
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "咚咚"
+                        },
+                        "gender": {},
+                        "birthday": {}
+                      }
+                    },
+                    "isSubscribe": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "points": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "resetPasswordToken": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "blockedUsers": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "notifications": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:34:38.298Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:34:38.298Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user-data/{id}": {
+      "get": {
+        "tags": [
+          "Profile-會員資料"
+        ],
+        "description": "取得會員資料",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "註冊資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6642c1504ff7d57fb94d9115"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "6642bfaec60d4f7c475d8401"
+                    },
+                    "nickNameDetails": {
+                      "type": "object",
+                      "properties": {
+                        "nickName": {
+                          "type": "string",
+                          "example": "Eason"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-14T01:41:36.960Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-14T02:10:50.806Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}
