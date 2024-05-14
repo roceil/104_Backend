@@ -1,6 +1,6 @@
 import swaggerAutogen from "swagger-autogen"
 import dotenv from "dotenv"
-const host = process.env.PORT ?? "backend.zeabur.internal:8080"
+const host = process.env.PORT ?? "https://104-backend.zeabur.app"
 dotenv.config({ path: ".env.local" })
 const doc = {
   info: {
