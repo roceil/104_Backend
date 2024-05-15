@@ -9,6 +9,43 @@ const router = Router()
 router.post("/sign-up", asyncErrorHandler(
   /**
    * #swagger.tags = ["LogInAndSignUp-登入與註冊"]
+   * #swagger.parameters['body'] = {
+      in: "body",
+      required: true,
+      type: "Object",
+      description: "註冊資訊",
+      schema: {
+        $username: "Eason",
+        $email: "56asdf@hotmail.com",
+        $password: "a1234567",
+        $confirmPassword: "a1234567"
+      }
+    }
+    * #swagger.responses[201] = {
+      description: '用戶新增成功',
+      schema: {
+        status: true,
+        message: "用戶新增成功",
+        data: {
+            _id: "66441880635c6a9bc95c164b",
+            personalInfo: {
+                username: "Eason",
+                email: "56asdf@hotmail.com",
+                gender: null,
+                birthday: null,
+                _id: "66441880635c6a9bc95c164c"
+            },
+            isSubscribe: false,
+            points: 0,
+            resetPasswordToken: "",
+            isActive: true,
+            blockedUsers: [],
+            notifications: [],
+            createdAt: "2024-05-15T02:05:52.314Z",
+            updatedAt: "2024-05-15T02:05:52.314Z"
+            }
+        }
+      }
    */
   loginController.signUp) as RequestHandler)
 

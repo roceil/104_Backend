@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "backend.zeabur.internal:8080",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -51,11 +51,122 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "註冊資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "Eason"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "56asdf@hotmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "a1234567"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "a1234567"
+                }
+              },
+              "required": [
+                "username",
+                "email",
+                "password",
+                "confirmPassword"
+              ]
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "用戶新增成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "用戶新增成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66441880635c6a9bc95c164b"
+                    },
+                    "personalInfo": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "example": "Eason"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "56asdf@hotmail.com"
+                        },
+                        "gender": {},
+                        "birthday": {},
+                        "_id": {
+                          "type": "string",
+                          "example": "66441880635c6a9bc95c164c"
+                        }
+                      }
+                    },
+                    "isSubscribe": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "points": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "resetPasswordToken": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "blockedUsers": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "notifications": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-15T02:05:52.314Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-15T02:05:52.314Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
