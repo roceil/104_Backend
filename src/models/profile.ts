@@ -24,6 +24,13 @@ interface ILineDetails {
   lineId: string
   isShow: boolean
 }
+
+interface IExposureSettings {
+  rating: string
+  isShow: boolean
+  isMatch:boolean
+} 
+
 interface IPersonalInfo {
   userId: IUserId
   photoDetails: IPhotoDetails
@@ -32,7 +39,9 @@ interface IPersonalInfo {
   incomeDetails: IIncomeDetails
   lineDetails: ILineDetails
   tags: string[]
+  exposureSettings:IExposureSettings
 }
+
 
 const profileSchema = new Schema<IPersonalInfo>({
   userId: {
@@ -84,7 +93,8 @@ const profileSchema = new Schema<IPersonalInfo>({
       },
       isShow: {
         type: Boolean,
-        default: false
+        default: false,
+       
       }
     }
   },
@@ -103,6 +113,22 @@ const profileSchema = new Schema<IPersonalInfo>({
   tags: {
     type: [String],
     default: []
+  },
+  exposureSettings:{
+    type: {
+      rating: {
+        type:String,
+        default:null
+      },
+      isShow:  {
+        type:Boolean,
+        default:false
+      },
+      isMatch: {
+        type:Boolean,
+        default:false
+      },
+    },
   }
 }, {
   timestamps: true,
