@@ -6,7 +6,7 @@ const doc = {
     title: "104_Backend",
     description: "the backend"
   },
-  host: process.env.PORT ? `localhost:${process.env.PORT}` : "https://104-backend.zeabur.app",
+  host: process.env.PORT ? `localhost:${process.env.PORT}` : "104-backend.zeabur.app",
   schemes: ["http", "https"],
   securityDefinitions: {
     apiKeyAuth: {
