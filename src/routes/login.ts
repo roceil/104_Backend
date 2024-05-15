@@ -18,7 +18,7 @@ router.post("/login", asyncErrorHandler(
    */
   loginController.login) as RequestHandler)
 
-router.put("/reset-password", isAuth as Handler, asyncErrorHandler(
+router.patch("/reset-password/:id", isAuth as Handler, asyncErrorHandler(
   /**
    * #swagger.tags = ["LogInAndSignUp-登入與註冊"]
    */
@@ -35,6 +35,8 @@ router.get("/verify", isAuth as Handler, asyncErrorHandler(
    * #swagger.tags = ["LogInAndSignUp-登入與註冊"]
    */
   loginController.verifyToken) as RequestHandler)
+
+router.patch("/activate-account/:token", isAuth as Handler, asyncErrorHandler(loginController.activateAccount) as RequestHandler)
 
 /* Google Login */
 router.get("/google", asyncErrorHandler(
