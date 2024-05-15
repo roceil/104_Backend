@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "https://104-backend.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -253,13 +253,19 @@
         }
       }
     },
-    "/api/v1/reset-password": {
-      "put": {
+    "/api/v1/reset-password/{id}": {
+      "patch": {
         "tags": [
           "LogInAndSignUp-登入與註冊"
         ],
         "description": "",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "origin",
             "in": "header",
@@ -396,6 +402,29 @@
             "apiKeyAuth": []
           }
         ]
+      }
+    },
+    "/api/v1/activate-account/{token}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/api/v1/google": {

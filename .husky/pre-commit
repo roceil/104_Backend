@@ -3,7 +3,6 @@
 
 # 獲取當前分支名稱
 branch_name=$(git symbolic-ref --short HEAD)
-
 # 檢查是否在 main 分支
 if [ "$branch_name" = "main" ]; then
   echo "您正在 main 分支上工作，請建立一個新的分支進行更改。"

@@ -1,13 +1,12 @@
 import swaggerAutogen from "swagger-autogen"
 import dotenv from "dotenv"
-dotenv.config({ path: ".env.local" })
-const host = `localhost:${process.env.PORT}` ?? "https://104-backend.zeabur.app"
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const doc = {
   info: {
     title: "104_Backend",
     description: "the backend"
   },
-  host,
+  host: process.env.PORT ? `localhost:${process.env.PORT}` : "https://104-backend.zeabur.app",
   schemes: ["http", "https"],
   securityDefinitions: {
     apiKeyAuth: {
