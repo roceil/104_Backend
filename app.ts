@@ -13,7 +13,7 @@ import globalErrorHandler from "@/utils/globalErrorHandler"
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
 import profileRouter from "@/routes/profileRoute"
-dotenv.config({ path: ".env.local" })
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app: Express = express()
 const port = process.env.PORT ?? 3001
 

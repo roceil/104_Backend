@@ -5,7 +5,8 @@ import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from "p
 import { User } from "@/models/user"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
-
+import dotenv from "dotenv"
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 interface GoogleProfile {
   sub: string
   name: string
