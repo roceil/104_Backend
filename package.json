@@ -11,7 +11,8 @@
     "format": "eslint src/**/*.ts app.ts --fix",
     "type-check": "tsc --noEmit",
     "prepare": "husky install",
-    "swagger": "tsx ./swagger.ts"
+    "swagger": "tsx ./swagger.ts",
+    "serve": "pnpm run swagger && pnpm run dev"
   },
   "husky": {
     "hooks": {

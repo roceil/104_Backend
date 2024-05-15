@@ -12,11 +12,11 @@ export interface LoginBody {
  * 登入後回傳資料型別
  */
 export interface LoginResData {
-  userId: Types.ObjectId
-  email: string
-  name: string
-  gender: string
-  birthday: string
+  userId?: Types.ObjectId
+  email?: string
+  name?: string
+  gender?: string
+  birthday?: string
   token?: string
 }
 

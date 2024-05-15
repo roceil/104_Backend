@@ -7,7 +7,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
 import validatePassword from "@/utils/validatePassword"
-import sendEmail from "@/utils/sendEmail"
+import resend from "@/services/resend"
 import generateJWT from "@/utils/generateJWT"
 
 /**
@@ -61,12 +61,24 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
     }
   })
 
+  // JWT payload
+  const jwtPayload = {
+    email,
+    name: username
+  }
+
+  // 產生 token
+  const token = generateJWT(jwtPayload)
+
   let resUserData = null
 
   // Note: 開發環境下，回傳使用者資料
   if (process.env.NODE_ENV === "dev") {
     resUserData = await User.findOne({ "personalInfo.email": email }).select("-personalInfo.password")
   }
+
+  // 發送帳號啟用信件
+  await resend.sendAccountVerifyEmail(email, token)
 
   appSuccessHandler(201, "用戶新增成功", resUserData, res)
 }
@@ -121,8 +133,8 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     birthday: user.personalInfo.birthday
   }
 
-  // 產生 token並加上 Bearer
-  const token = `Bearer ${generateJWT(jwtPayload)}`
+  // 產生 token
+  const token = generateJWT(jwtPayload)
 
   // token 寫入 cookie
   res.cookie("token", token, {
@@ -215,10 +227,54 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction): 
     return
   }
 
+  // JWT payload
+  const jwtPayload = {
+    userId: user._id
+  }
+
+  // 產生 token
+  const token = generateJWT(jwtPayload)
+
   // 寄出重設密碼信件
-  await sendEmail(email)
+  await resend.sendResetPasswordEmail(email, token)
 
   appSuccessHandler(200, "郵件寄送成功", null, res)
+}
+
+/**
+ * 啟用帳號
+ */
+const activateAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  // 取得當前格林威治時間
+  const now = new Date()
+
+  const userData = req.user as LoginResData
+
+  // 取得用戶資料
+  const user = await User.findOne({ "personalInfo.email": userData.email })
+
+  // 檢查用戶是否存在
+  if (!user) {
+    appErrorHandler(400, "帳號啟用失敗，該用戶不存在", next)
+    return
+  }
+
+  // 計算啟用截止時間（createdAt 加 5 分鐘）
+  const expirationTime = new Date(user.createdAt.getTime())
+  expirationTime.setMinutes(expirationTime.getMinutes() + 5)
+
+  // 檢查帳號是否已超過啟用時間
+  if (expirationTime < now) {
+    // 超過啟用時間，刪除用戶資料
+    await User.deleteOne({ _id: user._id })
+    appErrorHandler(400, "帳號啟用失敗，啟用時間已過期且資料已刪除", next)
+    return
+  }
+
+  // 啟用帳號
+  await User.findByIdAndUpdate(user._id, { "personalInfo.isActivated": true })
+
+  appSuccessHandler(200, "帳號啟用成功", null, res)
 }
 
 /**
@@ -235,6 +291,7 @@ const loginController = {
   login,
   resetPassword,
   forgetPassword,
+  activateAccount,
   verifyToken
 }
 

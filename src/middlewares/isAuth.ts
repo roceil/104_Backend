@@ -4,7 +4,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
   // 檢查 cookie 中是否有 token
-  const token = req.cookies.token as string
+  const token = req.cookies.token as string || req.params.token
 
   if (!token) {
     appErrorHandler(401, "未登入", next)
@@ -19,16 +19,15 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 
   // 移除 Bearer 字串並確保 tokenString 不為 undefined
-  const tokenParts = token.split(" ")
-  const tokenString = tokenParts.length > 1 ? tokenParts[1] : undefined
-
-  if (!tokenString) {
-    appErrorHandler(401, "無效的 token 格式", next)
-    return
-  }
+  // const tokenParts = token
+  // const tokenString = tokenParts
+  // if (!tokenString) {
+  //   appErrorHandler(401, "無效的 token 格式", next)
+  //   return
+  // }
 
   // 驗證 token 並將解碼後的資料存入 req.user
-  jwt.verify(tokenString, key, (err, decoded) => {
+  jwt.verify(token, key, (err, decoded) => {
     if (err) {
       if (err instanceof jwt.TokenExpiredError) {
         appErrorHandler(401, "token 已過期", next)

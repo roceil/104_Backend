@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "backend.zeabur.internal:8080",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -51,11 +51,122 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "註冊資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "Eason"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "56asdf@hotmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "a1234567"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "a1234567"
+                }
+              },
+              "required": [
+                "username",
+                "email",
+                "password",
+                "confirmPassword"
+              ]
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "用戶新增成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "用戶新增成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66441880635c6a9bc95c164b"
+                    },
+                    "personalInfo": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string",
+                          "example": "Eason"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "56asdf@hotmail.com"
+                        },
+                        "gender": {},
+                        "birthday": {},
+                        "_id": {
+                          "type": "string",
+                          "example": "66441880635c6a9bc95c164c"
+                        }
+                      }
+                    },
+                    "isSubscribe": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "points": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "resetPasswordToken": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "blockedUsers": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "notifications": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-15T02:05:52.314Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-15T02:05:52.314Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -71,11 +182,73 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "登入資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "56asdf@hotmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "a1234567"
+                }
+              },
+              "required": [
+                "account",
+                "password"
+              ]
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "登入成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "登入成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "66441880635c6a9bc95c164b"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "56asdf@hotmail.com"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Eason"
+                    },
+                    "gender": {},
+                    "birthday": {},
+                    "token": {
+                      "type": "string",
+                      "example": "as4d5fa421sdfasdf"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -91,13 +264,58 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "修改密碼",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "newPassword": {
+                  "type": "string",
+                  "example": "a1234567"
+                },
+                "confirmNewPassword": {
+                  "type": "string",
+                  "example": "a1234567"
+                }
+              },
+              "required": [
+                "newPassword",
+                "confirmNewPassword"
+              ]
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "修改成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "修改密碼成功"
+                },
+                "data": {}
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1/forget-password": {
@@ -111,11 +329,46 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "忘記密碼",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "asdfa@hotmail.com"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "郵件寄送成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "郵件寄送成功"
+                },
+                "data": {}
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -125,7 +378,7 @@
         "tags": [
           "LogInAndSignUp-登入與註冊"
         ],
-        "description": "",
+        "description": "把拿到的Token拿到Authorize中，進行驗證。",
         "parameters": [
           {
             "name": "origin",
@@ -137,7 +390,12 @@
           "default": {
             "description": ""
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1/google": {

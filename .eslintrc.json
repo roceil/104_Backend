@@ -46,6 +46,7 @@
             }
         ], // 強制使用雙引號，但允許模板字面值
         "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
     }
 }
