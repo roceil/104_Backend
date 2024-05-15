@@ -6,12 +6,13 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/app.js",
-    "dev": "tsx watch app.ts",
+    "dev": "cross-env NODE_ENV=dev tsx watch app.ts",
     "lint": "eslint src/**/*.ts app.ts",
     "format": "eslint src/**/*.ts app.ts --fix",
     "type-check": "tsc --noEmit",
     "prepare": "husky install",
-    "swagger": "tsx ./swagger.ts",
+    "swagger": "cross-env NODE_ENV=dev tsx ./swagger.ts",
+    "swaggerDep": "cross-env NODE_ENV=swagger tsx ./swagger.ts",
     "serve": "pnpm run swagger && pnpm run dev"
   },
   "husky": {
@@ -34,6 +35,7 @@
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
