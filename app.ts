@@ -39,7 +39,7 @@ void connectDB()
 /* Router */
 app.use("/api/v1", healthyCheckRouter)
 app.use("/api/v1", loginRouter)
-app.use("/api/v1/user-data", profileRouter)
+app.use("/api/v1", profileRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()
