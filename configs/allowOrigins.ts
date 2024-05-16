@@ -6,8 +6,8 @@ const allowOrigin = [
   "https://104social-front-end.vercel.app",
   "https://104-backend.zeabur.app",
   "http://104-backend.zeabur.app",
-  "https://104-dev.zeabur.app/",
-  "http://104-dev.zeabur.app/",
+  "https://104-dev.zeabur.app",
+  "http://104-dev.zeabur.app",
   "http://localhost:3000",
   "http://localhost:3001"
 ]
