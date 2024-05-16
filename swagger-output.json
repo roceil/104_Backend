@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-backend.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -406,7 +406,10 @@
     },
     "/api/v1/activate-account/{token}": {
       "patch": {
-        "description": "",
+        "tags": [
+          "LogInAndSignUp-登入與註冊"
+        ],
+        "description": "swagger未完成。",
         "parameters": [
           {
             "name": "token",

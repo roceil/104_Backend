@@ -22,7 +22,6 @@ process.on("uncaughtException", (err: Error) => {
   console.error(`[server]：捕獲到 uncaughtException: ${err.message}`)
   process.exit(1)
 })
-
 /* CORS */
 app.use(credentials)
 app.use(cors(corsOptions))
