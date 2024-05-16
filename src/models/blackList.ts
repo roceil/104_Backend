@@ -1,5 +1,5 @@
 import { Schema, model, mongo } from "mongoose"
-import { type IUserId } from "../interface/userInterface"
+import { type IUserId } from "../types/userInterface"
 interface IBlackList {
   userId: IUserId
   lockedUserId: mongo.ObjectId[]

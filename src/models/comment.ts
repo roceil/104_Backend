@@ -1,5 +1,5 @@
 import { Schema, model, mongo, type Types } from "mongoose"
-import { type IUserId } from "../interface/userInterface"
+import { type IUserId } from "../types/userInterface"
 interface ICommentUserId {
   commentedUserId: Types.ObjectId
 }
