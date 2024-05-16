@@ -1,5 +1,5 @@
 import { Schema, model, mongo, type Document } from "mongoose"
-import { type IUserId } from "../interface/userInterface"
+import { type IUserId } from "../types/userInterface"
 
 interface IInvitation extends Document {
   userId: IUserId

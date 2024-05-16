@@ -115,7 +115,6 @@ export function putProfileSwagger (_req: Request, _res: Response, next: NextFunc
             required: true,
             description: "資料格式",
             schema: {
-                $userId:"6642bfaec60d4f7c475d8401",
                 nickNameDetails:{
                   nickName:"Jack",
                   isShow:true
