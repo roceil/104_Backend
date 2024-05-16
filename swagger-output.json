@@ -470,7 +470,7 @@
         }
       }
     },
-    "/api/v1/user-data/": {
+    "/api/v1/user-data": {
       "get": {
         "tags": [
           "Profile-會員資料"
