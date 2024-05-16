@@ -470,7 +470,7 @@
         }
       }
     },
-    "/api/v1/user-data/": {
+    "/api/v1/user-data": {
       "get": {
         "tags": [
           "Profile-會員資料"
@@ -696,10 +696,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "userId": {
-                  "type": "string",
-                  "example": "6642bfaec60d4f7c475d8401"
-                },
                 "nickNameDetails": {
                   "type": "object",
                   "properties": {
@@ -713,10 +709,7 @@
                     }
                   }
                 }
-              },
-              "required": [
-                "userId"
-              ]
+              }
             }
           }
         ],
