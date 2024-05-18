@@ -5,8 +5,8 @@ import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from "p
 import { User } from "@/models/user"
 import generateJWT from "@/utils/generateJWT"
 import appErrorHandler from "@/utils/appErrorHandler"
+import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
-import cookie from "cookie"
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
@@ -98,22 +98,25 @@ const googleCallback = async (req: Request, res: Response, next: NextFunction): 
 
     const token = generateJWT(jwtPayload)
 
-    // token 寫入 cookie
-    res.setHeader(
-      "Set-Cookie",
-      cookie.serialize("token", token, {
-        sameSite: "none",
-        httpOnly: true,
-        path: "/",
-        secure: true,
-        maxAge: 60 * 60 * 24 * 7 * 52
-        // domain: "104-frontend.zeabur.app"
-      })
-    )
-
-    // 跳轉回首頁
-    res.redirect("https://104social-front-end.vercel.app")
+    // 跳轉至前端 Google 登入頁
+    res.redirect(`${process.env.FRONTEND_URL}/google_login/${token}`)
   })(req, res)
+}
+
+/**
+ * Google 寫入 cookie
+ */
+const googleWriteCookie = async (req: Request, res: Response): Promise<void> => {
+  const token = req.params.id
+
+  // 寫入 cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+  })
+
+  appSuccessHandler(200, "登入成功", null, res)
 }
 
 /**
@@ -333,7 +336,8 @@ const googleService = {
   googleAuthenticate,
   googleCallback,
   sendAccountVerifyEmail,
-  sendResetPasswordEmail
+  sendResetPasswordEmail,
+  googleWriteCookie
 }
 
 export default googleService
