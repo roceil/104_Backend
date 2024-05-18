@@ -7,7 +7,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
 import validatePassword from "@/utils/validatePassword"
-import resend from "@/services/resend"
+import googleService from "@/services/google"
 import generateJWT from "@/utils/generateJWT"
 
 /**
@@ -78,7 +78,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
   }
 
   // 發送帳號啟用信件
-  await resend.sendAccountVerifyEmail(email, token)
+  await googleService.sendAccountVerifyEmail(email, token)
 
   appSuccessHandler(201, "用戶新增成功", resUserData, res)
 }
@@ -236,7 +236,7 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction): 
   const token = generateJWT(jwtPayload)
 
   // 寄出重設密碼信件
-  await resend.sendResetPasswordEmail(email, token)
+  await googleService.sendResetPasswordEmail(email, token)
 
   appSuccessHandler(200, "郵件寄送成功", null, res)
 }
@@ -278,6 +278,14 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
 }
 
 /**
+ * 登出（清除 Cookie 的 Token）
+ */
+const logout = async (req: Request, res: Response): Promise<void> => {
+  res.clearCookie("token")
+  appSuccessHandler(200, "登出成功", null, res)
+}
+
+/**
  * 驗證 token 後回傳使用者資料
  */
 const verifyToken = async (req: Request, res: Response): Promise<void> => {
@@ -292,6 +300,7 @@ const loginController = {
   resetPassword,
   forgetPassword,
   activateAccount,
+  logout,
   verifyToken
 }
 
