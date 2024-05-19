@@ -21,9 +21,13 @@ router.get("/verify", verifySwagger, isAuth as Handler, asyncErrorHandler(loginC
 
 router.patch("/activate-account/:token", activateAccountSwagger, isAuth as Handler, asyncErrorHandler(loginController.activateAccount) as RequestHandler)
 
+router.get("/logout", isAuth as Handler, asyncErrorHandler(loginController.logout) as RequestHandler)
+
 /* Google Login */
 router.get("/google", googleSwagger, asyncErrorHandler(googleService.googleAuthenticate) as RequestHandler)
 
 router.get("/google/callback", googleCallbackSwagger, asyncErrorHandler(googleService.googleCallback) as RequestHandler)
+
+router.get("/google/check-auth/:id", googleCallbackSwagger, asyncErrorHandler(googleService.googleWriteCookie) as RequestHandler)
 
 export default router
