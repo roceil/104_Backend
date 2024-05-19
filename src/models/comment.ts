@@ -19,7 +19,7 @@ const commentSchema = new Schema<IComment>({
   },
   commentedUserId: {
     type: mongo.ObjectId,
-    required: [true, "需要被價者id"]
+    required: [true, "需要被評價者id"]
   },
   content: {
     type: String,
@@ -38,6 +38,6 @@ const commentSchema = new Schema<IComment>({
   versionKey: false
 })
 
-const Comment = model<IComment>("Comment", commentSchema)
+const Comment = model<IComment>("comment", commentSchema)
 
-export default Comment
+export { Comment, type IComment }

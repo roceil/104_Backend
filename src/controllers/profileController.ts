@@ -45,9 +45,6 @@ const postUser = async (req: Request, res: Response, next: NextFunction): Promis
 }
 
 const putUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  /**
-   * #swagger.tags = ['Profile-會員資料']
-   */
   const { userId } = req.user as LoginResData
   if (!userId) {
     appErrorHandler(400, "缺少使用者Id請重新登入", next); return
