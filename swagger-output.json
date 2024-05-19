@@ -884,6 +884,563 @@
           }
         ]
       }
+    },
+    "/api/v1/user-params": {
+      "get": {
+        "tags": [
+          "DefaultParams-預設參數"
+        ],
+        "description": "取得預設參數",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "參數資訊",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hashTags": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "array",
+                          "example": [
+                            "誠實",
+                            "公正",
+                            "正直",
+                            "尊重",
+                            "慷慨",
+                            "勇敢",
+                            "責任感",
+                            "寬容",
+                            "助人",
+                            "合作",
+                            "謙虛",
+                            "堅韌"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "personal": {
+                          "type": "array",
+                          "example": [
+                            "樂觀",
+                            "幽默",
+                            "積極",
+                            "溫柔",
+                            "細心",
+                            "冷靜",
+                            "活潑",
+                            "耐心",
+                            "自信",
+                            "謙虛",
+                            "大方",
+                            "溫和"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "zodiac": {
+                          "type": "array",
+                          "example": [
+                            "牡羊座",
+                            "金牛座",
+                            "雙子座",
+                            "巨蟹座",
+                            "獅子座",
+                            "處女座",
+                            "天秤座",
+                            "天蠍座",
+                            "射手座",
+                            "摩羯座",
+                            "水瓶座",
+                            "雙魚座"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "hobby": {
+                          "type": "array",
+                          "example": [
+                            "讀書",
+                            "旅行",
+                            "攝影",
+                            "烹飪",
+                            "電影",
+                            "音樂",
+                            "登山",
+                            "游泳",
+                            "花藝",
+                            "健身",
+                            "瑜伽",
+                            "釣魚"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "news": {
+                          "type": "array",
+                          "example": [
+                            "政治",
+                            "經濟",
+                            "科技",
+                            "環境",
+                            "社會",
+                            "醫療",
+                            "教育",
+                            "文化",
+                            "運動",
+                            "娛樂",
+                            "國際",
+                            "國內"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/comment-i-left": {
+      "post": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "新增評價",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "新增評價",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentedUserId": {
+                  "type": "string",
+                  "example": "66487581f6f2c93ddd16ff00"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "test666666"
+                }
+              },
+              "required": [
+                "commentedUserId",
+                "content"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "新增評價",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "新增成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "commentedUserId": {
+                      "type": "string",
+                      "example": "66487581f6f2c93ddd16ff00"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "test666666"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664980fe213d91ed5fbff629"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:33:02.282Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:33:02.282Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/comment-list": {
+      "get": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "取得評價列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "評價列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "66497a7c9acbc3bfb1a21621"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "664473d53d428e98fd5fb226"
+                      },
+                      "commentedUserId": {
+                        "type": "string",
+                        "example": "66487581f6f2c93ddd16ff00"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "test666666"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-05-19T04:05:16.243Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-05-19T04:05:16.243Z"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/comment-i-left/{id}": {
+      "get": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "取得評價",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "評價Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "評價",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66497a7c9acbc3bfb1a21621"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "commentedUserId": {
+                      "type": "string",
+                      "example": "66487581f6f2c93ddd16ff00"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "test666666"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "修改評價",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "評價Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "修改評價",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "example": "test777777"
+                }
+              },
+              "required": [
+                "content"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "修改評價",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "修改成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66497a7c9acbc3bfb1a21621"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "commentedUserId": {
+                      "type": "string",
+                      "example": "66487581f6f2c93ddd16ff00"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "test777777"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "刪除評價",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "評價Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除評價",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66497a7c9acbc3bfb1a21621"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "commentedUserId": {
+                      "type": "string",
+                      "example": "66487581f6f2c93ddd16ff00"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "test777777"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
     }
   }
 }
