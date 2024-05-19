@@ -1,22 +1,24 @@
 import { Schema, model } from "mongoose"
 
 interface ITags {
-  tags: object
+  hashTags: object
 }
 
 interface IParams {
-  tags: ITags
+  hashTags: ITags
 }
 const paramsSchema = new Schema<IParams>({
-  tags: {
+  hashTags: {
     type: Object
   }
+}, {
+  versionKey: false
 })
-const Params = model<IParams>("params", paramsSchema)
+const Params = model<IParams>("param", paramsSchema)
 
 export { Params, type IParams }
 
-// const tags = {
+// const hashTags = {
 //   value: ["誠實", "公正", "正直", "尊重", "慷慨", "勇敢", "責任感", "寬容", "助人", "合作", "謙虛", "堅韌"],
 //   personal: ["樂觀", "幽默", "積極", "溫柔", "細心", "冷靜", "活潑", "耐心", "自信", "謙虛", "大方", "溫和"],
 //   zodiac: ["牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座", "摩羯座", "水瓶座", "雙魚座"],

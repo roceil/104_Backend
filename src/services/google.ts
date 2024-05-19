@@ -5,7 +5,6 @@ import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from "p
 import { User } from "@/models/user"
 import generateJWT from "@/utils/generateJWT"
 import appErrorHandler from "@/utils/appErrorHandler"
-import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
@@ -98,25 +97,30 @@ const googleCallback = async (req: Request, res: Response, next: NextFunction): 
 
     const token = generateJWT(jwtPayload)
 
-    // 跳轉至前端 Google 登入頁
-    res.redirect(`${process.env.FRONTEND_URL}/google_login/${token}`)
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: true, // 确保在 HTTPS 中使用
+    //   sameSite: "none" // 可选，增强 CSRF 保护
+    // })
+
+    // 跳轉回首頁
+    res.redirect(`${process.env.FRONTEND_URL}/login/${token}`)
   })(req, res)
 }
 
 /**
- * Google 寫入 cookie
+ * 測試 google 寫入 cookie
  */
 const googleWriteCookie = async (req: Request, res: Response): Promise<void> => {
   const token = req.params.id
 
-  // 寫入 cookie
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "none",
-    secure: true
+    secure: true,
+    sameSite: "none"
   })
 
-  appSuccessHandler(200, "登入成功", null, res)
+  res.end()
 }
 
 /**
