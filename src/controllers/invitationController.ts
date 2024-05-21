@@ -7,7 +7,6 @@ import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { invitedUserId, message } = req.body
-  console.log("message", message)
   if (!invitedUserId) {
     appErrorHandler(400, "缺少邀請使用者Id", next)
   }
@@ -51,7 +50,10 @@ const getInvitationList = async (req: Request, res: Response, next: NextFunction
 
 const getInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findById(id)
+  const invitation = await Invitation.findById(id).populate({
+    path: "profile",
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
+  })
   if (!invitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
@@ -59,4 +61,43 @@ const getInvitationById = async (req: Request, res: Response, next: NextFunction
   }
 }
 
-export { postInvitation, getInvitationList, getInvitationById }
+const cancelInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const invitation = await Invitation.findByIdAndUpdate(id, { status: "cancel" }, { new: true })
+  if (!invitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "取消邀請成功", invitation, res)
+  }
+}
+const rejectInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const invitation = await Invitation.findByIdAndUpdate(id, { status: "rejected" }, { new: true })
+  if (!invitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "拒絕邀請成功", invitation, res)
+  }
+}
+
+const acceptInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const invitation = await Invitation.findByIdAndUpdate(id, { status: "accepted" }, { new: true })
+  if (!invitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "接受邀請成功", invitation, res)
+  }
+}
+
+const deleteInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const invitation = await Invitation.findByIdAndDelete(id)
+  if (!invitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "刪除成功", invitation, res)
+  }
+}
+
+export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, rejectInvitation, acceptInvitation, deleteInvitation }
