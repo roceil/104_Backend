@@ -24,9 +24,9 @@ interface GoogleProfile {
  */
 const setupGoogleStrategy = (): void => {
   passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID as unknown as string,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET as unknown as string,
-    callbackURL: process.env.GOOGLE_CLIENT_CALLBACK_URL as unknown as string
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CLIENT_CALLBACK_URL
   },
   (_accessToken: string, _refreshToken: string, profile: Profile, done: VerifyCallback) => {
     // 取得使用者資料
