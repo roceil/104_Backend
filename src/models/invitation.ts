@@ -67,12 +67,16 @@ const invitationSchema = new Schema<IInvitation>({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 })
-invitationSchema.virtual("profile", {
+invitationSchema.virtual("profileByUser", {
   ref: "profile",
   foreignField: "userId",
   localField: "invitedUserId"
-}
-)
+})
+invitationSchema.virtual("profileByInvitedUser", {
+  ref: "profile",
+  foreignField: "userId",
+  localField: "userId"
+})
 
 const Invitation = model<IInvitation>("invitation", invitationSchema)
 export { Invitation, type IInvitation }

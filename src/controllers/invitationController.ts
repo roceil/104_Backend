@@ -37,10 +37,27 @@ const getInvitationList = async (req: Request, res: Response, next: NextFunction
 
   const { userId } = req.user as LoginResData
   const invitations = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
-    path: "profile",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
+    path: "profileByUser",
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
+  if (!invitations || invitations.length === 0) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "查詢成功", { invitations, invitationsLength }, res)
+  }
+}
+const getWhoInvitationList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
+
+  const { userId } = req.user as LoginResData
+  const invitations = await Invitation.find({ invitedUserId: userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
+    path: "profileByInvitedUser",
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags"
+  })
+  const invitationsLength = await Invitation.countDocuments({ invitedUserId: userId })
   if (!invitations || invitations.length === 0) {
     appErrorHandler(404, "No invitation found", next)
   } else {
@@ -100,4 +117,4 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
   }
 }
 
-export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, rejectInvitation, acceptInvitation, deleteInvitation }
+export { postInvitation, getInvitationList, getWhoInvitationList, getInvitationById, cancelInvitation, rejectInvitation, acceptInvitation, deleteInvitation }
