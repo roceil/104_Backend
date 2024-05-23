@@ -5,7 +5,10 @@ interface INotification {
   userId: IUserId
   receiveUserId: IUserId
   type: number // 1: 邀約通知 | 2: 系統通知
-  content: string
+  message: {
+    title: string
+    content: string
+  }
   date: Date
   isRead: boolean
   createdAt: Date
@@ -29,8 +32,17 @@ const notificationSchema = new Schema<INotification>(
       required: [true, "需要通知類型"],
       enum: [1, 2] // 1: 邀約通知, 2: 系統通知
     },
-    content: {
-      type: String,
+    message: {
+      type: {
+        title: {
+          type: String,
+          required: [true, "需要通知標題"]
+        },
+        content: {
+          type: String,
+          required: [true, "需要通知內容"]
+        }
+      },
       required: [true, "需要通知內容"]
     },
     isRead: {
@@ -70,9 +82,9 @@ notificationSchema.virtual("receiveUser", {
   localField: "receiveUserId"
 })
 
-notificationSchema.virtual("invitation", {
-  ref: "invitation",
-  foreignField: "invitedUserId",
+notificationSchema.virtual("userProfile", {
+  ref: "profile",
+  foreignField: "userId",
   localField: "receiveUserId"
 })
 
