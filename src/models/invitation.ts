@@ -5,14 +5,13 @@ interface IInvitation extends Document {
   userId: IUserId
   invitedUserId: string
   message: {
-    userId: mongo.ObjectId
     title: string
     message: string
     createdAt: Date
     updatedAt: Date
   }
   date: Date
-  status: "accepted" | "rejected"
+  status: "accepted" | "rejected" | "cancel" | "pending"
   createdAt: Date
   updatedAt: Date
 }
@@ -28,15 +27,11 @@ const invitationSchema = new Schema<IInvitation>({
     required: [true, "需要邀請使用者id"]
   },
   message: {
-    userId: {
-      type: mongo.ObjectId,
-      required: [true, "需要使用者id"]
-    },
     title: {
       type: String,
       required: [true, "需要標題"]
     },
-    message: {
+    content: {
       type: String,
       required: [true, "需要訊息"]
     },
@@ -55,8 +50,8 @@ const invitationSchema = new Schema<IInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected"],
-    required: [true, "需要邀請狀態"]
+    enum: ["accepted", "rejected", "cancel", "pending"],
+    default: "pending"
   },
   createdAt: {
     type: Date,
@@ -68,8 +63,16 @@ const invitationSchema = new Schema<IInvitation>({
   }
 }, {
   timestamps: true,
-  versionKey: false
+  versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
+invitationSchema.virtual("profile", {
+  ref: "profile",
+  foreignField: "userId",
+  localField: "invitedUserId"
+}
+)
 
 const Invitation = model<IInvitation>("invitation", invitationSchema)
 export { Invitation, type IInvitation }

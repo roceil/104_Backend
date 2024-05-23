@@ -9,12 +9,13 @@ import swaggerFile from "./swagger-output.json"
 import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
 import globalErrorHandler from "@/utils/globalErrorHandler"
-
 import healthyCheckRouter from "@/routes/healthyCheck"
 import loginRouter from "@/routes/login"
 import profileRouter from "@/routes/profileRoute"
 import defaultParamsRouter from "@/routes/defaultParamsRoute"
 import commentRouter from "@/routes/commentRouter"
+import invitationRouter from "@/routes/invitationRouter"
+import notificationRouter from "@/routes/notificationsRoute"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app: Express = express()
 const port = process.env.PORT ?? 3001
@@ -44,6 +45,8 @@ app.use("/api/v1", loginRouter)
 app.use("/api/v1", profileRouter)
 app.use("/api/v1", defaultParamsRouter)
 app.use("/api/v1", commentRouter)
+app.use("/api/v1", invitationRouter)
+app.use("/api/v1", notificationRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()
