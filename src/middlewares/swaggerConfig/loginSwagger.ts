@@ -133,6 +133,17 @@ export function verifySwagger (_req: Request, _res: Response, next: NextFunction
    */
   next()
 }
+
+export function logOutSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+     * #swagger.tags = ["LogInAndSignUp-登入與註冊"]
+     * #swagger.description = "登出並清除 Cookie 中的 Token。"
+     * #swagger.security = [{
+        "apiKeyAuth":[]
+      }]
+     */
+  next()
+}
 export function activateAccountSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
    * #swagger.tags = ["LogInAndSignUp-登入與註冊"]

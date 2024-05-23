@@ -69,7 +69,6 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
 
   // 產生 token
   const token = generateJWT(jwtPayload)
-
   let resUserData = null
 
   // Note: 開發環境下，回傳使用者資料
@@ -79,7 +78,6 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
 
   // 發送帳號啟用信件
   await googleService.sendAccountVerifyEmail(email, token)
-
   appSuccessHandler(201, "用戶新增成功", resUserData, res)
 }
 

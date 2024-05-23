@@ -430,6 +430,23 @@
         }
       }
     },
+    "/api/v1/logout": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/google": {
       "get": {
         "tags": [
@@ -457,6 +474,32 @@
         ],
         "description": "",
         "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/google/check-auth/{id}": {
+      "get": {
+        "tags": [
+          "第三方登入"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "origin",
             "in": "header",
@@ -1425,6 +1468,1005 @@
                     "updatedAt": {
                       "type": "string",
                       "example": "2024-05-19T04:05:16.243Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/invite": {
+      "post": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "新增邀約",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "邀請別人",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "invitedUserId": {
+                  "type": "string",
+                  "example": "664c3cbe345b4cb02e698660"
+                },
+                "message": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "example": "hello7777"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "7777777"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "content"
+                  ]
+                }
+              },
+              "required": [
+                "invitedUserId",
+                "message"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "邀請成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "邀請成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c3cbe345b4cb02e698660"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-22T02:14:28.873Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-22T02:14:28.873Z"
+                        }
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664d55048e49b8c72b838f5a"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664d55048e49b8c72b838f5a"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/i-invite-who-list": {
+      "get": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "取得邀約列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "邀約列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "invitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "example": "hello7777"
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "7777777"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              }
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "664473d53d428e98fd5fb226"
+                          },
+                          "invitedUserId": {
+                            "type": "string",
+                            "example": "664c427bb56b34d999f86c83"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "pending"
+                          },
+                          "date": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "profile": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_id": {
+                                  "type": "string",
+                                  "example": "664c42ea58453572378249bf"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "664c427bb56b34d999f86c83"
+                                },
+                                "nickNameDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nickName": {
+                                      "type": "string",
+                                      "example": "Kven"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "tags": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          }
+                        }
+                      }
+                    },
+                    "invitationsLength": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/who-invite-me-list": {
+      "get": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "取得邀約列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "邀約列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "invitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "example": "hello7777"
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "7777777"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              }
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "664473d53d428e98fd5fb226"
+                          },
+                          "invitedUserId": {
+                            "type": "string",
+                            "example": "664c427bb56b34d999f86c83"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "pending"
+                          },
+                          "date": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "profile": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_id": {
+                                  "type": "string",
+                                  "example": "664c42ea58453572378249bf"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "664c427bb56b34d999f86c83"
+                                },
+                                "nickNameDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nickName": {
+                                      "type": "string",
+                                      "example": "Kven"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "tags": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          }
+                        }
+                      }
+                    },
+                    "invitationsLength": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/i-invite-who/{id}": {
+      "get": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "取得邀約人詳細資料",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "profile": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "664c42ea58453572378249bf"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "664c427bb56b34d999f86c83"
+                          },
+                          "nickNameDetails": {
+                            "type": "object",
+                            "properties": {
+                              "nickName": {
+                                "type": "string",
+                                "example": "Kven"
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "_id": {
+                                "type": "string",
+                                "example": "664c42ea58453572378249c0"
+                              }
+                            }
+                          },
+                          "tags": {
+                            "type": "array",
+                            "example": [],
+                            "items": {}
+                          }
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "刪除邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/i-invite-who/{id}/cancel": {
+      "put": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "取消邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取消邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消邀約成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "cancel"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/i-invite-who/{id}/reject": {
+      "put": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "拒絕邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "拒絕邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "拒絕邀約成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "rejected"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/i-invite-who/{id}/accept": {
+      "put": {
+        "tags": [
+          "invitation-邀約"
+        ],
+        "description": "接受邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "接受邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "接受邀約成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "accepted"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
                     }
                   }
                 }
