@@ -2727,8 +2727,42 @@
         }
       }
     },
-    "/api/v1/user/invitations": {
+    "/api/v1/user/notifications": {
       "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user/notifications/read": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user/notifications/read-all": {
+      "patch": {
         "description": "",
         "parameters": [
           {
@@ -2746,23 +2780,6 @@
     },
     "/api/v1/my-notifications": {
       "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/notification": {
-      "post": {
         "description": "",
         "parameters": [
           {

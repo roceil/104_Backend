@@ -5,6 +5,8 @@ import { BeInvitation } from "@/models/beInvitation"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
+import { createNotification } from "./notificationsController"
+
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { invitedUserId, message } = req.body
@@ -24,7 +26,8 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     appErrorHandler(400, "缺少訊息", next)
   }
   const invitation = await Invitation.create({ userId, invitedUserId, message })
-  if (!invitation) {
+  const isNotificationCreated = await createNotification(userId, invitedUserId, message, 1)
+  if (!invitation || !isNotificationCreated) {
     appErrorHandler(400, "邀請失敗", next)
   } else {
     const beInvitation = await BeInvitation.create({ userId, invitedUserId, message, invitationId: invitation.id as string })

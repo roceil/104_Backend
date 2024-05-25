@@ -3,6 +3,7 @@ import { type LoginResData } from "@/types/login"
 import { Notification } from "@/models/notification"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
+import { type Types } from "mongoose"
 
 /**
  * 取得所有通知
@@ -26,10 +27,9 @@ const getInviteNotificationsByUserId = async (req: Request, res: Response, next:
 
   const notifications = await Notification
     .find({ receiveUserId: userId })
-    .populate("user", "personalInfo")
-    .populate("receiveUser", "personalInfo")
-    .populate("invitation", "message")
-
+    .populate("user", "personalInfo.username personalInfo.email")
+    .populate("receiveUser", "personalInfo.username personalInfo.email")
+    .populate("userProfile")
   if (!notifications || notifications.length === 0) {
     appErrorHandler(404, "查無通知", next)
     return
@@ -58,44 +58,98 @@ const getNotificationsByUserId = async (req: Request, res: Response, next: NextF
 }
 
 /**
- * 建立通知
+ * 已讀特定通知 By notificationId
  */
-const createNotification = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const userData = req.user as LoginResData
+const readNotificationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { notificationId } = req.body
 
+  if (!notificationId) {
+    appErrorHandler(400, "請提供通知id", next)
+    return
+  }
+
+  const notification = await Notification.findById(notificationId)
+
+  if (!notification) {
+    appErrorHandler(404, "查無通知", next)
+    return
+  }
+
+  notification.isRead = true
+  await notification.save()
+
+  appSuccessHandler(200, "已讀成功", notification, res)
+}
+
+/**
+ * 已讀所有通知 By userId
+ */
+const readAllNotificationsByUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { userId } = req.user as LoginResData
+
+  // 先檢查是否有未讀的通知
+  const unreadNotifications = await Notification.countDocuments({ receiveUserId: userId, isRead: false })
+
+  if (unreadNotifications === 0) {
+    appErrorHandler(404, "目前沒有訊息可以設為已讀", next)
+    return
+  }
+
+  // 更新所有未讀通知為已讀
+  const updated = await Notification.updateMany({ receiveUserId: userId, isRead: false }, { isRead: true })
+
+  if (updated.modifiedCount === 0) {
+    appErrorHandler(400, "訊息已讀失敗", next)
+    return
+  }
+
+  appSuccessHandler(200, "成功已讀所有訊息", null, res)
+}
+
+/**
+ * 【函式】建立通知
+ * @param userId 送出通知的使用者id
+ * @param receiveUserId 接收通知的使用者id
+ * @param message 通知內容
+ * @param notifyType 通知類型
+ */
+const createNotification = async (
+  userId: Types. ObjectId | undefined,
+  receiveUserId: Types.ObjectId | undefined,
+  message: { title: string, content: string },
+  notifyType: 1 | 2): Promise<boolean> => {
   // 取得通知內容
-  const { receiveUserId, content, type } = req.body
   if (!receiveUserId) {
-    appErrorHandler(400, "接收通知的使用者id不得為空", next)
-    return
+    throw new Error("接收通知的使用者id不得為空")
   }
 
-  if (userData.userId === receiveUserId) {
-    appErrorHandler(400, "通知不能發送給自己", next)
-    return
+  if (userId === receiveUserId) {
+    throw new Error("通知不能發送給自己")
   }
 
-  if (!content) {
-    appErrorHandler(400, "通知內容不得為空", next)
-    return
+  if (!message) {
+    throw new Error("通知內容不得為空")
   }
 
-  if (!type) {
-    appErrorHandler(400, "通知類型不得為空", next)
-    return
+  if (!notifyType) {
+    throw new Error("通知類型不得為空")
   }
 
   const notification = new Notification({
-    userId: userData.userId,
+    userId,
     receiveUserId,
-    type,
-    content,
+    type: notifyType,
+    message,
     date: new Date()
   })
 
   await notification.save()
 
-  appSuccessHandler(201, "通知建立成功", notification, res)
+  if (!notification) {
+    throw new Error("通知建立失敗")
+  }
+
+  return true
 }
 
-export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification }
+export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification, readNotificationById, readAllNotificationsByUserId }
