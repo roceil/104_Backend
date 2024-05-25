@@ -68,7 +68,6 @@ export function postProfileSwagger (_req: Request, _res: Response, next: NextFun
             required: true,
             description: "資料格式",
             schema: {
-                $userId:"6642bfaec60d4f7c475d8401",
                 nickNameDetails:{
                   nickName:"Jack",
                   isShow:true
