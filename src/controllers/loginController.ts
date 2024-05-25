@@ -2,14 +2,15 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData, type LoginBody, type SignUpReqBody } from "@/types/login"
 import bcrypt from "bcrypt"
 import validator from "validator"
-import { User } from "@/models/user"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import checkMissingFields from "@/utils/checkMissingFields"
 import validatePassword from "@/utils/validatePassword"
 import googleService from "@/services/google"
 import generateJWT from "@/utils/generateJWT"
-
+import { Profile } from "@/models/profile"
+import { User } from "@/models/user"
+import { isUserProfileExist } from "@/utils/checkProfileExist"
 /**
  * 使用者註冊
  */
@@ -246,10 +247,9 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
   // 取得當前格林威治時間
   const now = new Date()
 
-  const userData = req.user as LoginResData
-
+  const { userId, email } = req.user as LoginResData
   // 取得用戶資料
-  const user = await User.findOne({ "personalInfo.email": userData.email })
+  const user = await User.findOne({ "personalInfo.email": email })
 
   // 檢查用戶是否存在
   if (!user) {
@@ -271,7 +271,14 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
 
   // 啟用帳號
   await User.findByIdAndUpdate(user._id, { "personalInfo.isActivated": true })
-
+  // 建立user profile
+  if (!userId) {
+    appErrorHandler(400, "缺少使用者id", next); return
+  }
+  if (await isUserProfileExist(userId)) {
+    appErrorHandler(400, "用戶Id已存在", next); return
+  }
+  await Profile.create(userId)
   appSuccessHandler(200, "帳號啟用成功", null, res)
 }
 

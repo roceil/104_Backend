@@ -1,9 +1,10 @@
 import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 
-interface IInvitation extends Document {
+interface IBeInvitation extends Document {
   userId: IUserId
   invitedUserId: string
+  invitationId: string
   message: {
     title: string
     message: string
@@ -16,7 +17,7 @@ interface IInvitation extends Document {
   updatedAt: Date
 }
 
-const invitationSchema = new Schema<IInvitation>({
+const beInvitationSchema = new Schema<IBeInvitation>({
   userId: {
     type: mongo.ObjectId,
     required: [true, "需要使用者id"],
@@ -25,6 +26,11 @@ const invitationSchema = new Schema<IInvitation>({
   invitedUserId: {
     type: String,
     required: [true, "需要邀請使用者id"]
+  },
+  invitationId: {
+    type: String,
+    required: [true, "需要邀請列表id"],
+    ref: "invitation"
   },
   message: {
     title: {
@@ -67,17 +73,11 @@ const invitationSchema = new Schema<IInvitation>({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 })
-
-invitationSchema.virtual("profileByInvitedUser", {
-  ref: "profile",
-  foreignField: "userId",
-  localField: "invitedUserId"
-})
-invitationSchema.virtual("profileByInvitedUser", {
+beInvitationSchema.virtual("profileByUser", {
   ref: "profile",
   foreignField: "userId",
   localField: "userId"
 })
 
-const Invitation = model<IInvitation>("invitation", invitationSchema)
-export { Invitation, type IInvitation }
+const BeInvitation = model<IBeInvitation>("beInvitation", beInvitationSchema)
+export { BeInvitation, type IBeInvitation }

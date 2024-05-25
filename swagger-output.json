@@ -611,10 +611,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "userId": {
-                  "type": "string",
-                  "example": "6642bfaec60d4f7c475d8401"
-                },
                 "nickNameDetails": {
                   "type": "object",
                   "properties": {
@@ -628,10 +624,7 @@
                     }
                   }
                 }
-              },
-              "required": [
-                "userId"
-              ]
+              }
             }
           }
         ],
@@ -1704,156 +1697,7 @@
                             "type": "string",
                             "example": "2024-05-21T06:49:49.383Z"
                           },
-                          "profile": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "_id": {
-                                  "type": "string",
-                                  "example": "664c42ea58453572378249bf"
-                                },
-                                "userId": {
-                                  "type": "string",
-                                  "example": "664c427bb56b34d999f86c83"
-                                },
-                                "nickNameDetails": {
-                                  "type": "object",
-                                  "properties": {
-                                    "nickName": {
-                                      "type": "string",
-                                      "example": "Kven"
-                                    },
-                                    "isShow": {
-                                      "type": "boolean",
-                                      "example": true
-                                    },
-                                    "_id": {
-                                      "type": "string",
-                                      "example": "664c42ea58453572378249c0"
-                                    }
-                                  }
-                                },
-                                "tags": {
-                                  "type": "array",
-                                  "example": [],
-                                  "items": {}
-                                }
-                              }
-                            }
-                          },
-                          "id": {
-                            "type": "string",
-                            "example": "664c440d58453572378249c9"
-                          }
-                        }
-                      }
-                    },
-                    "invitationsLength": {
-                      "type": "number",
-                      "example": 1
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
-      }
-    },
-    "/api/v1/who-invite-me-list": {
-      "get": {
-        "tags": [
-          "invitation-邀約"
-        ],
-        "description": "取得邀約列表",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "邀約列表",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "查詢成功"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "invitations": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "message": {
-                            "type": "object",
-                            "properties": {
-                              "title": {
-                                "type": "string",
-                                "example": "hello7777"
-                              },
-                              "content": {
-                                "type": "string",
-                                "example": "7777777"
-                              },
-                              "createdAt": {
-                                "type": "string",
-                                "example": "2024-05-21T06:49:49.383Z"
-                              },
-                              "updatedAt": {
-                                "type": "string",
-                                "example": "2024-05-21T06:49:49.383Z"
-                              }
-                            }
-                          },
-                          "_id": {
-                            "type": "string",
-                            "example": "664c440d58453572378249c9"
-                          },
-                          "userId": {
-                            "type": "string",
-                            "example": "664473d53d428e98fd5fb226"
-                          },
-                          "invitedUserId": {
-                            "type": "string",
-                            "example": "664c427bb56b34d999f86c83"
-                          },
-                          "status": {
-                            "type": "string",
-                            "example": "pending"
-                          },
-                          "date": {
-                            "type": "string",
-                            "example": "2024-05-21T06:49:49.383Z"
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "example": "2024-05-21T06:49:49.383Z"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "example": "2024-05-21T06:49:49.383Z"
-                          },
-                          "profile": {
+                          "profileByInvitedUser": {
                             "type": "array",
                             "items": {
                               "type": "object",
@@ -2004,7 +1848,7 @@
                       "type": "string",
                       "example": "2024-05-21T06:49:49.383Z"
                     },
-                    "profile": {
+                    "profileByInvitedUser": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -2272,10 +2116,286 @@
         ]
       }
     },
-    "/api/v1/i-invite-who/{id}/reject": {
+    "/api/v1/who-invite-me-list": {
+      "get": {
+        "tags": [
+          "beInvitation-被邀約"
+        ],
+        "description": "取得誰邀約我列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "邀約列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "invitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "example": "hello7777"
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "7777777"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2024-05-21T06:49:49.383Z"
+                              }
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "664473d53d428e98fd5fb226"
+                          },
+                          "invitedUserId": {
+                            "type": "string",
+                            "example": "664c427bb56b34d999f86c83"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "pending"
+                          },
+                          "date": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-05-21T06:49:49.383Z"
+                          },
+                          "profileByUser": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_id": {
+                                  "type": "string",
+                                  "example": "664c42ea58453572378249bf"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "664c427bb56b34d999f86c83"
+                                },
+                                "nickNameDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nickName": {
+                                      "type": "string",
+                                      "example": "Kven"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "tags": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "664c440d58453572378249c9"
+                          }
+                        }
+                      }
+                    },
+                    "invitationsLength": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/who-invite-me/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "beInvitation-被邀約"
+        ],
+        "description": "刪除被邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/who-invite-me/{id}/reject": {
       "put": {
         "tags": [
-          "invitation-邀約"
+          "beInvitation-被邀約"
         ],
         "description": "拒絕邀約",
         "parameters": [
@@ -2378,10 +2498,10 @@
         ]
       }
     },
-    "/api/v1/i-invite-who/{id}/accept": {
+    "/api/v1/who-invite-me/{id}/accept": {
       "put": {
         "tags": [
-          "invitation-邀約"
+          "beInvitation-被邀約"
         ],
         "description": "接受邀約",
         "parameters": [
@@ -2482,6 +2602,180 @@
             "apiKeyAuth": []
           }
         ]
+      }
+    },
+    "/api/v1/who-invite-me/{id}/cancel": {
+      "put": {
+        "tags": [
+          "beInvitation-被邀約"
+        ],
+        "description": "取消邀約",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "列表Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取消邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消邀約成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "cancel"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user/invitations": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/my-notifications": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/notification": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     }
   }

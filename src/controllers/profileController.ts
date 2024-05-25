@@ -3,7 +3,7 @@ import { type LoginResData } from "@/types/login"
 import { Profile, type IPersonalInfo } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
-
+import { isUserProfileExist } from "@/utils/checkProfileExist"
 const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const users = await Profile.find()
   if (!users || users.length === 0) {
@@ -34,12 +34,15 @@ const getUserById = async (req: Request, res: Response, next: NextFunction): Pro
 }
 
 const postUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const { userId } = req.body
+  const { userId } = req.user as LoginResData
 
   if (!userId) {
     appErrorHandler(400, "缺少使用者id", next); return
   }
-
+  if (await isUserProfileExist(userId)) {
+    appErrorHandler(400, "用戶Id已存在", next); return
+  }
+  req.body.userId = userId
   const userPost = await Profile.create(req.body)
   appSuccessHandler(201, "用戶新增資料成功", userPost, res)
 }
