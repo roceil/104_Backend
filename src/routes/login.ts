@@ -28,6 +28,6 @@ router.get("/google", googleSwagger, asyncErrorHandler(googleService.googleAuthe
 
 router.get("/google/callback", googleCallbackSwagger, asyncErrorHandler(googleService.googleCallback) as RequestHandler)
 
-router.get("/google/check-auth/:id", googleCallbackSwagger, asyncErrorHandler(googleService.googleWriteCookie) as RequestHandler)
+router.get("/google/check-auth/:token", googleCallbackSwagger, isAuth as Handler, asyncErrorHandler(googleService.googleWriteCookie) as RequestHandler)
 
 export default router

@@ -5,8 +5,11 @@ import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from "p
 import { User } from "@/models/user"
 import generateJWT from "@/utils/generateJWT"
 import appErrorHandler from "@/utils/appErrorHandler"
+import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
 import nodemailer from "nodemailer"
+import { Profile as ProfileModel } from "@/models/profile"
+import { isUserProfileExist } from "@/utils/checkProfileExist"
 import dotenv from "dotenv"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 interface GoogleProfile {
@@ -91,6 +94,7 @@ const googleCallback = async (req: Request, res: Response, next: NextFunction): 
       userId: userResData?._id,
       email: userResData?.personalInfo.email,
       name: userResData?.personalInfo.username,
+      avatar: user.picture,
       gender: userResData?.personalInfo.gender,
       birthday: userResData?.personalInfo.birthday
     }
@@ -111,14 +115,33 @@ const googleCallback = async (req: Request, res: Response, next: NextFunction): 
 /**
  * 測試 google 寫入 cookie
  */
-const googleWriteCookie = async (req: Request, res: Response): Promise<void> => {
-  const token = req.params.id
+const googleWriteCookie = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const token = req.params.token
+  const userData = req.user as LoginResData
 
   res.cookie("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "none"
   })
+
+  // 建立user profile
+  if (!userData.userId) {
+    appErrorHandler(400, "缺少使用者id", next); return
+  }
+
+  if (await isUserProfileExist(userData.userId)) {
+    appSuccessHandler(200, "使用者資料已存在", userData, res); return
+  }
+
+  const userProfileData = {
+    userId: userData.userId,
+    nickNameDetails: {
+      nickName: userData.name,
+      isShow: false
+    }
+  }
+  await ProfileModel.create(userProfileData)
 
   res.end()
 }
