@@ -247,9 +247,11 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
   // 取得當前格林威治時間
   const now = new Date()
 
-  const { userId, email } = req.user as LoginResData
+  const userData = req.user as LoginResData
   // 取得用戶資料
-  const user = await User.findOne({ "personalInfo.email": email })
+  const user = await User.findOne({ "personalInfo.email": userData.email })
+
+  console.log("login", user)
 
   // 檢查用戶是否存在
   if (!user) {
@@ -272,13 +274,20 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
   // 啟用帳號
   await User.findByIdAndUpdate(user._id, { "personalInfo.isActivated": true })
   // 建立user profile
-  if (!userId) {
+  if (!user._id) {
     appErrorHandler(400, "缺少使用者id", next); return
   }
-  if (await isUserProfileExist(userId)) {
+  if (await isUserProfileExist(user._id)) {
     appErrorHandler(400, "用戶Id已存在", next); return
   }
-  await Profile.create(userId)
+  const userProfileData = {
+    userId: user._id,
+    nickNameDetails: {
+      nickName: userData.name,
+      isShow: false
+    }
+  }
+  await Profile.create(userProfileData)
   appSuccessHandler(200, "帳號啟用成功", null, res)
 }
 
