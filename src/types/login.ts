@@ -18,6 +18,7 @@ export interface LoginResData {
   gender?: string
   birthday?: string
   token?: string
+  avatar?: string
 }
 
 /**

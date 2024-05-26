@@ -39,6 +39,7 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
     }
 
     req.user = decoded
+    req.token = token
   })
 
   next()
