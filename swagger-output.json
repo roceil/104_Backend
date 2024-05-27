@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -487,7 +487,7 @@
         }
       }
     },
-    "/api/v1/google/check-auth/{id}": {
+    "/api/v1/google/check-auth/{token}": {
       "get": {
         "tags": [
           "第三方登入"
@@ -495,7 +495,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "token",
             "in": "path",
             "required": true,
             "type": "string"
