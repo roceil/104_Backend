@@ -43,7 +43,6 @@ const getBlackList = async (req: Request, res: Response, _next: NextFunction): P
   if (!blackList) {
     appSuccessHandler(200, "沒有黑名單", { data: [] }, res)
   } else {
-    // 要在確認一下blackList是什麼內容
     const blackProfileList = await Profile.find({ userId: { $in: blackList[0].lockedUserId } }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
     appSuccessHandler(200, "查詢成功", blackProfileList, res)
   }
