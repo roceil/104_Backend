@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -487,7 +487,7 @@
         }
       }
     },
-    "/api/v1/google/check-auth/{id}": {
+    "/api/v1/google/check-auth/{token}": {
       "get": {
         "tags": [
           "第三方登入"
@@ -495,7 +495,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "token",
             "in": "path",
             "required": true,
             "type": "string"
@@ -1461,6 +1461,214 @@
                     "updatedAt": {
                       "type": "string",
                       "example": "2024-05-19T04:05:16.243Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/black-list": {
+      "post": {
+        "tags": [
+          "blackList-黑名單"
+        ],
+        "description": "新增黑名單",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "lockedUserId": {
+                  "type": "string",
+                  "example": "string"
+                }
+              },
+              "required": [
+                "lockedUserId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "黑名單新增成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "黑名單新增成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "lockedUserId": {
+                      "type": "string",
+                      "example": "664c3cbe345b4cb02e698660"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "blackList-黑名單"
+        ],
+        "description": "取得黑名單列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "黑名單列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "lockedUserId": {
+                      "type": "string",
+                      "example": "664c3cbe345b4cb02e698660"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/black-list/{id}": {
+      "delete": {
+        "tags": [
+          "blackList-黑名單"
+        ],
+        "description": "刪除黑名單",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "黑名單userId"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "黑名單刪除成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "黑名單刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "lockedUserId": {
+                      "type": "string",
+                      "example": "664c3cbe345b4cb02e698660"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
                     }
                   }
                 }
