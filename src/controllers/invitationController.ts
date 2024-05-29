@@ -6,7 +6,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { createNotification } from "./notificationsController"
-
+import { isInBlackList } from "@/utils/blackListHandler"
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { invitedUserId, message } = req.body
@@ -25,6 +25,14 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
   if (!message.content) {
     appErrorHandler(400, "缺少訊息", next)
   }
+  if (!userId || !invitedUserId) {
+    appErrorHandler(400, "缺少使用者Id", next)
+  }
+  // 檢查邀約人是否在被邀約人的黑名單中
+  if (await isInBlackList(userId, invitedUserId, next)) {
+    appErrorHandler(400, "邀請失敗", next)
+  }
+
   const invitation = await Invitation.create({ userId, invitedUserId, message })
   const isNotificationCreated = await createNotification(userId, invitedUserId, message, 1)
   if (!invitation || !isNotificationCreated) {
