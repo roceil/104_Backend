@@ -17,6 +17,7 @@ import commentRouter from "@/routes/commentRouter"
 import invitationRouter from "@/routes/invitationRouter"
 import notificationRouter from "@/routes/notificationsRoute"
 import beInvitationRouter from "@/routes/beInvitationRouter"
+import blackListRouter from "@/routes/blackListRouter"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app: Express = express()
 const port = process.env.PORT ?? 3001
@@ -46,6 +47,7 @@ app.use("/api/v1", loginRouter)
 app.use("/api/v1", profileRouter)
 app.use("/api/v1", defaultParamsRouter)
 app.use("/api/v1", commentRouter)
+app.use("/api/v1", blackListRouter)
 app.use("/api/v1", invitationRouter)
 app.use("/api/v1", beInvitationRouter)
 app.use("/api/v1", notificationRouter)

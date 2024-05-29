@@ -7,7 +7,7 @@ interface IBlackList {
   updatedAt: Date
 }
 const blackListSchema = new Schema<IBlackList>({
-  userId: { type: mongo.ObjectId, required: [true, "需要使用者id"], ref: "user" },
+  userId: { type: mongo.ObjectId, required: [true, "需要被封鎖者用者Id"], ref: "user" },
   lockedUserId: {
     type: [mongo.ObjectId],
     default: []

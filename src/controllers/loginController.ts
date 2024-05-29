@@ -295,7 +295,11 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
  * 登出（清除 Cookie 的 Token）
  */
 const logout = async (req: Request, res: Response): Promise<void> => {
-  res.clearCookie("token")
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true
+  })
   appSuccessHandler(200, "登出成功", null, res)
 }
 
