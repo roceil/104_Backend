@@ -5,7 +5,7 @@ import { BeInvitation } from "@/models/beInvitation"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
-
+import { isInBlackList } from "@/utils/blackListHandler"
 const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
   // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
@@ -64,7 +64,15 @@ const rejectInvitation = async (req: Request, res: Response, next: NextFunction)
 
 const acceptInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
+  const { userId } = req.user as LoginResData
+  // 檢查邀約者是否在黑名單中
+  if (await isInBlackList(userId, id, next)) {
+    appErrorHandler(400, "接受失敗", next)
+  }
   const beInvitation = await BeInvitation.findByIdAndUpdate(id, { status: "accept" }, { new: true })
+  if (!beInvitation) {
+    appErrorHandler(404, "No invitation found", next)
+  }
   const beInvitationId = await BeInvitation.findById(id).select("invitationId")
   const { invitationId } = beInvitationId as { invitationId: string }
   const invitation = await Invitation.findByIdAndUpdate(invitationId, { status: "accept" }, { new: true })
