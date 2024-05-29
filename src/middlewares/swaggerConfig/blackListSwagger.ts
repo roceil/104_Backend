@@ -40,22 +40,24 @@ export function getBlackListSwagger (_req: Request, _res: Response, next: NextFu
       "apiKeyAuth":[]
     }]
    * #swagger.responses[200] = {
-      description: '黑名單列表',
+      description: "黑名單列表",
       schema: {
-          [
-      {
-        _id: "66542da5edb728aae4b1f220",
-        userId: "66542d94edb728aae4b1f218",
-        nickNameDetails: {
+         status: true,
+         message: "查詢成功",
+         data: [
+            {
+          _id: "66542da5edb728aae4b1f220",
+          userId: "66542d94edb728aae4b1f218",
+          nickNameDetails: {
           nickName: "JACK",
           isShow: false,
           _id: "66542f38edb728aae4b1f234"
-        },
-        tags: [],
-        createdAt: "2024-05-27T06:52:21.549Z",
-        updatedAt: "2024-05-27T06:59:04.972Z"
-      }
-        ]
+            },
+          tags: [],
+          createdAt: "2024-05-27T06:52:21.549Z",
+          updatedAt: "2024-05-27T06:59:04.972Z"
+    }
+  ]
         }
       }
     */
