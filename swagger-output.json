@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -1520,7 +1520,7 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "黑名單新增成功"
+                  "example": "封鎖成功"
                 },
                 "data": {
                   "type": "object",
@@ -1530,8 +1530,13 @@
                       "example": "664473d53d428e98fd5fb226"
                     },
                     "lockedUserId": {
-                      "type": "string",
-                      "example": "664c3cbe345b4cb02e698660"
+                      "type": "array",
+                      "example": [
+                        "664c3cbe345b4cb02e698660"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
                     },
                     "createdAt": {
                       "type": "string",
@@ -1583,23 +1588,48 @@
                   "example": "查詢成功"
                 },
                 "data": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "string",
-                      "example": "664473d53d428e98fd5fb226"
-                    },
-                    "lockedUserId": {
-                      "type": "string",
-                      "example": "664c3cbe345b4cb02e698660"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2024-05-22T02:14:28.873Z"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "example": "2024-05-22T02:14:28.873Z"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "66542da5edb728aae4b1f220"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "66542d94edb728aae4b1f218"
+                      },
+                      "nickNameDetails": {
+                        "type": "object",
+                        "properties": {
+                          "nickName": {
+                            "type": "string",
+                            "example": "JACK"
+                          },
+                          "isShow": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "_id": {
+                            "type": "string",
+                            "example": "66542f38edb728aae4b1f234"
+                          }
+                        }
+                      },
+                      "tags": {
+                        "type": "array",
+                        "example": [],
+                        "items": {}
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-05-27T06:52:21.549Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-05-27T06:59:04.972Z"
+                      }
                     }
                   }
                 }
@@ -1654,21 +1684,30 @@
                 "data": {
                   "type": "object",
                   "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "665581e6974f4f097bfe5751"
+                    },
                     "userId": {
                       "type": "string",
-                      "example": "664473d53d428e98fd5fb226"
+                      "example": "66557ab1e67debd9083e3669"
                     },
                     "lockedUserId": {
-                      "type": "string",
-                      "example": "664c3cbe345b4cb02e698660"
+                      "type": "array",
+                      "example": [
+                        "66542d94edb728aae4b1f218"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
                     },
                     "createdAt": {
                       "type": "string",
-                      "example": "2024-05-22T02:14:28.873Z"
+                      "example": "2024-05-28T07:04:06.857Z"
                     },
                     "updatedAt": {
                       "type": "string",
-                      "example": "2024-05-22T02:14:28.873Z"
+                      "example": "2024-05-28T07:15:36.384Z"
                     }
                   }
                 }
