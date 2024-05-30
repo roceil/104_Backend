@@ -7,6 +7,7 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { createNotification } from "./notificationsController"
 import { isInBlackList } from "@/utils/blackListHandler"
+import { eraseProperty } from "@/utils/responseDataHandler"
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { invitedUserId, message } = req.body
@@ -52,14 +53,18 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
 
   const { userId } = req.user as LoginResData
-  const invitations = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
+  const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
-  if (!invitations || invitations.length === 0) {
+  if (!invitationList || invitationList.length === 0) {
     appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
   } else {
+    const invitations = JSON.parse(JSON.stringify(invitationList))
+    invitations.forEach((_: undefined, index: number) => {
+      eraseProperty(invitations[index], ["profileByInvitedUser", "nickNameDetails"], ["_id"])
+    })
     appSuccessHandler(200, "查詢成功", { invitations, invitationsLength }, res)
   }
 }
