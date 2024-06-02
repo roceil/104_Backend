@@ -29,8 +29,8 @@ const initOptions = async () => {
         8: "41-43 歲",
         9: "44-46 歲",
         10: "47-50 歲",
-        11: "50 歲以上",
-      },
+        11: "50 歲以上"
+      }
     },
     {
       type: "genderOptions",
@@ -39,8 +39,8 @@ const initOptions = async () => {
         1: "男性",
         2: "女性",
         3: "其他",
-        4: "不透露",
-      },
+        4: "不透露"
+      }
     },
     {
       type: "heightOptions",
@@ -56,8 +56,8 @@ const initOptions = async () => {
         8: "180-185cm",
         9: "185-190cm",
         10: "190cm 以上",
-        11: "不透露",
-      },
+        11: "不透露"
+      }
     },
     {
       type: "weightOptions",
@@ -73,8 +73,8 @@ const initOptions = async () => {
         8: "80-85kg",
         9: "85-90kg",
         10: "90kg 以上",
-        11: "不透露",
-      },
+        11: "不透露"
+      }
     },
     {
       type: "isMarriedOptions",
@@ -82,8 +82,8 @@ const initOptions = async () => {
         0: "無指定",
         1: "已婚",
         2: "未婚",
-        3: "離婚",
-      },
+        3: "離婚"
+      }
     },
     {
       type: "locationOptions",
@@ -94,8 +94,8 @@ const initOptions = async () => {
         3: "東部",
         4: "西部",
         5: "中部",
-        6: "海外",
-      },
+        6: "海外"
+      }
     },
     {
       type: "educationOptions",
@@ -106,8 +106,8 @@ const initOptions = async () => {
         3: "高中",
         4: "大學",
         5: "研究所",
-        6: "博士後研究",
-      },
+        6: "博士後研究"
+      }
     },
     {
       type: "liveWithParentsOptions",
@@ -115,8 +115,8 @@ const initOptions = async () => {
         0: "無指定",
         1: "與父母同住",
         2: "獨立居住",
-        3: "其他",
-      },
+        3: "其他"
+      }
     },
     {
       type: "religionOptions",
@@ -130,8 +130,8 @@ const initOptions = async () => {
         6: "印度教",
         7: "錫克教",
         8: "猶太教",
-        9: "其他",
-      },
+        9: "其他"
+      }
     },
     {
       type: "smokingOptions",
@@ -140,8 +140,8 @@ const initOptions = async () => {
         1: "不抽菸",
         2: "偶爾抽菸",
         3: "經常抽菸",
-        4: "電子菸",
-      },
+        4: "電子菸"
+      }
     },
     {
       type: "socialCircleOptions",
@@ -157,8 +157,8 @@ const initOptions = async () => {
         8: "旅遊",
         9: "攝影",
         10: "閱讀",
-        11: "其他",
-      },
+        11: "其他"
+      }
     },
     {
       type: "activitiesOptions",
@@ -167,8 +167,8 @@ const initOptions = async () => {
         1: "健行",
         2: "園藝",
         3: "慈善",
-        4: "其他",
-      },
+        4: "其他"
+      }
     },
     {
       type: "occupationOptions",
@@ -182,8 +182,8 @@ const initOptions = async () => {
         6: "自由業",
         7: "家庭主婦",
         8: "學生",
-        9: "其他",
-      },
+        9: "其他"
+      }
     },
     {
       type: "industryOptions",
@@ -200,8 +200,8 @@ const initOptions = async () => {
         9: "運輸業",
         10: "倉儲業",
         11: "資訊業",
-        12: "其他",
-      },
+        12: "其他"
+      }
     },
     {
       type: "expectedSalary",
@@ -213,10 +213,10 @@ const initOptions = async () => {
         4: "35-40k",
         5: "40-45k",
         6: "45-50k",
-        7: "50k以上",
-      },
-    },
-  ];
+        7: "50k以上"
+      }
+    }
+  ]
 
   for (const opt of options) {
     await matchListOption.findOneAndUpdate({ type: opt.type }, opt, { upsert: true })
@@ -224,7 +224,7 @@ const initOptions = async () => {
 }
 
 initOptions().catch((err) => {
-  console.error('[server]：matchListOption schema error:', err)
+  console.error("[server]：matchListOption schema error:", err)
 })
 
 export { matchListOption }

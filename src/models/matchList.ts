@@ -53,8 +53,8 @@ const options = [
       8: "41-43 歲",
       9: "44-46 歲",
       10: "47-50 歲",
-      11: "50 歲以上",
-    },
+      11: "50 歲以上"
+    }
   },
   {
     type: "genderOptions",
@@ -63,8 +63,8 @@ const options = [
       1: "男性",
       2: "女性",
       3: "其他",
-      4: "不透露",
-    },
+      4: "不透露"
+    }
   },
   {
     type: "heightOptions",
@@ -80,8 +80,8 @@ const options = [
       8: "180-185cm",
       9: "185-190cm",
       10: "190cm 以上",
-      11: "不透露",
-    },
+      11: "不透露"
+    }
   },
   {
     type: "weightOptions",
@@ -97,8 +97,8 @@ const options = [
       8: "80-85kg",
       9: "85-90kg",
       10: "90kg 以上",
-      11: "不透露",
-    },
+      11: "不透露"
+    }
   },
   {
     type: "isMarriedOptions",
@@ -106,8 +106,8 @@ const options = [
       0: "無指定",
       1: "已婚",
       2: "未婚",
-      3: "離婚",
-    },
+      3: "離婚"
+    }
   },
   {
     type: "locationOptions",
@@ -118,8 +118,8 @@ const options = [
       3: "東部",
       4: "西部",
       5: "中部",
-      6: "海外",
-    },
+      6: "海外"
+    }
   },
   {
     type: "educationOptions",
@@ -130,8 +130,8 @@ const options = [
       3: "高中",
       4: "大學",
       5: "研究所",
-      6: "博士後研究",
-    },
+      6: "博士後研究"
+    }
   },
   {
     type: "liveWithParentsOptions",
@@ -139,8 +139,8 @@ const options = [
       0: "無指定",
       1: "與父母同住",
       2: "獨立居住",
-      3: "其他",
-    },
+      3: "其他"
+    }
   },
   {
     type: "religionOptions",
@@ -154,8 +154,8 @@ const options = [
       6: "印度教",
       7: "錫克教",
       8: "猶太教",
-      9: "其他",
-    },
+      9: "其他"
+    }
   },
   {
     type: "smokingOptions",
@@ -164,8 +164,8 @@ const options = [
       1: "不抽菸",
       2: "偶爾抽菸",
       3: "經常抽菸",
-      4: "電子菸",
-    },
+      4: "電子菸"
+    }
   },
   {
     type: "socialCircleOptions",
@@ -181,8 +181,8 @@ const options = [
       8: "旅遊",
       9: "攝影",
       10: "閱讀",
-      11: "其他",
-    },
+      11: "其他"
+    }
   },
   {
     type: "activitiesOptions",
@@ -191,8 +191,8 @@ const options = [
       1: "健行",
       2: "園藝",
       3: "慈善",
-      4: "其他",
-    },
+      4: "其他"
+    }
   },
   {
     type: "occupationOptions",
@@ -206,8 +206,8 @@ const options = [
       6: "自由業",
       7: "家庭主婦",
       8: "學生",
-      9: "其他",
-    },
+      9: "其他"
+    }
   },
   {
     type: "industryOptions",
@@ -224,8 +224,8 @@ const options = [
       9: "運輸業",
       10: "倉儲業",
       11: "資訊業",
-      12: "其他",
-    },
+      12: "其他"
+    }
   },
   {
     type: "expectedSalary",
@@ -237,17 +237,17 @@ const options = [
       4: "35-40k",
       5: "40-45k",
       6: "45-50k",
-      7: "50k以上",
-    },
-  },
-];
+      7: "50k以上"
+    }
+  }
+]
 
 function getOptionKeys (type: string) {
-  const option = options.find(option => option.type === type);
-  return option ? Object.keys(option.options).map(Number) : [];
+  const option = options.find(option => option.type === type)
+  return option ? Object.keys(option.options).map(Number) : []
 }
 
-console.log(getOptionKeys('ageOptions'));
+console.log(getOptionKeys("ageOptions"))
 
 const matchListSchema = new Schema<IMatchList>({
   userId: {
@@ -256,31 +256,31 @@ const matchListSchema = new Schema<IMatchList>({
     ref: "User"
   },
   personalInfo: {
-    age: { type: Number, enum: getOptionKeys('ageOptions'), default: 0 },
-    gender: { type: Number, enum: getOptionKeys('genderOptions'), default: 0 },
-    isMarried: { type: Number, enum: getOptionKeys('isMarriedOptions'), default: 0 },
-    height: { type: Number, enum: getOptionKeys('heightOptions'), default: 0 },
-    weight: { type: Number, enum: getOptionKeys('weightOptions'), default: 0 },
-    socialCircle: { type: Number, enum: getOptionKeys('socialCircleOptions'), default: 0 },
-    activites: [{ type: Number, enum: getOptionKeys('activitiesOptions'), default: 0 }],
-    location: { type: Number, enum: getOptionKeys('locationOptions'), default: 0 },
-    education: { type: Number, enum: getOptionKeys('educationOptions'), default: 0 },
-    liveWithParents: { type: Number, enum: getOptionKeys('liveWithParentsOptions'), default: 0 },
-    religion: { type: Number, enum: getOptionKeys('religionOptions'), default: 0 },
-    smoking: { type: Number, enum: getOptionKeys('smokingOptions'), default: 0 }
+    age: { type: Number, enum: getOptionKeys("ageOptions"), default: 0 },
+    gender: { type: Number, enum: getOptionKeys("genderOptions"), default: 0 },
+    isMarried: { type: Number, enum: getOptionKeys("isMarriedOptions"), default: 0 },
+    height: { type: Number, enum: getOptionKeys("heightOptions"), default: 0 },
+    weight: { type: Number, enum: getOptionKeys("weightOptions"), default: 0 },
+    socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 0 },
+    activites: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
+    location: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
+    education: { type: Number, enum: getOptionKeys("educationOptions"), default: 0 },
+    liveWithParents: { type: Number, enum: getOptionKeys("liveWithParentsOptions"), default: 0 },
+    religion: { type: Number, enum: getOptionKeys("religionOptions"), default: 0 },
+    smoking: { type: Number, enum: getOptionKeys("smokingOptions"), default: 0 }
   },
   workInfo: {
-    occupation: { type: Number, enum: getOptionKeys('occupationOptions'), default: 0 },
-    industry: [{ type: Number, enum: getOptionKeys('industryOptions'), default: 0 }],
-    workLocation: { type: Number, enum: getOptionKeys('locationOptions'), default: 0 },
-    expectedSalary: { type: Number, enum: getOptionKeys('expectedSalary'), default: 0 }
+    occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
+    industry: [{ type: Number, enum: getOptionKeys("industryOptions"), default: 0 }],
+    workLocation: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
+    expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
   },
   blacklist: {
-    occupation: { type: Number, enum: getOptionKeys('occupationOptions'), default: 0 },
-    industry: [{ type: Number, enum: getOptionKeys('industryOptions'), default: 0 }],
-    socialCircle: { type: Number, enum: getOptionKeys('socialCircleOptions'), default: 0 },
-    activites: [{ type: Number, enum: getOptionKeys('activitiesOptions'), default: 0 }],
-    smokingOptions: { type: Number, enum: getOptionKeys('smokingOptions'), default: 0 }
+    occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
+    industry: [{ type: Number, enum: getOptionKeys("industryOptions"), default: 0 }],
+    socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 0 },
+    activites: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
+    smokingOptions: { type: Number, enum: getOptionKeys("smokingOptions"), default: 0 }
   },
   noticeInfo: {
     email: { type: String, default: "" },
