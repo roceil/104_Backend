@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
     "http",
@@ -3040,6 +3040,623 @@
             "description": ""
           }
         }
+      }
+    },
+    "/api/v1/match-list/options": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/match-list": {
+      "put": {
+        "tags": [
+          "matchList-配對設定"
+        ],
+        "description": "編輯配對設定",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "編輯配對設定",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "matchList": {
+                  "type": "object",
+                  "properties": {
+                    "personalInfo": {
+                      "type": "object",
+                      "properties": {
+                        "age": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "gender": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "isMarried": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "height": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "weight": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "socialCircle": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "activites": {
+                          "type": "array",
+                          "example": [
+                            1
+                          ],
+                          "items": {
+                            "type": "number"
+                          }
+                        },
+                        "location": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "education": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "liveWithParents": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "religion": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "smoking": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      },
+                      "required": [
+                        "age",
+                        "gender",
+                        "isMarried",
+                        "height",
+                        "weight",
+                        "socialCircle",
+                        "activites",
+                        "location",
+                        "education",
+                        "liveWithParents",
+                        "religion",
+                        "smoking"
+                      ]
+                    },
+                    "workInfo": {
+                      "type": "object",
+                      "properties": {
+                        "occupation": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "industry": {
+                          "type": "array",
+                          "example": [
+                            1
+                          ],
+                          "items": {
+                            "type": "number"
+                          }
+                        },
+                        "workLocation": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "expectedSalary": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      },
+                      "required": [
+                        "occupation",
+                        "industry",
+                        "workLocation",
+                        "expectedSalary"
+                      ]
+                    },
+                    "blacklist": {
+                      "type": "object",
+                      "properties": {
+                        "occupation": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "industry": {
+                          "type": "array",
+                          "example": [
+                            1
+                          ],
+                          "items": {
+                            "type": "number"
+                          }
+                        },
+                        "socialCircle": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "activites": {
+                          "type": "array",
+                          "example": [
+                            1
+                          ],
+                          "items": {
+                            "type": "number"
+                          }
+                        },
+                        "smokingOptions": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      },
+                      "required": [
+                        "occupation",
+                        "industry",
+                        "socialCircle",
+                        "activites",
+                        "smokingOptions"
+                      ]
+                    },
+                    "noticeInfo": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "notice": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      },
+                      "required": [
+                        "email",
+                        "notice"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "personalInfo",
+                    "workInfo",
+                    "blacklist",
+                    "noticeInfo"
+                  ]
+                }
+              },
+              "required": [
+                "matchList"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "編輯配對設定成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "編輯配對設定成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "編輯配對設定成功"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "personalInfo": {
+                          "type": "object",
+                          "properties": {
+                            "age": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "gender": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "isMarried": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "height": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "weight": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "socialCircle": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "activites": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "location": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "education": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "liveWithParents": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "religion": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "smoking": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "workInfo": {
+                          "type": "object",
+                          "properties": {
+                            "occupation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "industry": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "workLocation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "expectedSalary": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "blacklist": {
+                          "type": "object",
+                          "properties": {
+                            "occupation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "industry": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "socialCircle": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "activites": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "smokingOptions": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "noticeInfo": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "notice": {
+                              "type": "boolean",
+                              "example": false
+                            }
+                          }
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "665c3a32c06a9436c9bc2401"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "665c1a800aa26fb4fb4e9823"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-06-02T09:24:02.313Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-06-02T09:24:02.313Z"
+                        },
+                        "__v": {
+                          "type": "number",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "matchList-配對設定"
+        ],
+        "description": "取得配對設定",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "取得配對設定成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得配對設定成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "matchList": {
+                      "type": "object",
+                      "properties": {
+                        "personalInfo": {
+                          "type": "object",
+                          "properties": {
+                            "age": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "gender": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "isMarried": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "height": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "weight": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "socialCircle": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "activites": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "location": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "education": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "liveWithParents": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "religion": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "smoking": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "workInfo": {
+                          "type": "object",
+                          "properties": {
+                            "occupation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "industry": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "workLocation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "expectedSalary": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "blacklist": {
+                          "type": "object",
+                          "properties": {
+                            "occupation": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "industry": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "socialCircle": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "activites": {
+                              "type": "array",
+                              "example": [
+                                1
+                              ],
+                              "items": {
+                                "type": "number"
+                              }
+                            },
+                            "smokingOptions": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "noticeInfo": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "notice": {
+                              "type": "boolean",
+                              "example": false
+                            }
+                          }
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "665c3a32c06a9436c9bc2401"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "665c1a800aa26fb4fb4e9823"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-06-02T09:24:02.313Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-06-02T09:24:02.313Z"
+                        },
+                        "__v": {
+                          "type": "number",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     }
   }
