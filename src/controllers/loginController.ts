@@ -11,6 +11,7 @@ import generateJWT from "@/utils/generateJWT"
 import { Profile } from "@/models/profile"
 import { User } from "@/models/user"
 import { isUserProfileExist } from "@/utils/checkProfileExist"
+
 /**
  * 使用者註冊
  */
@@ -112,6 +113,12 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   const user = await User.findOne({ "personalInfo.email": account }).select("+personalInfo.password")
   if (!user) {
     appErrorHandler(400, "登入失敗，帳號不存在", next)
+    return
+  }
+
+  // 檢查帳號是否已啟用
+  if (!user.isActive) {
+    appErrorHandler(400, "帳號尚未啟用", next)
     return
   }
 
@@ -245,13 +252,11 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction): 
  */
 const activateAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   // 取得當前格林威治時間
-  const now = new Date()
+  // const now = new Date()
 
   const userData = req.user as LoginResData
   // 取得用戶資料
   const user = await User.findOne({ "personalInfo.email": userData.email })
-
-  console.log("login", user)
 
   // 檢查用戶是否存在
   if (!user) {
@@ -260,19 +265,19 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
   }
 
   // 計算啟用截止時間（createdAt 加 5 分鐘）
-  const expirationTime = new Date(user.createdAt.getTime())
-  expirationTime.setMinutes(expirationTime.getMinutes() + 5)
+  // const expirationTime = new Date(user.createdAt.getTime())
+  // expirationTime.setMinutes(expirationTime.getMinutes() + 5)
 
   // 檢查帳號是否已超過啟用時間
-  if (expirationTime < now) {
-    // 超過啟用時間，刪除用戶資料
-    await User.deleteOne({ _id: user._id })
-    appErrorHandler(400, "帳號啟用失敗，啟用時間已過期且資料已刪除", next)
-    return
-  }
+  // if (expirationTime < now) {
+  // 超過啟用時間，刪除用戶資料
+  //   await User.deleteOne({ _id: user._id })
+  //   appErrorHandler(400, "帳號啟用失敗，啟用時間已過期且資料已刪除", next)
+  //   return
+  // }
 
   // 啟用帳號
-  await User.findByIdAndUpdate(user._id, { "personalInfo.isActivated": true })
+  await User.findByIdAndUpdate(user._id, { isActive: true })
   // 建立user profile
   if (!user._id) {
     appErrorHandler(400, "缺少使用者id", next); return
