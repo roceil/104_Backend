@@ -290,6 +290,6 @@ const matchListSchema = new Schema<IMatchList>({
 })
 
 const MatchList = model<IMatchList>("matchList", matchListSchema)
-const MatchListSelf = model<IMatchList>("matchListSelf", matchListSchema)
+const MatchListSelfSetting = model<IMatchList>("matchListSelfSetting", matchListSchema)
 
-export { MatchList, MatchListSelf, type IMatchList }
+export { MatchList, MatchListSelfSetting, type IMatchList }

@@ -2,7 +2,7 @@ import { type NextFunction, type Request, type Response } from "express"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
-import { MatchList, MatchListSelf } from "@/models/matchList"
+import { MatchList, MatchListSelfSetting } from "@/models/matchList"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
 
@@ -57,30 +57,29 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
   if (!matchListData) {
     appErrorHandler(400, "尚未新建配對設定，查詢配對失敗", next)
   } else {
-    // const { personalInfo, workInfo, blacklist } = matchListData
+    // 該用戶的配對設定
+    const { personalInfo, workInfo, blacklist } = matchListData
 
-    const users = await MatchListSelf.find({
+    // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
+    const users = await MatchListSelfSetting.find({
       // "userId": { $ne: userId },
-      // "personalInfo.age": personalInfo.age,
-      // "personalInfo.gender": personalInfo.gender,
-      // "personalInfo.height": personalInfo.height,
-      // "personalInfo.weight": personalInfo.weight,
-      // "personalInfo.socialCircle": personalInfo.socialCircle,
-      // "personalInfo.activites": { $in: personalInfo.activites },
-      // "personalInfo.location": personalInfo.location,
-      // "personalInfo.education": personalInfo.education,
-      // "personalInfo.liveWithParents": personalInfo.liveWithParents,
-      // "personalInfo.religion": personalInfo.religion,
-      // "personalInfo.smoking": personalInfo.smoking,
-      // "workInfo.occupation": workInfo.occupation,
-      // "workInfo.industry": { $in: workInfo.industry },
-      // "workInfo.workLocation": workInfo.workLocation,
-      // "workInfo.expectedSalary": workInfo.expectedSalary,
-      // "blacklist.occupation": blacklist.occupation,
-      // "blacklist.industry": { $in: blacklist.industry },
-      // "blacklist.socialCircle": blacklist.socialCircle,
-      // "blacklist.activites": { $in: blacklist.activites },
-      // "blacklist.smokingOptions": blacklist.smokingOptions
+      $and: [
+        { "personalInfo.age": personalInfo.age },
+        { "personalInfo.gender": personalInfo.gender },
+        { "personalInfo.height": personalInfo.height },
+        { "personalInfo.weight": personalInfo.weight },
+        { "personalInfo.socialCircle": { $in: personalInfo.socialCircle, $nin: [blacklist.socialCircle] } },
+        { "personalInfo.activities": { $in: personalInfo.activities, $nin: blacklist.activities } },
+        { "personalInfo.location": personalInfo.location },
+        { "personalInfo.education": personalInfo.education },
+        { "personalInfo.liveWithParents": personalInfo.liveWithParents },
+        { "personalInfo.religion": personalInfo.religion },
+        { "personalInfo.smoking": personalInfo.smoking },
+        { "workInfo.occupation": { $in: [workInfo.occupation], $nin: [blacklist.occupation] } },
+        { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.industry } },
+        { "workInfo.workLocation": workInfo.workLocation },
+        { "workInfo.expectedSalary": workInfo.expectedSalary }
+      ]
     })
 
     const userIds = users.map(user => user.userId)
@@ -90,13 +89,13 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     if (users.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
     } else {
-      appSuccessHandler(200, "查詢配對成功", usersData, res)
+      appSuccessHandler(200, "查詢配對結果成功", usersData, res)
     }
   }
 }
 
-// MatchListSelf
-export const editMatchListSelf = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+// MatchListSelfSetting
+export const editMatchListSelfSetting = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { matchList } = req.body
 
@@ -107,7 +106,7 @@ export const editMatchListSelf = async (req: Request, res: Response, next: NextF
     appErrorHandler(400, "缺少使用者Id", next)
   }
 
-  const matchListData = await MatchListSelf
+  const matchListData = await MatchListSelfSetting
     .findOneAndUpdate({ userId }, { $set: matchList }, { new: true })
 
   if (!matchListData) {
@@ -117,12 +116,12 @@ export const editMatchListSelf = async (req: Request, res: Response, next: NextF
   }
 }
 
-export const getMatchListSelf = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+export const getMatchListSelfSetting = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const matchListData = await MatchListSelf.findOne({ userId })
+  const matchListData = await MatchListSelfSetting.findOne({ userId })
 
   if (!matchListData) {
-    const newMatchList = new MatchListSelf({ userId })
+    const newMatchList = new MatchListSelfSetting({ userId })
     await newMatchList.save()
     appSuccessHandler(200, "預設配對設定", newMatchList, res)
   } else {

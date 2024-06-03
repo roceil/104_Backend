@@ -367,8 +367,8 @@ export const findUsersByMultipleConditionsSwagger = (_req: Request, _res: Respon
   next()
 }
 
-// matchListSelf
-export function editMatchListSelfSwagger (_req: Request, _res: Response, next: NextFunction): void {
+// MatchListSelfSetting
+export function editMatchListSelfSettingSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
    * #swagger.tags = ["matchList-配對設定"]
    * #swagger.description = "編輯配對設定"
@@ -473,7 +473,7 @@ export function editMatchListSelfSwagger (_req: Request, _res: Response, next: N
   next()
 }
 
-export const getMatchListSelfSwagger = (_req: Request, _res: Response, next: NextFunction): void => {
+export const getMatchListSelfSettingSwagger = (_req: Request, _res: Response, next: NextFunction): void => {
   /**
    * #swagger.tags = ["matchList-配對設定"]
    * #swagger.description = "取得配對設定"
