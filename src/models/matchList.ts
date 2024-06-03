@@ -247,8 +247,6 @@ function getOptionKeys (type: string) {
   return option ? Object.keys(option.options).map(Number) : []
 }
 
-console.log(getOptionKeys("ageOptions"))
-
 const matchListSchema = new Schema<IMatchList>({
   userId: {
     type: mongo.ObjectId,
@@ -291,6 +289,7 @@ const matchListSchema = new Schema<IMatchList>({
   versionKey: false
 })
 
-const MatchList = model<IMatchList>("MatchList", matchListSchema)
+const MatchList = model<IMatchList>("matchList", matchListSchema)
+const MatchListSelf = model<IMatchList>("matchListSelf", matchListSchema)
 
-export { MatchList, type IMatchList }
+export { MatchList, MatchListSelf, type IMatchList }
