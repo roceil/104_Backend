@@ -21,7 +21,7 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
               $height: 1,
               $weight: 1,
               $socialCircle: 1,
-              $activites: [1],
+              $activities: [1],
               $location: 1,
               $education: 1,
               $liveWithParents: 1,
@@ -35,11 +35,11 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
               $expectedSalary: 1
             },
             $blacklist: {
-              $occupation: 1,
-              $industry: [1],
-              $socialCircle: 1,
-              $activites: [1],
-              $smokingOptions: 1
+              $occupation: 0,
+              $industry: [0],
+              $socialCircle: 0,
+              $activities: [0],
+              $smokingOptions: 0
             },
             $noticeInfo: {
               $email: "",
@@ -61,7 +61,7 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
                       "height": 1,
                       "weight": 1,
                       "socialCircle": 1,
-                      "activites": [
+                      "activities": [
                         1
                       ],
                       "location": 1,
@@ -84,7 +84,7 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
                         1
                       ],
                       "socialCircle": 1,
-                      "activites": [
+                      "activities": [
                         1
                       ],
                       "smokingOptions": 1
@@ -120,39 +120,39 @@ export const getMatchListSwagger = (_req: Request, _res: Response, next: NextFun
         data: {
           matchList: {
               "personalInfo": {
-                "age": 1,
-                "gender": 1,
-                "isMarried": 1,
-                "height": 1,
-                "weight": 1,
-                "socialCircle": 1,
-                "activites": [
-                  1
+                "age": 0,
+                "gender": 0,
+                "isMarried": 0,
+                "height": 0,
+                "weight": 0,
+                "socialCircle": 0,
+                "activities": [
+                  0
                 ],
-                "location": 1,
-                "education": 1,
-                "liveWithParents": 1,
-                "religion": 1,
-                "smoking": 1
+                "location": 0,
+                "education": 0,
+                "liveWithParents": 0,
+                "religion": 0,
+                "smoking": 0
               },
               "workInfo": {
-                "occupation": 1,
+                "occupation": 0,
                 "industry": [
-                  1
+                  0
                 ],
-                "workLocation": 1,
-                "expectedSalary": 1
+                "workLocation": 0,
+                "expectedSalary": 0
               },
               "blacklist": {
-                "occupation": 1,
+                "occupation": 0,
                 "industry": [
-                  1
+                  0
                 ],
-                "socialCircle": 1,
-                "activites": [
-                  1
+                "socialCircle": 0,
+                "activities": [
+                  0
                 ],
-                "smokingOptions": 1
+                "smokingOptions": 0
               },
               "noticeInfo": {
                 "email": "",
@@ -383,30 +383,30 @@ export function editMatchListSelfSettingSwagger (_req: Request, _res: Response, 
       schema: {
         $matchList: {
             $personalInfo: {
-              $age: 1,
-              $gender: 1,
-              $isMarried: 1,
-              $height: 1,
-              $weight: 1,
-              $socialCircle: 1,
-              $activites: [1],
-              $location: 1,
-              $education: 1,
-              $liveWithParents: 1,
-              $religion: 1,
-              $smoking: 1
+              $age: 0,
+              $gender: 0,
+              $isMarried: 0,
+              $height: 0,
+              $weight: 0,
+              $socialCircle: 0,
+              $activities: [0],
+              $location: 0,
+              $education: 0,
+              $liveWithParents: 0,
+              $religion: 0,
+              $smoking: 0
             },
             $workInfo: {
-              $occupation: 1,
-              $industry: [1],
-              $workLocation: 1,
-              $expectedSalary: 1
+              $occupation: 0,
+              $industry: [0],
+              $workLocation: 0,
+              $expectedSalary: 0
             },
             $blacklist: {
               $occupation: 1,
               $industry: [1],
               $socialCircle: 1,
-              $activites: [1],
+              $activities: [1],
               $smokingOptions: 1
             },
             $noticeInfo: {
@@ -423,43 +423,28 @@ export function editMatchListSelfSettingSwagger (_req: Request, _res: Response, 
         message: "編輯配對設定成功",
         data: {
                     "personalInfo": {
-                      "age": 1,
-                      "gender": 1,
-                      "isMarried": 1,
-                      "height": 1,
-                      "weight": 1,
-                      "socialCircle": 1,
-                      "activites": [
-                        1
+                      "age": 0,
+                      "gender": 0,
+                      "isMarried": 0,
+                      "height": 0,
+                      "weight": 0,
+                      "socialCircle": 0,
+                      "activities": [
+                        0
                       ],
-                      "location": 1,
-                      "education": 1,
-                      "liveWithParents": 1,
-                      "religion": 1,
-                      "smoking": 1
+                      "location": 0,
+                      "education": 0,
+                      "liveWithParents": 0,
+                      "religion": 0,
+                      "smoking": 0
                     },
                     "workInfo": {
-                      "occupation": 1,
+                      "occupation": 0,
                       "industry": [
-                        1
+                        0
                       ],
-                      "workLocation": 1,
-                      "expectedSalary": 1
-                    },
-                    "blacklist": {
-                      "occupation": 1,
-                      "industry": [
-                        1
-                      ],
-                      "socialCircle": 1,
-                      "activites": [
-                        1
-                      ],
-                      "smokingOptions": 1
-                    },
-                    "noticeInfo": {
-                      "email": "",
-                      "notice": false
+                      "workLocation": 0,
+                      "expectedSalary": 0
                     },
                     "_id": "665c3a32c06a9436c9bc2401",
                     "userId": "665c1a800aa26fb4fb4e9823",
@@ -488,43 +473,28 @@ export const getMatchListSelfSettingSwagger = (_req: Request, _res: Response, ne
         data: {
           matchList: {
               "personalInfo": {
-                "age": 1,
-                "gender": 1,
-                "isMarried": 1,
-                "height": 1,
-                "weight": 1,
-                "socialCircle": 1,
-                "activites": [
-                  1
+                "age": 0,
+                "gender": 0,
+                "isMarried": 0,
+                "height": 0,
+                "weight": 0,
+                "socialCircle": 0,
+                "activities": [
+                  0
                 ],
-                "location": 1,
-                "education": 1,
-                "liveWithParents": 1,
-                "religion": 1,
-                "smoking": 1
+                "location": 0,
+                "education": 0,
+                "liveWithParents": 0,
+                "religion": 0,
+                "smoking": 0
               },
               "workInfo": {
-                "occupation": 1,
+                "occupation": 0,
                 "industry": [
-                  1
+                  0
                 ],
-                "workLocation": 1,
-                "expectedSalary": 1
-              },
-              "blacklist": {
-                "occupation": 1,
-                "industry": [
-                  1
-                ],
-                "socialCircle": 1,
-                "activites": [
-                  1
-                ],
-                "smokingOptions": 1
-              },
-              "noticeInfo": {
-                "email": "",
-                "notice": false
+                "workLocation": 0,
+                "expectedSalary": 0
               },
               "_id": "665c3a32c06a9436c9bc2401",
               "userId": "665c1a800aa26fb4fb4e9823",

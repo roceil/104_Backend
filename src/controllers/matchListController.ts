@@ -2,7 +2,8 @@ import { type NextFunction, type Request, type Response } from "express"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
-import { MatchList, MatchListSelfSetting } from "@/models/matchList"
+import { MatchList } from "@/models/matchList"
+import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
 
@@ -68,14 +69,14 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         { "personalInfo.gender": personalInfo.gender },
         { "personalInfo.height": personalInfo.height },
         { "personalInfo.weight": personalInfo.weight },
-        { "personalInfo.socialCircle": { $in: personalInfo.socialCircle, $nin: [blacklist.socialCircle] } },
-        { "personalInfo.activities": { $in: [personalInfo.activities], $nin: [blacklist.activities] } },
         { "personalInfo.location": personalInfo.location },
         { "personalInfo.education": personalInfo.education },
         { "personalInfo.liveWithParents": personalInfo.liveWithParents },
         { "personalInfo.religion": personalInfo.religion },
         { "personalInfo.smoking": personalInfo.smoking },
+        { "personalInfo.socialCircle": { $in: personalInfo.socialCircle, $nin: [blacklist.socialCircle] } },
         { "workInfo.occupation": { $in: [workInfo.occupation], $nin: [blacklist.occupation] } },
+        { "personalInfo.activities": { $in: [personalInfo.activities], $nin: [blacklist.activities] } },
         { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.industry } },
         { "workInfo.workLocation": workInfo.workLocation },
         { "workInfo.expectedSalary": workInfo.expectedSalary }

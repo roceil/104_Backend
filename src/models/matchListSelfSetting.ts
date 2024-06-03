@@ -1,7 +1,7 @@
 import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 
-interface IMatchList extends Document {
+interface IMatchListSelfSetting extends Document {
   userId: IUserId
   personalInfo: {
     age: number
@@ -23,17 +23,6 @@ interface IMatchList extends Document {
     workLocation: number
     expectedSalary: number
   }
-  blacklist: {
-    occupation: number
-    industry: number[]
-    socialCircle: number
-    activities: number[]
-    smokingOptions: number
-  }
-  noticeInfo: {
-    email: string
-    notice: boolean
-  }
   createdAt: Date
   updatedAt: Date
 }
@@ -42,7 +31,7 @@ const options = [
   {
     type: "ageOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "20-22 歲",
       2: "23-25 歲",
       3: "26-28 歲",
@@ -59,7 +48,7 @@ const options = [
   {
     type: "genderOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "男性",
       2: "女性",
       3: "其他",
@@ -69,7 +58,7 @@ const options = [
   {
     type: "heightOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "150cm 以下",
       2: "150-155cm",
       3: "155-160cm",
@@ -86,7 +75,7 @@ const options = [
   {
     type: "weightOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "50kg 以下",
       2: "50-55kg",
       3: "55-60kg",
@@ -103,7 +92,7 @@ const options = [
   {
     type: "isMarriedOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "已婚",
       2: "未婚",
       3: "離婚"
@@ -112,7 +101,7 @@ const options = [
   {
     type: "locationOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "北部",
       2: "南部",
       3: "東部",
@@ -124,7 +113,7 @@ const options = [
   {
     type: "educationOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "國小",
       2: "國中",
       3: "高中",
@@ -136,7 +125,7 @@ const options = [
   {
     type: "liveWithParentsOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "與父母同住",
       2: "獨立居住",
       3: "其他"
@@ -145,7 +134,7 @@ const options = [
   {
     type: "religionOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "基督教",
       2: "佛教",
       3: "道教",
@@ -160,7 +149,7 @@ const options = [
   {
     type: "smokingOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "不抽菸",
       2: "偶爾抽菸",
       3: "經常抽菸",
@@ -170,7 +159,7 @@ const options = [
   {
     type: "socialCircleOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "外籍人士",
       2: "本地人",
       3: "藝術",
@@ -187,7 +176,7 @@ const options = [
   {
     type: "activitiesOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "健行",
       2: "園藝",
       3: "慈善",
@@ -197,7 +186,7 @@ const options = [
   {
     type: "occupationOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "軍人",
       2: "警察",
       3: "消防員",
@@ -212,7 +201,7 @@ const options = [
   {
     type: "industryOptions",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "餐旅",
       2: "科技",
       3: "金融",
@@ -230,7 +219,7 @@ const options = [
   {
     type: "expectedSalary",
     options: {
-      0: "無指定",
+      0: "未填寫",
       1: "20-25k",
       2: "25-30k",
       3: "30-35k",
@@ -247,7 +236,7 @@ function getOptionKeys (type: string) {
   return option ? Object.keys(option.options).map(Number) : []
 }
 
-const matchListSchema = new Schema<IMatchList>({
+const matchListSchema = new Schema<IMatchListSelfSetting>({
   userId: {
     type: mongo.ObjectId,
     required: [true, "需要使用者id"],
@@ -272,23 +261,12 @@ const matchListSchema = new Schema<IMatchList>({
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
     workLocation: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
-  },
-  blacklist: {
-    occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 1 },
-    industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [1] },
-    socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 1 },
-    activities: { type: [Number], enum: getOptionKeys("activitiesOptions"), default: [1] },
-    smokingOptions: { type: Number, enum: getOptionKeys("smokingOptions"), default: 1 }
-  },
-  noticeInfo: {
-    email: { type: String, default: "" },
-    notice: { type: Boolean, default: false }
   }
 }, {
   timestamps: true,
   versionKey: false
 })
 
-const MatchList = model<IMatchList>("matchList", matchListSchema)
+const MatchListSelfSetting = model<IMatchListSelfSetting>("matchListSelfSetting", matchListSchema)
 
-export { MatchList, type IMatchList }
+export { MatchListSelfSetting, type IMatchListSelfSetting }
