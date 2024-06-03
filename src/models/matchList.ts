@@ -260,7 +260,7 @@ const matchListSchema = new Schema<IMatchList>({
     height: { type: Number, enum: getOptionKeys("heightOptions"), default: 0 },
     weight: { type: Number, enum: getOptionKeys("weightOptions"), default: 0 },
     socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 0 },
-    activites: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
+    activities: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
     location: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
     education: { type: Number, enum: getOptionKeys("educationOptions"), default: 0 },
     liveWithParents: { type: Number, enum: getOptionKeys("liveWithParentsOptions"), default: 0 },
@@ -277,7 +277,7 @@ const matchListSchema = new Schema<IMatchList>({
     occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
     industry: [{ type: Number, enum: getOptionKeys("industryOptions"), default: 0 }],
     socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 0 },
-    activites: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
+    activities: [{ type: Number, enum: getOptionKeys("activitiesOptions"), default: 0 }],
     smokingOptions: { type: Number, enum: getOptionKeys("smokingOptions"), default: 0 }
   },
   noticeInfo: {
