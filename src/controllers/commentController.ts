@@ -1,6 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData } from "@/types/login"
 import { Comment } from "@/models/comment"
+import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 
@@ -26,12 +27,54 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const comments = await Comment.find({ userId })
-  if (!comments || comments.length === 0) {
-    appErrorHandler(404, "No comment found", next)
-  } else {
-    appSuccessHandler(200, "查詢成功", comments, res)
+  // 以下是重構前的程式碼
+  // const rawComments = await Comment.find({ userId })
+  // const userProfile = await Profile.findOne({ userId }).select("unlockComment")
+  const [rawComments, userProfile] = await Promise.all([
+    Comment.find({ userId }),
+    Profile.findOne({ userId }).select("unlockComment")
+  ])
+
+  if (!userProfile) {
+    appErrorHandler(404, "用戶不存在", next)
+    return
   }
+
+  const { unlockComment } = userProfile
+
+  if (!rawComments || rawComments.length === 0) {
+    appErrorHandler(404, "No comment found", next)
+    return
+  }
+  // 添加解鎖狀態到評論
+  const comments = rawComments.map(comment => {
+    comment.isUnlock = unlockComment.includes(comment._id.toString())
+    return comment
+  })
+  appSuccessHandler(200, "查詢成功", comments, res)
+  // 以下是重構前的程式碼
+  // if (!rawComments || rawComments.length === 0) {
+  //   appErrorHandler(404, "No comment found", next)
+  // } else {
+  //   // 檢查是否有解鎖評價並加上isUnlock的狀態
+  //   if (unlockComment.length > 0) {
+  //     const comments = rawComments.map(comment => {
+  //       if (unlockComment.includes(comment._id.toString())) {
+  //         comment.isUnlock = true
+  //       } else {
+  //         comment.isUnlock = false
+  //       }
+  //       return comment // Add return statement here
+  //     })
+  //     appSuccessHandler(200, "查詢成功", comments, res)
+  //   } else {
+  //     const comments = rawComments.map(comment => {
+  //       comment.isUnlock = false
+  //       return comment
+  //     })
+  //     appSuccessHandler(200, "查詢成功", comments, res)
+  //   }
+  // }
 }
 const getCommentById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params

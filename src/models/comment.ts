@@ -7,6 +7,7 @@ interface IComment {
   userId: IUserId
   commentedUserId: ICommentUserId
   content: string
+  isUnlock: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -24,6 +25,10 @@ const commentSchema = new Schema<IComment>({
   content: {
     type: String,
     required: [true, "需要評價內容"]
+  },
+  isUnlock: {
+    type: Boolean,
+    default: false
   },
   createdAt: {
     type: Date,

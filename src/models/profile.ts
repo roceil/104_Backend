@@ -40,6 +40,7 @@ interface IPersonalInfo {
   lineDetails: ILineDetails
   tags: string[]
   exposureSettings: IExposureSettings
+  unlockComment: string[]
 }
 
 const profileSchema = new Schema<IPersonalInfo>({
@@ -128,6 +129,10 @@ const profileSchema = new Schema<IPersonalInfo>({
         default: false
       }
     }
+  },
+  unlockComment: {
+    type: [String],
+    default: []
   }
 }, {
   timestamps: true,

@@ -39,7 +39,10 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
   if (!invitation || !isNotificationCreated) {
     appErrorHandler(400, "邀請失敗", next)
   } else {
-    const beInvitation = await BeInvitation.create({ userId, invitedUserId, message, invitationId: invitation.id as string })
+    if (!invitation.id) {
+      appErrorHandler(400, "邀請失敗", next)
+    }
+    const beInvitation = await BeInvitation.create({ userId, invitedUserId, message, invitationId: invitation.id })
     if (!beInvitation) {
       appErrorHandler(400, "邀請失敗", next)
     } else {
