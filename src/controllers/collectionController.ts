@@ -2,10 +2,8 @@ import { type NextFunction, type Request, type Response } from "express"
 import { Collection } from "@/models/collection"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
-import { type Types } from "mongoose"
 import { type LoginResData } from "@/types/login"
 import checkMissingFields from "@/utils/checkMissingFields"
-import { User } from "@/models/user"
 
 /**
  * 取得所有收藏
