@@ -1,5 +1,6 @@
 import { Schema, model, mongo } from "mongoose"
 import { type IUserId } from "../types/userInterface"
+
 interface IPhotoDetails {
   photo: string
   isShow: boolean
@@ -31,6 +32,12 @@ interface IExposureSettings {
   isMatch: boolean
 }
 
+interface IUserStatus {
+  rating: string
+  isMatch: boolean
+  point: number
+}
+
 interface IPersonalInfo {
   userId: IUserId
   photoDetails: IPhotoDetails
@@ -40,6 +47,7 @@ interface IPersonalInfo {
   lineDetails: ILineDetails
   tags: string[]
   exposureSettings: IExposureSettings
+  userStatus: IUserStatus
 }
 
 const profileSchema = new Schema<IPersonalInfo>({
@@ -58,7 +66,8 @@ const profileSchema = new Schema<IPersonalInfo>({
         type: Boolean,
         default: false
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
   },
   introDetails: {
     type: {
@@ -70,7 +79,8 @@ const profileSchema = new Schema<IPersonalInfo>({
         type: Boolean,
         default: false
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
   },
   nickNameDetails: {
     type: {
@@ -82,7 +92,8 @@ const profileSchema = new Schema<IPersonalInfo>({
         type: Boolean,
         default: false
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
   },
   incomeDetails: {
     type: {
@@ -93,9 +104,9 @@ const profileSchema = new Schema<IPersonalInfo>({
       isShow: {
         type: Boolean,
         default: false
-
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
   },
   lineDetails: {
     type: {
@@ -107,7 +118,8 @@ const profileSchema = new Schema<IPersonalInfo>({
         type: Boolean,
         default: false
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
   },
   tags: {
     type: [String],
@@ -127,11 +139,31 @@ const profileSchema = new Schema<IPersonalInfo>({
         type: Boolean,
         default: false
       }
-    }
+    },
+    default: {} // 確保這裡有預設值
+  },
+  userStatus: {
+    type: {
+      rating: {
+        type: String,
+        default: null
+      },
+      isMatch: {
+        type: Boolean,
+        default: false
+      },
+      point: {
+        type: Number,
+        default: 0
+      }
+    },
+    default: {} // 確保這裡有預設值
   }
 }, {
   timestamps: true,
   versionKey: false
 })
+
 const Profile = model<IPersonalInfo>("profile", profileSchema)
+
 export { Profile, type IPersonalInfo }

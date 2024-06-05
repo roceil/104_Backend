@@ -63,7 +63,7 @@ const userSchema = new Schema<IUserSchema>(
     },
     isActive: {
       type: Boolean,
-      default: true // NOTE: 這邊預設值是 true，但是在實際應用中，可能需要改成 false
+      default: false
     },
     blockedUsers: {
       type: [Schema.Types.ObjectId],
