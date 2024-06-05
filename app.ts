@@ -18,6 +18,8 @@ import invitationRouter from "@/routes/invitationRouter"
 import notificationRouter from "@/routes/notificationsRoute"
 import beInvitationRouter from "@/routes/beInvitationRouter"
 import blackListRouter from "@/routes/blackListRouter"
+import unlockCommentRouter from "@/routes/unlockCommentRouter"
+import addPointRouter from "@/routes/addPointRouter"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app: Express = express()
 const port = process.env.PORT ?? 3001
@@ -51,6 +53,8 @@ app.use("/api/v1", blackListRouter)
 app.use("/api/v1", invitationRouter)
 app.use("/api/v1", beInvitationRouter)
 app.use("/api/v1", notificationRouter)
+app.use("/api/v1", unlockCommentRouter)
+app.use("/api/v1", addPointRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()

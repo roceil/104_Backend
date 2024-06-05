@@ -33,6 +33,33 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
    */
   next()
 }
+export function getCommentILiftListSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+   * #swagger.tags = ["Comment-評價"]
+   * #swagger.description = "取得我從留下的評價列表"
+   * #swagger.security = [{
+       "apiKeyAuth":[]
+     }]
+   * #swagger.responses[200] = {
+           description: '評價列表',
+           schema: {
+               status: true,
+               message: "查詢成功",
+               data: [
+                 {
+                   _id: "66497a7c9acbc3bfb1a21621",
+                   userId: "664473d53d428e98fd5fb226",
+                   commentedUserId: "66487581f6f2c93ddd16ff00",
+                   content: "test666666",
+                   createdAt: "2024-05-19T04:05:16.243Z",
+                   updatedAt: "2024-05-19T04:05:16.243Z"
+                 }
+               ]
+           }
+       }
+   */
+  next()
+}
 export function getCommentListSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
    * #swagger.tags = ["Comment-評價"]

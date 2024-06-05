@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -1143,6 +1143,156 @@
                     "updatedAt": {
                       "type": "string",
                       "example": "2024-05-19T04:33:02.282Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/comment-i-left-list": {
+      "get": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "取得我從留下的評價列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "評價列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "66497a7c9acbc3bfb1a21621"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "664473d53d428e98fd5fb226"
+                      },
+                      "commentedUserId": {
+                        "type": "string",
+                        "example": "66487581f6f2c93ddd16ff00"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "test666666"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-05-19T04:05:16.243Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-05-19T04:05:16.243Z"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/comment-list/{id}": {
+      "get": {
+        "tags": [
+          "Comment-評價"
+        ],
+        "description": "取得評價",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "評價Id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "評價",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66497a7c9acbc3bfb1a21621"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "commentedUserId": {
+                      "type": "string",
+                      "example": "66487581f6f2c93ddd16ff00"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "test666666"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-19T04:05:16.243Z"
                     }
                   }
                 }
@@ -2514,13 +2664,17 @@
     },
     "/api/v1/who-invite-me/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "beInvitation-被邀約"
+        ],
+        "description": "取得被邀約人詳細資料",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "列表Id"
           },
           {
             "name": "origin",
@@ -2529,10 +2683,127 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "邀約",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "hello7777"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "7777777"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-21T06:49:49.383Z"
+                        }
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "664473d53d428e98fd5fb226"
+                    },
+                    "invitedUserId": {
+                      "type": "string",
+                      "example": "664c427bb56b34d999f86c83"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-21T06:49:49.383Z"
+                    },
+                    "profileByUser": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "664c42ea58453572378249bf"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "664c427bb56b34d999f86c83"
+                          },
+                          "nickNameDetails": {
+                            "type": "object",
+                            "properties": {
+                              "nickName": {
+                                "type": "string",
+                                "example": "Kven"
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "_id": {
+                                "type": "string",
+                                "example": "664c42ea58453572378249c0"
+                              }
+                            }
+                          },
+                          "tags": {
+                            "type": "array",
+                            "example": [],
+                            "items": {}
+                          }
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "664c440d58453572378249c9"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -3040,6 +3311,120 @@
             "description": ""
           }
         }
+      }
+    },
+    "/api/v1/unlock-comment/{id}": {
+      "put": {
+        "tags": [
+          "解鎖評價"
+        ],
+        "description": "解鎖評價",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "評價id"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "解鎖評價成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "解鎖評價成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "unlockComment": {
+                      "type": "string",
+                      "example": "123"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/add-point/{point}": {
+      "put": {
+        "tags": [
+          "測試用增加點數"
+        ],
+        "description": "增加點數",
+        "parameters": [
+          {
+            "name": "point",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "點數"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "增加點數成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "增加點數成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "point": {
+                      "type": "number",
+                      "example": 5
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     }
   }

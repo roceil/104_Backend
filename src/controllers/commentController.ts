@@ -4,6 +4,7 @@ import { Comment } from "@/models/comment"
 import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
+import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 
 // todo: comment的規則是完成約會後才能評價，記得以後要補上約會完成的判斷
 
@@ -27,19 +28,20 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
+
   // 以下是重構前的程式碼
-  // const rawComments = await Comment.find({ userId })
+  // const rawComments = await Comment.find()
   // const userProfile = await Profile.findOne({ userId }).select("unlockComment")
+  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
   const [rawComments, userProfile] = await Promise.all([
-    Comment.find({ userId }),
+    Comment.find().skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
     Profile.findOne({ userId }).select("unlockComment")
   ])
-
   if (!userProfile) {
     appErrorHandler(404, "用戶不存在", next)
     return
   }
-
   const { unlockComment } = userProfile
 
   if (!rawComments || rawComments.length === 0) {
@@ -52,29 +54,6 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
     return comment
   })
   appSuccessHandler(200, "查詢成功", comments, res)
-  // 以下是重構前的程式碼
-  // if (!rawComments || rawComments.length === 0) {
-  //   appErrorHandler(404, "No comment found", next)
-  // } else {
-  //   // 檢查是否有解鎖評價並加上isUnlock的狀態
-  //   if (unlockComment.length > 0) {
-  //     const comments = rawComments.map(comment => {
-  //       if (unlockComment.includes(comment._id.toString())) {
-  //         comment.isUnlock = true
-  //       } else {
-  //         comment.isUnlock = false
-  //       }
-  //       return comment // Add return statement here
-  //     })
-  //     appSuccessHandler(200, "查詢成功", comments, res)
-  //   } else {
-  //     const comments = rawComments.map(comment => {
-  //       comment.isUnlock = false
-  //       return comment
-  //     })
-  //     appSuccessHandler(200, "查詢成功", comments, res)
-  //   }
-  // }
 }
 const getCommentById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
@@ -85,7 +64,18 @@ const getCommentById = async (req: Request, res: Response, next: NextFunction): 
     appSuccessHandler(200, "查詢成功", comment, res)
   }
 }
+const getCommentILiftList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { userId } = req.user as LoginResData
+  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
 
+  const comment = await Comment.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
+  if (!comment || comment.length === 0) {
+    appSuccessHandler(200, "沒有評價", [], res)
+    return
+  }
+  appSuccessHandler(200, "查詢成功", comment, res)
+}
 const putComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { content } = req.body
@@ -112,4 +102,4 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
   }
 }
 
-export { postComment, getCommentList, getCommentById, putComment, deleteComment }
+export { postComment, getCommentList, getCommentById, getCommentILiftList, putComment, deleteComment }
