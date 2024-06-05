@@ -13,7 +13,7 @@ router.post("/sign-up", signUpSwagger, asyncErrorHandler(loginController.signUp)
 
 router.post("/login", loginSwagger, asyncErrorHandler(loginController.login) as RequestHandler)
 
-router.patch("/reset-password/:id", resetPasswordSwagger, isAuth as Handler, asyncErrorHandler(loginController.resetPassword) as RequestHandler)
+router.patch("/reset-password/:token", resetPasswordSwagger, isAuth as Handler, asyncErrorHandler(loginController.resetPassword) as RequestHandler)
 
 router.post("/forget-password", forgetPasswordSwagger, asyncErrorHandler(loginController.forgetPassword) as RequestHandler)
 
