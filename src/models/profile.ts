@@ -46,8 +46,9 @@ interface IPersonalInfo {
   incomeDetails: IIncomeDetails
   lineDetails: ILineDetails
   tags: string[]
-  exposureSettings: IExposureSettings
   userStatus: IUserStatus
+  exposureSettings: IExposureSettings
+  unlockComment: string[]
 }
 
 const profileSchema = new Schema<IPersonalInfo>({
@@ -122,6 +123,10 @@ const profileSchema = new Schema<IPersonalInfo>({
     default: {} // 確保這裡有預設值
   },
   tags: {
+    type: [String],
+    default: []
+  },
+  unlockComment: {
     type: [String],
     default: []
   },

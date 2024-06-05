@@ -18,6 +18,8 @@ import invitationRouter from "@/routes/invitationRouter"
 import notificationRouter from "@/routes/notificationsRoute"
 import beInvitationRouter from "@/routes/beInvitationRouter"
 import blackListRouter from "@/routes/blackListRouter"
+import unlockCommentRouter from "@/routes/unlockCommentRouter"
+import addPointRouter from "@/routes/addPointRouter"
 import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
@@ -55,6 +57,8 @@ app.use("/api/v1", beInvitationRouter)
 app.use("/api/v1", notificationRouter)
 app.use("/api/v1", collectionRouter)
 app.use("/api/v1", searchRouter)
+app.use("/api/v1", unlockCommentRouter)
+app.use("/api/v1", addPointRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()
