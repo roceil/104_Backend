@@ -105,9 +105,10 @@
   "include": [
     "src/**/*.ts",
     "app.ts",
-    "swagger.ts"
+    "swagger.ts",
+    "scritp/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "nodce_modules"
   ],
 }

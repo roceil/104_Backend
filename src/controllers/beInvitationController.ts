@@ -41,6 +41,9 @@ const cancelBeInvitation = async (req: Request, res: Response, next: NextFunctio
   const beInvitation = await BeInvitation.findByIdAndUpdate(id, { status: "cancel" }, { new: true })
   const beInvitationId = await BeInvitation.findById(id).select("invitationId")
   const { invitationId } = beInvitationId as { invitationId: string }
+  if (!invitationId) {
+    appErrorHandler(404, "No invitation found", next)
+  }
   const invitation = await Invitation.findByIdAndUpdate(invitationId, { status: "cancel" }, { new: true })
   if (!beInvitation || !invitation) {
     appErrorHandler(404, "No invitation found", next)
@@ -53,6 +56,9 @@ const rejectInvitation = async (req: Request, res: Response, next: NextFunction)
   const { id } = req.params
   const beInvitation = await BeInvitation.findByIdAndUpdate(id, { status: "rejected" }, { new: true })
   const beInvitationId = await BeInvitation.findById(id).select("invitationId")
+  if (!beInvitationId || !beInvitationId.invitationId) {
+    appErrorHandler(404, "No invitation found", next)
+  }
   const { invitationId } = beInvitationId as { invitationId: string }
   const invitation = await Invitation.findByIdAndUpdate(invitationId, { status: "rejected" }, { new: true })
   if (!invitation || !beInvitation) {
