@@ -5,7 +5,6 @@ import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
-
 // todo: comment的規則是完成約會後才能評價，記得以後要補上約會完成的判斷
 
 const postComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -28,10 +27,6 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-
-  // 以下是重構前的程式碼
-  // const rawComments = await Comment.find()
-  // const userProfile = await Profile.findOne({ userId }).select("unlockComment")
   const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
   const [rawComments, userProfile] = await Promise.all([
@@ -63,6 +58,21 @@ const getCommentById = async (req: Request, res: Response, next: NextFunction): 
   } else {
     appSuccessHandler(200, "查詢成功", comment, res)
   }
+}
+const getCommentByIdAndUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const { userId } = req.user as LoginResData
+  const comment = await Comment.findOne({
+    $and: [
+      { _id: id },
+      { userId }
+    ]
+  }).select("-isUnlock")
+  if (!comment) {
+    appErrorHandler(404, "No comment found", next)
+    return
+  }
+  appSuccessHandler(200, "查詢成功", comment, res)
 }
 const getCommentILiftList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -102,4 +112,4 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
   }
 }
 
-export { postComment, getCommentList, getCommentById, getCommentILiftList, putComment, deleteComment }
+export { postComment, getCommentList, getCommentById, getCommentByIdAndUserId, getCommentILiftList, putComment, deleteComment }
