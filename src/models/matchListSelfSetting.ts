@@ -259,7 +259,6 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
   workInfo: {
     occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
-    workLocation: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
   }
 }, {

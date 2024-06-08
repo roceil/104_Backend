@@ -9,9 +9,9 @@ import { User } from "@/models/user"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { matchList } = req.body
+  const body = req.body
 
-  if (!matchList) {
+  if (!body) {
     appErrorHandler(400, "缺少配對設定", next)
   }
   if (!userId) {
@@ -19,7 +19,7 @@ export const editMatchList = async (req: Request, res: Response, next: NextFunct
   }
 
   const matchListData = await MatchList
-    .findOneAndUpdate({ userId }, { $set: matchList }, { new: true })
+    .findOneAndUpdate({ userId }, { $set: body }, { new: true })
 
   if (!matchListData) {
     appErrorHandler(400, "尚未新建配對設定，編輯配對設定失敗", next)
@@ -43,12 +43,8 @@ export const getMatchList = async (req: Request, res: Response, _next: NextFunct
 
 export const getMatchListOptions = async (_req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const options = await matchListOption.find({})
-  const result: Record<string, Record<string, string>> = {}
-  options.forEach((option) => {
-    result[option.type] = option.options
-  })
 
-  appSuccessHandler(200, "取得配對設定選項", result, res)
+  appSuccessHandler(200, "取得配對設定選項", options, res)
 }
 
 export const findUsersByMultipleConditions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -59,7 +55,12 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     appErrorHandler(400, "尚未新建配對設定，查詢配對失敗", next)
   } else {
     // 該用戶的配對設定
-    const { personalInfo, workInfo, blacklist } = matchListData
+    const {
+      personalInfo, workInfo
+      // blacklist
+    } = matchListData
+
+    // console.log(personalInfo.activities);
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
     const users = await MatchListSelfSetting.find({
@@ -74,12 +75,13 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         { "personalInfo.liveWithParents": personalInfo.liveWithParents },
         { "personalInfo.religion": personalInfo.religion },
         { "personalInfo.smoking": personalInfo.smoking },
-        { "personalInfo.socialCircle": { $in: personalInfo.socialCircle, $nin: [blacklist.socialCircle] } },
-        { "workInfo.occupation": { $in: [workInfo.occupation], $nin: [blacklist.occupation] } },
-        { "personalInfo.activities": { $in: [personalInfo.activities], $nin: [blacklist.activities] } },
-        { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.industry } },
-        { "workInfo.workLocation": workInfo.workLocation },
+        { "personalInfo.socialCircle": personalInfo.socialCircle },
+        { "personalInfo.activities": { $in: personalInfo.activities } },
+        { "workInfo.occupation": workInfo.occupation },
+        { "workInfo.industry": { $in: workInfo.industry } },
         { "workInfo.expectedSalary": workInfo.expectedSalary }
+        // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
+        // { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.industry } }, // 剔除名單
       ]
     })
 

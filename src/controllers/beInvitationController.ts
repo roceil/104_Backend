@@ -101,5 +101,13 @@ const deleteBeInvitation = async (req: Request, res: Response, next: NextFunctio
     appSuccessHandler(200, "刪除成功", beInvitation, res)
   }
 }
-
-export { getWhoInvitationList, getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation }
+const finishBeInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const beInvitation = await BeInvitation.findByIdAndUpdate(id, { isFinishDating: true }, { new: true })
+  if (!beInvitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "完成約會", beInvitation, res)
+  }
+}
+export { getWhoInvitationList, getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation, finishBeInvitationDating }

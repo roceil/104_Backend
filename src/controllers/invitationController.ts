@@ -106,5 +106,13 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
     appSuccessHandler(200, "刪除成功", invitation, res)
   }
 }
-
-export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation }
+const finishInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const invitation = await Invitation.findByIdAndUpdate(id, { isFinishDating: true }, { new: true })
+  if (!invitation) {
+    appErrorHandler(404, "No invitation found", next)
+  } else {
+    appSuccessHandler(200, "已完成約會", invitation, res)
+  }
+}
+export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating }

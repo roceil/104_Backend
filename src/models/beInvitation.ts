@@ -11,6 +11,7 @@ interface IBeInvitation extends Document {
     createdAt: Date
     updatedAt: Date
   }
+  isFinishDating: boolean
   date: Date
   status: "accepted" | "rejected" | "cancel" | "pending"
   createdAt: Date
@@ -49,6 +50,10 @@ const beInvitationSchema = new Schema<IBeInvitation>({
       type: Date,
       default: Date.now
     }
+  },
+  isFinishDating: {
+    type: Boolean,
+    default: false
   },
   date: {
     type: Date,

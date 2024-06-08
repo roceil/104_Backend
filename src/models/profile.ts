@@ -16,6 +16,16 @@ interface INickNameDetails {
   isShow: boolean
 }
 
+interface IPhoneDetails {
+  phone: string
+  isShow: boolean
+}
+
+interface ICompanyDetails {
+  company: string
+  isShow: boolean
+}
+
 interface IIncomeDetails {
   income: string
   isShow: boolean
@@ -26,14 +36,19 @@ interface ILineDetails {
   isShow: boolean
 }
 
+interface IJobDetails {
+  job: string
+  isShow: boolean
+}
+
 interface IExposureSettings {
-  rating: string
+  rating: number
   isShow: boolean
   isMatch: boolean
 }
 
 interface IUserStatus {
-  rating: string
+  rating: number
   isMatch: boolean
   point: number
 }
@@ -43,8 +58,11 @@ interface IPersonalInfo {
   photoDetails: IPhotoDetails
   introDetails: IIntroDetails
   nickNameDetails: INickNameDetails
+  phoneDetails: IPhoneDetails
+  companyDetails: ICompanyDetails
   incomeDetails: IIncomeDetails
   lineDetails: ILineDetails
+  jobDetails: IJobDetails
   tags: string[]
   userStatus: IUserStatus
   exposureSettings: IExposureSettings
@@ -96,6 +114,32 @@ const profileSchema = new Schema<IPersonalInfo>({
     },
     default: {} // 確保這裡有預設值
   },
+  phoneDetails: {
+    type: {
+      phone: {
+        type: String,
+        default: ""
+      },
+      isShow: {
+        type: Boolean,
+        default: false
+      }
+    },
+    default: {} // 確保這裡有預設值
+  },
+  companyDetails: {
+    type: {
+      company: {
+        type: String,
+        default: ""
+      },
+      isShow: {
+        type: Boolean,
+        default: false
+      }
+    },
+    default: {} // 確保這裡有預設值
+  },
   incomeDetails: {
     type: {
       income: {
@@ -122,6 +166,19 @@ const profileSchema = new Schema<IPersonalInfo>({
     },
     default: {} // 確保這裡有預設值
   },
+  jobDetails: {
+    type: {
+      job: {
+        type: String,
+        default: ""
+      },
+      isShow: {
+        type: Boolean,
+        default: false
+      }
+    },
+    default: {} // 確保這裡有預設值
+  },
   tags: {
     type: [String],
     default: []
@@ -133,8 +190,8 @@ const profileSchema = new Schema<IPersonalInfo>({
   exposureSettings: {
     type: {
       rating: {
-        type: String,
-        default: null
+        type: Number,
+        default: 0
       },
       isShow: {
         type: Boolean,
@@ -150,8 +207,8 @@ const profileSchema = new Schema<IPersonalInfo>({
   userStatus: {
     type: {
       rating: {
-        type: String,
-        default: null
+        type: Number,
+        default: 0
       },
       isMatch: {
         type: Boolean,
@@ -167,6 +224,13 @@ const profileSchema = new Schema<IPersonalInfo>({
 }, {
   timestamps: true,
   versionKey: false
+})
+
+profileSchema.virtual("userInfo", {
+  ref: "user",
+  localField: "userId",
+  foreignField: "_id",
+  justOne: true
 })
 
 const Profile = model<IPersonalInfo>("profile", profileSchema)
