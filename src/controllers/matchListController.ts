@@ -56,11 +56,8 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
   } else {
     // 該用戶的配對設定
     const {
-      personalInfo, workInfo
-      // blacklist
+      personalInfo, workInfo, blacklist
     } = matchListData
-
-    // console.log(personalInfo.activities);
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
     const users = await MatchListSelfSetting.find({
@@ -74,14 +71,13 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         { "personalInfo.education": personalInfo.education },
         { "personalInfo.liveWithParents": personalInfo.liveWithParents },
         { "personalInfo.religion": personalInfo.religion },
-        { "personalInfo.smoking": personalInfo.smoking },
         { "personalInfo.socialCircle": personalInfo.socialCircle },
         { "personalInfo.activities": { $in: personalInfo.activities } },
-        { "workInfo.occupation": workInfo.occupation },
-        { "workInfo.industry": { $in: workInfo.industry } },
-        { "workInfo.expectedSalary": workInfo.expectedSalary }
+        { "personalInfo.smoking": { $in: personalInfo.smoking, $nin: blacklist.banSmoking } }, // 剔除名單
+        { "workInfo.occupation": { $in: workInfo.occupation, $nin: blacklist.banOccupation } },
+        { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.banIndustry } },
+        { "workInfo.expectedSalary": { $in: workInfo.expectedSalary, $nin: blacklist.banExpectedSalary } }
         // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
-        // { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.industry } }, // 剔除名單
       ]
     })
 

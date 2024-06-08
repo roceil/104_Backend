@@ -23,6 +23,11 @@ interface IMatchListSelfSetting extends Document {
     workLocation: number
     expectedSalary: number
   }
+  blacklist: {
+    banSmoking: number
+    banOccupation: number
+    banIndustry: number[]
+  }
   createdAt: Date
   updatedAt: Date
 }
@@ -261,6 +266,7 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
   }
+  // 本身條件不需要儲存黑名單選項
 }, {
   timestamps: true,
   versionKey: false
