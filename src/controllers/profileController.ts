@@ -17,7 +17,8 @@ const getUserByAuth = async (req: Request, res: Response, next: NextFunction): P
   const { userId } = req.user as { userId: string }
   const user = await Profile.findOne({
     userId
-  })
+  }).populate("userInfo").lean()
+
   if (!user) {
     appErrorHandler(404, "No user found", next)
   } else {
@@ -66,6 +67,7 @@ const putUser = async (req: Request, res: Response, next: NextFunction): Promise
   }
   const userPut = await Profile.findOneAndUpdate({ userId }, { $set: updateData }, { new: true }
   )
+
   if (!userPut) {
     appErrorHandler(400, "找不到使用者資料Id，請稍後在試", next)
   } else {
