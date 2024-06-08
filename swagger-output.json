@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -4294,183 +4294,175 @@
             "schema": {
               "type": "object",
               "properties": {
-                "matchList": {
+                "personalInfo": {
                   "type": "object",
                   "properties": {
-                    "personalInfo": {
-                      "type": "object",
-                      "properties": {
-                        "age": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "gender": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "isMarried": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "height": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "weight": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "socialCircle": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "activities": {
-                          "type": "array",
-                          "example": [
-                            1
-                          ],
-                          "items": {
-                            "type": "number"
-                          }
-                        },
-                        "location": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "education": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "liveWithParents": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "religion": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "smoking": {
-                          "type": "number",
-                          "example": 1
-                        }
-                      },
-                      "required": [
-                        "age",
-                        "gender",
-                        "isMarried",
-                        "height",
-                        "weight",
-                        "socialCircle",
-                        "activities",
-                        "location",
-                        "education",
-                        "liveWithParents",
-                        "religion",
-                        "smoking"
-                      ]
+                    "age": {
+                      "type": "number",
+                      "example": 1
                     },
-                    "workInfo": {
-                      "type": "object",
-                      "properties": {
-                        "occupation": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "industry": {
-                          "type": "array",
-                          "example": [
-                            1
-                          ],
-                          "items": {
-                            "type": "number"
-                          }
-                        },
-                        "workLocation": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "expectedSalary": {
-                          "type": "number",
-                          "example": 1
-                        }
-                      },
-                      "required": [
-                        "occupation",
-                        "industry",
-                        "workLocation",
-                        "expectedSalary"
-                      ]
+                    "gender": {
+                      "type": "number",
+                      "example": 1
                     },
-                    "blacklist": {
-                      "type": "object",
-                      "properties": {
-                        "occupation": {
-                          "type": "number",
-                          "example": 0
-                        },
-                        "industry": {
-                          "type": "array",
-                          "example": [
-                            0
-                          ],
-                          "items": {
-                            "type": "number"
-                          }
-                        },
-                        "socialCircle": {
-                          "type": "number",
-                          "example": 0
-                        },
-                        "activities": {
-                          "type": "array",
-                          "example": [
-                            0
-                          ],
-                          "items": {
-                            "type": "number"
-                          }
-                        },
-                        "smokingOptions": {
-                          "type": "number",
-                          "example": 0
-                        }
-                      },
-                      "required": [
-                        "occupation",
-                        "industry",
-                        "socialCircle",
-                        "activities",
-                        "smokingOptions"
-                      ]
+                    "isMarried": {
+                      "type": "number",
+                      "example": 1
                     },
-                    "noticeInfo": {
-                      "type": "object",
-                      "properties": {
-                        "email": {
-                          "type": "string",
-                          "example": ""
-                        },
-                        "notice": {
-                          "type": "boolean",
-                          "example": false
-                        }
-                      },
-                      "required": [
-                        "email",
-                        "notice"
-                      ]
+                    "height": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "weight": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "socialCircle": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "activities": {
+                      "type": "array",
+                      "example": [
+                        1
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "location": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "education": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "liveWithParents": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "religion": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "smoking": {
+                      "type": "number",
+                      "example": 1
                     }
                   },
                   "required": [
-                    "personalInfo",
-                    "workInfo",
-                    "blacklist",
-                    "noticeInfo"
+                    "age",
+                    "gender",
+                    "isMarried",
+                    "height",
+                    "weight",
+                    "socialCircle",
+                    "activities",
+                    "location",
+                    "education",
+                    "liveWithParents",
+                    "religion",
+                    "smoking"
+                  ]
+                },
+                "workInfo": {
+                  "type": "object",
+                  "properties": {
+                    "occupation": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "industry": {
+                      "type": "array",
+                      "example": [
+                        1
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "workLocation": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "expectedSalary": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  },
+                  "required": [
+                    "occupation",
+                    "industry",
+                    "workLocation",
+                    "expectedSalary"
+                  ]
+                },
+                "blacklist": {
+                  "type": "object",
+                  "properties": {
+                    "occupation": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "industry": {
+                      "type": "array",
+                      "example": [
+                        0
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "socialCircle": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "activities": {
+                      "type": "array",
+                      "example": [
+                        0
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "smokingOptions": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  },
+                  "required": [
+                    "occupation",
+                    "industry",
+                    "socialCircle",
+                    "activities",
+                    "smokingOptions"
+                  ]
+                },
+                "noticeInfo": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "notice": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "notice"
                   ]
                 }
               },
               "required": [
-                "matchList"
+                "personalInfo",
+                "workInfo",
+                "blacklist",
+                "noticeInfo"
               ]
             }
           }
