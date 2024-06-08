@@ -260,7 +260,7 @@ const matchListSchema = new Schema<IMatchList>({
     height: { type: Number, enum: getOptionKeys("heightOptions"), default: 0 },
     weight: { type: Number, enum: getOptionKeys("weightOptions"), default: 0 },
     socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 0 },
-    activities: { type: [Number], enum: getOptionKeys("activitiesOptions"), default: [0] },
+    activities: { type: [Number], enum: getOptionKeys("activitiesOptions"), default: [0, 2] },
     location: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
     education: { type: Number, enum: getOptionKeys("educationOptions"), default: 0 },
     liveWithParents: { type: Number, enum: getOptionKeys("liveWithParentsOptions"), default: 0 },
@@ -270,15 +270,7 @@ const matchListSchema = new Schema<IMatchList>({
   workInfo: {
     occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
-    workLocation: { type: Number, enum: getOptionKeys("locationOptions"), default: 0 },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
-  },
-  blacklist: {
-    occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 1 },
-    industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [1] },
-    socialCircle: { type: Number, enum: getOptionKeys("socialCircleOptions"), default: 1 },
-    activities: { type: [Number], enum: getOptionKeys("activitiesOptions"), default: [1] },
-    smokingOptions: { type: Number, enum: getOptionKeys("smokingOptions"), default: 1 }
   },
   noticeInfo: {
     email: { type: String, default: "" },

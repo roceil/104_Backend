@@ -1,226 +1,207 @@
 import { Schema, model, type Document } from "mongoose"
 
-interface IMatchListOption extends Document {
-  type: string
-  options: Record<string, string>
+interface MatchListOptionDocument extends Document {
+  age: Array<{ value: number, label: string }>
+  gender: Array<{ value: number, label: string }>
+  height: Array<{ value: number, label: string }>
+  weight: Array<{ value: number, label: string }>
+  isMarried: Array<{ value: number, label: string }>
+  location: Array<{ value: number, label: string }>
+  education: Array<{ value: number, label: string }>
+  liveWithParents: Array<{ value: number, label: string }>
+  religion: Array<{ value: number, label: string }>
+  smoking: Array<{ value: number, label: string }>
+  socialCircle: Array<{ value: number, label: string }>
+  activities: Array<{ value: number, label: string }>
+  occupation: Array<{ value: number, label: string }>
+  industry: Array<{ value: number, label: string }>
+  expectedSalary: Array<{ value: number, label: string }>
 }
 
-const matchListOptionSchema = new Schema<IMatchListOption>({
-  type: { type: String, required: true },
-  options: { type: Map, of: String, required: true }
+const matchListOptionSchema = new Schema<MatchListOptionDocument>({
+  age: [{ value: Number, label: String }],
+  gender: [{ value: Number, label: String }],
+  height: [{ value: Number, label: String }],
+  weight: [{ value: Number, label: String }],
+  isMarried: [{ value: Number, label: String }],
+  location: [{ value: Number, label: String }],
+  education: [{ value: Number, label: String }],
+  liveWithParents: [{ value: Number, label: String }],
+  religion: [{ value: Number, label: String }],
+  smoking: [{ value: Number, label: String }],
+  socialCircle: [{ value: Number, label: String }],
+  activities: [{ value: Number, label: String }],
+  occupation: [{ value: Number, label: String }],
+  industry: [{ value: Number, label: String }],
+  expectedSalary: [{ value: Number, label: String }]
 })
 
 const matchListOption = model("matchListOption", matchListOptionSchema)
 
 // 初始化選項資料
 const initOptions = async () => {
-  const options = [
-    {
-      type: "ageOptions",
-      options: {
-        0: "無指定",
-        1: "20-22 歲",
-        2: "23-25 歲",
-        3: "26-28 歲",
-        4: "29-31 歲",
-        5: "32-34 歲",
-        6: "35-37 歲",
-        7: "38-40 歲",
-        8: "41-43 歲",
-        9: "44-46 歲",
-        10: "47-50 歲",
-        11: "50 歲以上"
-      }
-    },
-    {
-      type: "genderOptions",
-      options: {
-        0: "無指定",
-        1: "男性",
-        2: "女性",
-        3: "其他",
-        4: "不透露"
-      }
-    },
-    {
-      type: "heightOptions",
-      options: {
-        0: "無指定",
-        1: "150cm 以下",
-        2: "150-155cm",
-        3: "155-160cm",
-        4: "160-165cm",
-        5: "165-170cm",
-        6: "170-175cm",
-        7: "175-180cm",
-        8: "180-185cm",
-        9: "185-190cm",
-        10: "190cm 以上",
-        11: "不透露"
-      }
-    },
-    {
-      type: "weightOptions",
-      options: {
-        0: "無指定",
-        1: "50kg 以下",
-        2: "50-55kg",
-        3: "55-60kg",
-        4: "60-65kg",
-        5: "65-70kg",
-        6: "70-75kg",
-        7: "75-80kg",
-        8: "80-85kg",
-        9: "85-90kg",
-        10: "90kg 以上",
-        11: "不透露"
-      }
-    },
-    {
-      type: "isMarriedOptions",
-      options: {
-        0: "無指定",
-        1: "已婚",
-        2: "未婚",
-        3: "離婚"
-      }
-    },
-    {
-      type: "locationOptions",
-      options: {
-        0: "無指定",
-        1: "北部",
-        2: "南部",
-        3: "東部",
-        4: "西部",
-        5: "中部",
-        6: "海外"
-      }
-    },
-    {
-      type: "educationOptions",
-      options: {
-        0: "無指定",
-        1: "國小",
-        2: "國中",
-        3: "高中",
-        4: "大學",
-        5: "研究所",
-        6: "博士後研究"
-      }
-    },
-    {
-      type: "liveWithParentsOptions",
-      options: {
-        0: "無指定",
-        1: "與父母同住",
-        2: "獨立居住",
-        3: "其他"
-      }
-    },
-    {
-      type: "religionOptions",
-      options: {
-        0: "無指定",
-        1: "基督教",
-        2: "佛教",
-        3: "道教",
-        4: "伊斯蘭教",
-        5: "天主教",
-        6: "印度教",
-        7: "錫克教",
-        8: "猶太教",
-        9: "其他"
-      }
-    },
-    {
-      type: "smokingOptions",
-      options: {
-        0: "無指定",
-        1: "不抽菸",
-        2: "偶爾抽菸",
-        3: "經常抽菸",
-        4: "電子菸"
-      }
-    },
-    {
-      type: "socialCircleOptions",
-      options: {
-        0: "無指定",
-        1: "外籍人士",
-        2: "本地人",
-        3: "藝術",
-        4: "音樂",
-        5: "運動",
-        6: "電影",
-        7: "烹飪",
-        8: "旅遊",
-        9: "攝影",
-        10: "閱讀",
-        11: "其他"
-      }
-    },
-    {
-      type: "activitiesOptions",
-      options: {
-        0: "無指定",
-        1: "健行",
-        2: "園藝",
-        3: "慈善",
-        4: "其他"
-      }
-    },
-    {
-      type: "occupationOptions",
-      options: {
-        0: "無指定",
-        1: "軍人",
-        2: "警察",
-        3: "消防員",
-        4: "教育",
-        5: "醫療",
-        6: "自由業",
-        7: "家庭主婦",
-        8: "學生",
-        9: "其他"
-      }
-    },
-    {
-      type: "industryOptions",
-      options: {
-        0: "無指定",
-        1: "餐旅",
-        2: "科技",
-        3: "金融",
-        4: "零售",
-        5: "製造",
-        6: "農業",
-        7: "礦業",
-        8: "營建業",
-        9: "運輸業",
-        10: "倉儲業",
-        11: "資訊業",
-        12: "其他"
-      }
-    },
-    {
-      type: "expectedSalary",
-      options: {
-        0: "無指定",
-        1: "20-25k",
-        2: "25-30k",
-        3: "30-35k",
-        4: "35-40k",
-        5: "40-45k",
-        6: "45-50k",
-        7: "50k以上"
-      }
-    }
-  ]
-
-  for (const opt of options) {
-    await matchListOption.findOneAndUpdate({ type: opt.type }, opt, { upsert: true })
+  const options = {
+    age: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "20-22 歲" },
+      { value: 2, label: "23-25 歲" },
+      { value: 3, label: "26-28 歲" },
+      { value: 4, label: "29-31 歲" },
+      { value: 5, label: "32-34 歲" },
+      { value: 6, label: "35-37 歲" },
+      { value: 7, label: "38-40 歲" },
+      { value: 8, label: "41-43 歲" },
+      { value: 9, label: "44-46 歲" },
+      { value: 10, label: "47-50 歲" },
+      { value: 11, label: "50 歲以上" }
+    ],
+    gender: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "男性" },
+      { value: 2, label: "女性" },
+      { value: 3, label: "其他" },
+      { value: 4, label: "不透露" }
+    ],
+    height: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "150cm 以下" },
+      { value: 2, label: "150-155cm" },
+      { value: 3, label: "155-160cm" },
+      { value: 4, label: "160-165cm" },
+      { value: 5, label: "165-170cm" },
+      { value: 6, label: "170-175cm" },
+      { value: 7, label: "175-180cm" },
+      { value: 8, label: "180-185cm" },
+      { value: 9, label: "185-190cm" },
+      { value: 10, label: "190cm 以上" },
+      { value: 11, label: "不透露" }
+    ],
+    weight: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "50kg 以下" },
+      { value: 2, label: "50-55kg" },
+      { value: 3, label: "55-60kg" },
+      { value: 4, label: "60-65kg" },
+      { value: 5, label: "65-70kg" },
+      { value: 6, label: "70-75kg" },
+      { value: 7, label: "75-80kg" },
+      { value: 8, label: "80-85kg" },
+      { value: 9, label: "85-90kg" },
+      { value: 10, label: "90kg 以上" },
+      { value: 11, label: "不透露" }
+    ],
+    isMarried: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "已婚" },
+      { value: 2, label: "未婚" },
+      { value: 3, label: "離婚" }
+    ],
+    location: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "北部" },
+      { value: 2, label: "南部" },
+      { value: 3, label: "東部" },
+      { value: 4, label: "西部" },
+      { value: 5, label: "中部" },
+      { value: 6, label: "海外" }
+    ],
+    education: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "國小" },
+      { value: 2, label: "國中" },
+      { value: 3, label: "高中" },
+      { value: 4, label: "大學" },
+      { value: 5, label: "研究所" },
+      { value: 6, label: "博士後研究" }
+    ],
+    liveWithParents: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "與父母同住" },
+      { value: 2, label: "獨立居住" },
+      { value: 3, label: "其他" }
+    ],
+    religion: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "基督教" },
+      { value: 2, label: "佛教" },
+      { value: 3, label: "道教" },
+      { value: 4, label: "伊斯蘭教" },
+      { value: 5, label: "天主教" },
+      { value: 6, label: "印度教" },
+      { value: 7, label: "錫克教" },
+      { value: 8, label: "猶太教" },
+      { value: 9, label: "其他" }
+    ],
+    smoking: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "不抽菸" },
+      { value: 2, label: "偶爾抽菸" },
+      { value: 3, label: "經常抽菸" },
+      { value: 4, label: "電子菸" }
+    ],
+    socialCircle: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "外籍人士" },
+      { value: 2, label: "本地人" },
+      { value: 3, label: "藝術" },
+      { value: 4, label: "音樂" },
+      { value: 5, label: "運動" },
+      { value: 6, label: "電影" },
+      { value: 7, label: "烹飪" },
+      { value: 8, label: "旅遊" },
+      { value: 9, label: "攝影" },
+      { value: 10, label: "閱讀" },
+      { value: 11, label: "其他" }
+    ],
+    activities: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "健行" },
+      { value: 2, label: "園藝" },
+      { value: 3, label: "慈善" },
+      { value: 4, label: "其他" }
+    ],
+    occupation: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "軍人" },
+      { value: 2, label: "警察" },
+      { value: 3, label: "消防員" },
+      { value: 4, label: "教育" },
+      { value: 5, label: "醫療" },
+      { value: 6, label: "自由業" },
+      { value: 7, label: "家庭主婦" },
+      {
+        value: 8, label: "學生"
+      },
+      { value: 9, label: "其他" }
+    ],
+    industry: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "餐旅" },
+      { value: 2, label: "科技" },
+      { value: 3, label: "金融" },
+      { value: 4, label: "零售" },
+      { value: 5, label: "製造" },
+      { value: 6, label: "農業" },
+      { value: 7, label: "礦業" },
+      { value: 8, label: "營建業" },
+      { value: 9, label: "運輸業" },
+      { value: 10, label: "倉儲業" },
+      { value: 11, label: "資訊業" },
+      { value: 12, label: "其他" }
+    ],
+    expectedSalary: [
+      { value: 0, label: "無指定" },
+      { value: 1, label: "20-25k" },
+      { value: 2, label: "25-30k" },
+      { value: 3, label: "30-35k" },
+      { value: 4, label: "35-40k" },
+      { value: 5, label: "40-45k" },
+      { value: 6, label: "45-50k" },
+      { value: 7, label: "50k以上" }
+    ]
   }
+
+  await matchListOption.create(options)
 }
 
 initOptions().catch((err) => {
