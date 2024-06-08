@@ -13,7 +13,6 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
       type: "Object",
       description: "編輯配對設定",
       schema: {
-        $matchList: {
             $personalInfo: {
               $age: 1,
               $gender: 1,
@@ -44,7 +43,6 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
             $noticeInfo: {
               $email: "",
               $notice: false
-      }
     }
       }
     }
