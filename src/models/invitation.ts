@@ -36,10 +36,6 @@ const invitationSchema = new Schema<IInvitation>({
       type: String,
       required: [true, "需要訊息"]
     },
-    isFinishDating: {
-      type: Boolean,
-      default: false
-    },
     createdAt: {
       type: Date,
       default: Date.now
@@ -48,6 +44,10 @@ const invitationSchema = new Schema<IInvitation>({
       type: Date,
       default: Date.now
     }
+  },
+  isFinishDating: {
+    type: Boolean,
+    default: false
   },
   date: {
     type: Date,

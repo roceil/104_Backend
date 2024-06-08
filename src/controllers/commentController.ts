@@ -31,7 +31,7 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
   if (numberScore <= 1 || numberScore >= 5) {
     appErrorHandler(400, "評分範圍為1-5", next)
   }
-  const comment = await Comment.create({ userId, commentedUserId, content, numberScore })
+  const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
 

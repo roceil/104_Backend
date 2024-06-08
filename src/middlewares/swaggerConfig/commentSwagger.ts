@@ -12,12 +12,12 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
        required: true,
        schema: {
          $commentedUserId:"66487581f6f2c93ddd16ff00",
-         $content:"test666666"
+         $content:"test666666",
          $score:4
        }
      }
    * #swagger.responses[200] = {
-           description: '新增評價',
+           description: "新增評價",
            schema: {
                status: true,
                message: "新增成功",
@@ -25,7 +25,8 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
                  userId: "664473d53d428e98fd5fb226",
                  commentedUserId: "66487581f6f2c93ddd16ff00",
                  content: "test666666",
-                 score: 4
+                 isUnlock: false,
+                 score: 4,
                  _id: "664980fe213d91ed5fbff629",
                  createdAt: "2024-05-19T04:33:02.282Z",
                  updatedAt: "2024-05-19T04:33:02.282Z"
@@ -43,7 +44,7 @@ export function getCommentILiftListSwagger (_req: Request, _res: Response, next:
        "apiKeyAuth":[]
      }]
    * #swagger.responses[200] = {
-           description: '評價列表',
+           description: "評價列表",
            schema: {
                status: true,
                message: "查詢成功",
