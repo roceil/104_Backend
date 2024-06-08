@@ -9,7 +9,7 @@ import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 
 const postComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { commentedUserId, content } = req.body
+  const { commentedUserId, content, score } = req.body
 
   if (!content) {
     appErrorHandler(400, "缺少評價", next)
@@ -21,7 +21,17 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "缺少被評價者Id", next)
   }
 
-  const comment = await Comment.create({ userId, commentedUserId, content })
+  if (!score) {
+    appErrorHandler(400, "缺少評分", next)
+  }
+  const numberScore = Number(score)
+  if (isNaN(numberScore)) {
+    appErrorHandler(400, "評分需要數字", next)
+  }
+  if (numberScore <= 1 || numberScore >= 5) {
+    appErrorHandler(400, "評分範圍為1-5", next)
+  }
+  const comment = await Comment.create({ userId, commentedUserId, content, numberScore })
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
 

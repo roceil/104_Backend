@@ -11,6 +11,7 @@ interface IInvitation extends Document {
     updatedAt: Date
   }
   date: Date
+  isFinishDating: boolean
   status: "accepted" | "rejected" | "cancel" | "pending"
   createdAt: Date
   updatedAt: Date
@@ -34,6 +35,10 @@ const invitationSchema = new Schema<IInvitation>({
     content: {
       type: String,
       required: [true, "需要訊息"]
+    },
+    isFinishDating: {
+      type: Boolean,
+      default: false
     },
     createdAt: {
       type: Date,

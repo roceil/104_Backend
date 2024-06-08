@@ -118,6 +118,7 @@ export function getBeInvitationByIdSwagger (_req: Request, _res: Response, next:
               _id: "664c440d58453572378249c9",
               userId: "664473d53d428e98fd5fb226",
               invitedUserId: "664c427bb56b34d999f86c83",
+              isFinishDating: false,
               status: "pending",
               date: "2024-05-21T06:49:49.383Z",
               createdAt: "2024-05-21T06:49:49.383Z",
@@ -170,6 +171,7 @@ export function cancelBeInvitationSwagger (_req: Request, _res: Response, next: 
             _id: "664c440d58453572378249c9",
             userId: "664473d53d428e98fd5fb226",
             invitedUserId: "664c427bb56b34d999f86c83",
+            isFinishDating: false,
             status: "cancel",
             date: "2024-05-21T06:49:49.383Z",
             createdAt: "2024-05-21T06:49:49.383Z",
@@ -210,6 +212,7 @@ export function acceptInvitationSwagger (_req: Request, _res: Response, next: Ne
             _id: "664c440d58453572378249c9",
             userId: "664473d53d428e98fd5fb226",
             invitedUserId: "664c427bb56b34d999f86c83",
+            isFinishDating: false,
             status: "accepted",
             date: "2024-05-21T06:49:49.383Z",
             createdAt: "2024-05-21T06:49:49.383Z",
@@ -219,6 +222,58 @@ export function acceptInvitationSwagger (_req: Request, _res: Response, next: Ne
       }
     }
    */
+  next()
+}
+export function finishBeInvitationDatingSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+   * #swagger.tags = ["beInvitation-被邀約"]
+   * #swagger.description = "完成約會"
+   * #swagger.security = [{
+     "apiKeyAuth":[]
+    }]
+    * #swagger.parameters["path"] = {
+          in: "path",
+          required: true,
+          type: "string",
+          name: "id",
+          description: "列表Id"
+      }
+    * #swagger.responses[200] = {
+        description: "完成約會",
+        schema: {
+            status: true,
+            message: "完成約會",
+            data: {
+              message: {
+                  title: "hello7777",
+                  content: "7777777",
+                  createdAt: "2024-05-21T06:49:49.383Z",
+                  updatedAt: "2024-05-21T06:49:49.383Z"
+              },
+              _id: "664c440d58453572378249c9",
+              userId: "664473d53d428e98fd5fb226",
+              invitedUserId: "664c427bb56b34d999f86c83",
+              status: "pending",
+              date: "2024-05-21T06:49:49.383Z",
+              createdAt: "2024-05-21T06:49:49.383Z",
+              updatedAt: "2024-05-21T06:49:49.383Z",
+              profileByUser: [
+                  {
+                      _id: "664c42ea58453572378249bf",
+                      userId: "664c427bb56b34d999f86c83",
+                      nickNameDetails: {
+                          nickName: "Kven",
+                          isShow: true,
+                          _id: "664c42ea58453572378249c0"
+                      },
+                      tags: []
+                  }
+              ],
+              id: "664c440d58453572378249c9"
+          }
+        }
+      }
+     */
   next()
 }
 export function deleteBeInvitationSwagger (_req: Request, _res: Response, next: NextFunction): void {
@@ -250,6 +305,7 @@ export function deleteBeInvitationSwagger (_req: Request, _res: Response, next: 
             _id: "664c440d58453572378249c9",
             userId: "664473d53d428e98fd5fb226",
             invitedUserId: "664c427bb56b34d999f86c83",
+            isFinishDating: false,
             status: "pending",
             date: "2024-05-21T06:49:49.383Z",
             createdAt: "2024-05-21T06:49:49.383Z",

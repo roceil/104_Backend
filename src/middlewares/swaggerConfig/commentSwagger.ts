@@ -13,6 +13,7 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
        schema: {
          $commentedUserId:"66487581f6f2c93ddd16ff00",
          $content:"test666666"
+         $score:4
        }
      }
    * #swagger.responses[200] = {
@@ -24,6 +25,7 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
                  userId: "664473d53d428e98fd5fb226",
                  commentedUserId: "66487581f6f2c93ddd16ff00",
                  content: "test666666",
+                 score: 4
                  _id: "664980fe213d91ed5fbff629",
                  createdAt: "2024-05-19T04:33:02.282Z",
                  updatedAt: "2024-05-19T04:33:02.282Z"
@@ -51,6 +53,7 @@ export function getCommentILiftListSwagger (_req: Request, _res: Response, next:
                    userId: "664473d53d428e98fd5fb226",
                    commentedUserId: "66487581f6f2c93ddd16ff00",
                    content: "test666666",
+                   score: 4,
                    createdAt: "2024-05-19T04:05:16.243Z",
                    updatedAt: "2024-05-19T04:05:16.243Z"
                  }
@@ -78,6 +81,7 @@ export function getCommentListSwagger (_req: Request, _res: Response, next: Next
                    userId: "664473d53d428e98fd5fb226",
                    commentedUserId: "66487581f6f2c93ddd16ff00",
                    content: "test666666",
+                   score: 4,
                    createdAt: "2024-05-19T04:05:16.243Z",
                    updatedAt: "2024-05-19T04:05:16.243Z"
                  }
@@ -111,6 +115,7 @@ export function getCommentByIdSwagger (_req: Request, _res: Response, next: Next
                  userId: "664473d53d428e98fd5fb226",
                  commentedUserId: "66487581f6f2c93ddd16ff00",
                  content: "test666666",
+                 score: 4,
                  createdAt: "2024-05-19T04:05:16.243Z",
                  updatedAt: "2024-05-19T04:05:16.243Z"
                }
@@ -138,7 +143,8 @@ export function putCommentSwagger (_req: Request, _res: Response, next: NextFunc
        description: "修改評價",
        required: true,
        schema: {
-         $content:"test777777"
+         $content:"test777777",
+         $score: 5
        }
      }
    * #swagger.responses[200] = {
@@ -151,6 +157,7 @@ export function putCommentSwagger (_req: Request, _res: Response, next: NextFunc
                  userId: "664473d53d428e98fd5fb226",
                  commentedUserId: "66487581f6f2c93ddd16ff00",
                  content: "test777777",
+                 score: 5,
                  createdAt: "2024-05-19T04:05:16.243Z",
                  updatedAt: "2024-05-19T04:05:16.243Z"
                }
@@ -183,6 +190,7 @@ export function deleteCommentSwagger (_req: Request, _res: Response, next: NextF
                  userId: "664473d53d428e98fd5fb226",
                  commentedUserId: "66487581f6f2c93ddd16ff00",
                  content: "test777777",
+                 score: 5,
                  createdAt: "2024-05-19T04:05:16.243Z",
                  updatedAt: "2024-05-19T04:05:16.243Z"
                }
