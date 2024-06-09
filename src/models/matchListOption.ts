@@ -50,7 +50,7 @@ const matchListOption = model("matchListOption", matchListOptionSchema)
 const initOptions = async () => {
   const options = {
     age: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "20-22 歲" },
       { value: 2, label: "23-25 歲" },
       { value: 3, label: "26-28 歲" },
@@ -64,14 +64,14 @@ const initOptions = async () => {
       { value: 11, label: "50 歲以上" }
     ],
     gender: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "男性" },
       { value: 2, label: "女性" },
       { value: 3, label: "其他" },
       { value: 4, label: "不透露" }
     ],
     height: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "150cm 以下" },
       { value: 2, label: "150-155cm" },
       { value: 3, label: "155-160cm" },
@@ -85,7 +85,7 @@ const initOptions = async () => {
       { value: 11, label: "不透露" }
     ],
     weight: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "50kg 以下" },
       { value: 2, label: "50-55kg" },
       { value: 3, label: "55-60kg" },
@@ -99,13 +99,13 @@ const initOptions = async () => {
       { value: 11, label: "不透露" }
     ],
     isMarried: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "已婚" },
       { value: 2, label: "未婚" },
       { value: 3, label: "離婚" }
     ],
     location: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "北部" },
       { value: 2, label: "南部" },
       { value: 3, label: "東部" },
@@ -114,7 +114,7 @@ const initOptions = async () => {
       { value: 6, label: "海外" }
     ],
     education: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "國小" },
       { value: 2, label: "國中" },
       { value: 3, label: "高中" },
@@ -123,13 +123,13 @@ const initOptions = async () => {
       { value: 6, label: "博士後研究" }
     ],
     liveWithParents: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "與父母同住" },
       { value: 2, label: "獨立居住" },
       { value: 3, label: "其他" }
     ],
     religion: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "基督教" },
       { value: 2, label: "佛教" },
       { value: 3, label: "道教" },
@@ -141,14 +141,14 @@ const initOptions = async () => {
       { value: 9, label: "其他" }
     ],
     smoking: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "不抽菸" },
       { value: 2, label: "偶爾抽菸" },
       { value: 3, label: "經常抽菸" },
       { value: 4, label: "電子菸" }
     ],
     socialCircle: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "外籍人士" },
       { value: 2, label: "本地人" },
       { value: 3, label: "藝術" },
@@ -162,14 +162,14 @@ const initOptions = async () => {
       { value: 11, label: "其他" }
     ],
     activities: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "健行" },
       { value: 2, label: "園藝" },
       { value: 3, label: "慈善" },
       { value: 4, label: "其他" }
     ],
     occupation: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "軍人" },
       { value: 2, label: "警察" },
       { value: 3, label: "消防員" },
@@ -183,7 +183,7 @@ const initOptions = async () => {
       { value: 9, label: "其他" }
     ],
     industry: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "餐旅" },
       { value: 2, label: "科技" },
       { value: 3, label: "金融" },
@@ -198,7 +198,7 @@ const initOptions = async () => {
       { value: 12, label: "其他" }
     ],
     expectedSalary: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "20-25k" },
       { value: 2, label: "25-30k" },
       { value: 3, label: "30-35k" },
@@ -208,14 +208,14 @@ const initOptions = async () => {
       { value: 7, label: "50k以上" }
     ],
     banSmoking: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "不抽菸" },
       { value: 2, label: "偶爾抽菸" },
       { value: 3, label: "經常抽菸" },
       { value: 4, label: "電子菸" }
     ],
     banOccupation: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "軍人" },
       { value: 2, label: "警察" },
       { value: 3, label: "消防員" },
@@ -227,7 +227,7 @@ const initOptions = async () => {
       { value: 9, label: "其他" }
     ],
     banIndustry: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "餐旅" },
       { value: 2, label: "科技" },
       { value: 3, label: "金融" },
@@ -242,7 +242,7 @@ const initOptions = async () => {
       { value: 12, label: "其他" }
     ],
     banExpectedSalary: [
-      { value: 0, label: "無指定" },
+      { value: 0, label: "請選擇" },
       { value: 1, label: "20-25k" },
       { value: 2, label: "25-30k" },
       { value: 3, label: "30-35k" },

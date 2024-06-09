@@ -1,4 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express"
+// import { Types } from "mongoose"
+
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
@@ -6,6 +8,10 @@ import { MatchList } from "@/models/matchList"
 import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
+
+// import { Collection } from "@/models/collection"
+import { BlackList } from "@/models/blackList"
+import { Invitation } from "@/models/invitation"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -81,14 +87,43 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
       ]
     })
 
-    const userIds = users.map(user => user.userId)
-
-    const usersData = await User.find({ _id: { $in: userIds } })
-
     if (users.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
     } else {
-      appSuccessHandler(200, "查詢配對結果成功", usersData, res)
+      const resultUserIds = users.map(user => user.userId)
+      // const resultUsersData = await User.find({ _id: { $in: resultUserIds } })
+
+      // 取得對方用戶的封鎖狀態
+      const blackList = await BlackList.findOne({ userId })
+      const lockedUserIds = blackList ? blackList.lockedUserId : []
+
+      // 取得對方用戶的邀約狀態
+      const invitations = await Invitation.find({
+        userId, // 邀請者
+        invitedUserId: { $in: resultUserIds } // 被邀請者
+      })
+
+      console.log("invitations", invitations)
+
+      const invitationStatuses = invitations.reduce<Record<string, string>>((acc, invitation) => {
+        /* eslint-disable-next-line */
+        acc[invitation.userId.toString()] = invitation.status
+        return acc
+      }, {})
+
+      // 將每個用戶的邀約狀態加入到返回的用戶資料中
+      const resultUsersData = await Promise.all(resultUserIds.map(async (id) => {
+        const user = await User.findById(id)
+        return {
+          ...user?.toObject(),
+          /* eslint-disable-next-line */
+          isLocked: lockedUserIds.map(id => id.toString()).includes(id.toString()),
+          /* eslint-disable-next-line */
+          invitationStatus: invitationStatuses[id.toString()] || "no invitation"
+        }
+      }))
+
+      appSuccessHandler(200, "查詢配對結果成功", resultUsersData, res)
     }
   }
 }
@@ -96,9 +131,9 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 // MatchListSelfSetting
 export const editMatchListSelfSetting = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { matchList } = req.body
+  const body = req.body
 
-  if (!matchList) {
+  if (!body) {
     appErrorHandler(400, "缺少配對設定", next)
   }
   if (!userId) {
@@ -106,7 +141,7 @@ export const editMatchListSelfSetting = async (req: Request, res: Response, next
   }
 
   const matchListData = await MatchListSelfSetting
-    .findOneAndUpdate({ userId }, { $set: matchList }, { new: true })
+    .findOneAndUpdate({ userId }, { $set: body }, { new: true })
 
   if (!matchListData) {
     appErrorHandler(400, "尚未新建配對設定，編輯配對設定失敗", next)

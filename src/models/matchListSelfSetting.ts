@@ -23,11 +23,6 @@ interface IMatchListSelfSetting extends Document {
     workLocation: number
     expectedSalary: number
   }
-  blacklist: {
-    banSmoking: number
-    banOccupation: number
-    banIndustry: number[]
-  }
   createdAt: Date
   updatedAt: Date
 }
