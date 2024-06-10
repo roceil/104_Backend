@@ -7,7 +7,7 @@ export function getProfileSwagger (_req: Request, _res: Response, next: NextFunc
       "apiKeyAuth":[]
     }]
  * #swagger.responses[200] = {
-            description: '註冊資訊',
+            description: "註冊資訊",
             schema: {
                 status: true,
                 message: "查詢成功",
@@ -18,9 +18,71 @@ export function getProfileSwagger (_req: Request, _res: Response, next: NextFunc
                     nickName: "Eason",
                     isShow: false,
                     },
-                  tags: [],
+                  tags: [
+                    "test1",
+                    "test2"
+                  ],
                   createdAt: "2024-05-14T01:41:36.960Z",
-                  updatedAt: "2024-05-14T02:10:50.806Z"
+                  updatedAt: "2024-05-14T02:10:50.806Z",
+                  companyDetails: {
+                    company: "test company",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ea"
+                  },
+                  exposureSettings: {
+                    rating: 5,
+                    isShow: true,
+                    isMatch: true,
+                    _id: "66670afb8e86cd62fa3161e6"
+                  },
+                  incomeDetails: {
+                    income: "test income",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e9"
+                  },
+                  introDetails: {
+                    intro: "test intro",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ed"
+                  },
+                  jobDetails: {
+                    job: "test job",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e7"
+                  },
+                  lineDetails: {
+                    lineId: "test line",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e8"
+                  },
+                  phoneDetails: {
+                    phone: "0987654321",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161eb"
+                  },
+                  photoDetails: {
+                    photo: "https://i.imgur.com/XgbZdeA.jpeg",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ee"
+                  },
+                  userInfo: {
+                    _id: "665c2f502ab2d6460452171c",
+                    personalInfo: {
+                      username: "Eason",
+                      email: "56asdf@hotmail.com",
+                      gender: null,
+                      birthday: null,
+                      _id: "665c2f502ab2d6460452171d"
+                    },
+                    isSubscribe: false,
+                    points: 0,
+                    resetPasswordToken: "",
+                    isActive: true,
+                    blockedUsers: [],
+                    notifications: [],
+                    createdAt: "2024-05-14T01:34:38.298Z",
+                    updatedAt: "2024-05-14T01:34:38.298Z"
+                  }
                 }
             }
         }
@@ -35,7 +97,7 @@ export function getProfileByIdSwagger (_req: Request, _res: Response, next: Next
       "apiKeyAuth":[]
     }]
  * #swagger.responses[200] = {
-            description: '註冊資訊',
+            description: "註冊資訊",
             schema: {
                 status: true,
                 message: "查詢成功",
@@ -75,7 +137,7 @@ export function postProfileSwagger (_req: Request, _res: Response, next: NextFun
             }
     }
    * #swagger.responses[200] = {
-            description: '註冊資訊',
+            description: "註冊資訊",
             schema: {
                 status: true,
                 message: "用戶新增成功",
@@ -114,10 +176,44 @@ export function putProfileSwagger (_req: Request, _res: Response, next: NextFunc
             required: true,
             description: "資料格式",
             schema: {
+                photoDetails: {
+                  photo:"https://i.imgur.com/XgbZdeA.jpeg",
+                  isShow:true
+                },
+                introDetails: {
+                  intro:"test intro",
+                  isShow:true
+                },
                 nickNameDetails:{
                   nickName:"Jack",
                   isShow:true
-                }
+                },
+                phoneDetails:{
+                  phone:"0987654321",
+                  isShow:true
+                },
+                companyDetails:{
+                  company:"test company",
+                  isShow:true
+                },
+                incomeDetails:{
+                  income:"test income",
+                  isShow:true
+                },
+                lineDetails:{
+                  lineId:"test line",
+                  isShow:true
+                },
+                jobDetails:{
+                  job:"test job",
+                  isShow:true
+                },
+                tags:["test1","test2"],
+                exposureSettings:{
+                  rating:5,
+                  isShow:true,
+                  isMatch:true
+                },
             }
     }
    * #swagger.responses[200] = {
@@ -127,18 +223,64 @@ export function putProfileSwagger (_req: Request, _res: Response, next: NextFunc
                 message: "修改資料成功",
                 data: {
                   _id: "6642bfaec60d4f7c475d8401",
-                  personalInfo: {
-                  email: "a444455555@hotmail.com",
-                  username: "咚咚",
-                  gender: null,
-                  birthday: null,
-                },
-                isSubscribe: false,
-                points: 0,
-                resetPasswordToken: "",
-                isActive: true,
-                blockedUsers: [],
-                notifications: [],
+                  unlockComment: [],
+                  userStatus: {
+                    rating: 0,
+                    isMatch: false,
+                    point: 0,
+                    _id: "66670afb8e86cd62fa3161f9"
+                  },
+                  userId: "665c2f502ab2d6460452171c",
+                  nickNameDetails: {
+                    nickName: "Jack",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ec"
+                  },
+                  tags: [
+                    "test1",
+                    "test2"
+                  ],
+                  companyDetails: {
+                    company: "test company",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ea"
+                  },
+                  exposureSettings: {
+                    rating: 5,
+                    isShow: true,
+                    isMatch: true,
+                    _id: "66670afb8e86cd62fa3161e6"
+                  },
+                  incomeDetails: {
+                    income: "test income",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e9"
+                  },
+                  introDetails: {
+                    intro: "test intro",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ed"
+                  },
+                  jobDetails: {
+                    job: "test job",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e7"
+                  },
+                  lineDetails: {
+                    lineId: "test line",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161e8"
+                  },
+                  phoneDetails: {
+                    phone: "0987654321",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161eb"
+                  },
+                  photoDetails: {
+                    photo: "https://i.imgur.com/XgbZdeA.jpeg",
+                    isShow: true,
+                    _id: "66670afb8e86cd62fa3161ee"
+                  },
                 createdAt: "2024-05-14T01:34:38.298Z",
                 updatedAt: "2024-05-14T01:34:38.298Z"
                 }

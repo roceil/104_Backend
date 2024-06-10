@@ -58,7 +58,7 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const { userId } = req.user as LoginResData
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings userStatus"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {
@@ -66,7 +66,8 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   } else {
     const invitations = JSON.parse(JSON.stringify(invitationList))
     invitations.forEach((_: undefined, index: number) => {
-      eraseProperty(invitations[index], ["profileByInvitedUser", "nickNameDetails"], ["_id"])
+      eraseProperty(invitations[index], ["profileByInvitedUser", "nickNameDetails", "photoDetails", "introDetails", "incomeDetails", "lineDetails", "exposureSettings", "userStatus"
+      ], ["_id"])
     })
     appSuccessHandler(200, "查詢成功", { invitations, invitationsLength }, res)
   }

@@ -566,8 +566,13 @@
                     },
                     "tags": {
                       "type": "array",
-                      "example": [],
-                      "items": {}
+                      "example": [
+                        "test1",
+                        "test2"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
                     },
                     "createdAt": {
                       "type": "string",
@@ -576,6 +581,208 @@
                     "updatedAt": {
                       "type": "string",
                       "example": "2024-05-14T02:10:50.806Z"
+                    },
+                    "companyDetails": {
+                      "type": "object",
+                      "properties": {
+                        "company": {
+                          "type": "string",
+                          "example": "test company"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ea"
+                        }
+                      }
+                    },
+                    "exposureSettings": {
+                      "type": "object",
+                      "properties": {
+                        "rating": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "isMatch": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e6"
+                        }
+                      }
+                    },
+                    "incomeDetails": {
+                      "type": "object",
+                      "properties": {
+                        "income": {
+                          "type": "string",
+                          "example": "test income"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e9"
+                        }
+                      }
+                    },
+                    "introDetails": {
+                      "type": "object",
+                      "properties": {
+                        "intro": {
+                          "type": "string",
+                          "example": "test intro"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ed"
+                        }
+                      }
+                    },
+                    "jobDetails": {
+                      "type": "object",
+                      "properties": {
+                        "job": {
+                          "type": "string",
+                          "example": "test job"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e7"
+                        }
+                      }
+                    },
+                    "lineDetails": {
+                      "type": "object",
+                      "properties": {
+                        "lineId": {
+                          "type": "string",
+                          "example": "test line"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e8"
+                        }
+                      }
+                    },
+                    "phoneDetails": {
+                      "type": "object",
+                      "properties": {
+                        "phone": {
+                          "type": "string",
+                          "example": "0987654321"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161eb"
+                        }
+                      }
+                    },
+                    "photoDetails": {
+                      "type": "object",
+                      "properties": {
+                        "photo": {
+                          "type": "string",
+                          "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ee"
+                        }
+                      }
+                    },
+                    "userInfo": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "665c2f502ab2d6460452171c"
+                        },
+                        "personalInfo": {
+                          "type": "object",
+                          "properties": {
+                            "username": {
+                              "type": "string",
+                              "example": "Eason"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "56asdf@hotmail.com"
+                            },
+                            "gender": {},
+                            "birthday": {},
+                            "_id": {
+                              "type": "string",
+                              "example": "665c2f502ab2d6460452171d"
+                            }
+                          }
+                        },
+                        "isSubscribe": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "points": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "resetPasswordToken": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "blockedUsers": {
+                          "type": "array",
+                          "example": [],
+                          "items": {}
+                        },
+                        "notifications": {
+                          "type": "array",
+                          "example": [],
+                          "items": {}
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-14T01:34:38.298Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-14T01:34:38.298Z"
+                        }
+                      }
                     }
                   }
                 }
@@ -732,6 +939,32 @@
             "schema": {
               "type": "object",
               "properties": {
+                "photoDetails": {
+                  "type": "object",
+                  "properties": {
+                    "photo": {
+                      "type": "string",
+                      "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "introDetails": {
+                  "type": "object",
+                  "properties": {
+                    "intro": {
+                      "type": "string",
+                      "example": "test intro"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
                 "nickNameDetails": {
                   "type": "object",
                   "properties": {
@@ -740,6 +973,98 @@
                       "example": "Jack"
                     },
                     "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "phoneDetails": {
+                  "type": "object",
+                  "properties": {
+                    "phone": {
+                      "type": "string",
+                      "example": "0987654321"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "companyDetails": {
+                  "type": "object",
+                  "properties": {
+                    "company": {
+                      "type": "string",
+                      "example": "test company"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "incomeDetails": {
+                  "type": "object",
+                  "properties": {
+                    "income": {
+                      "type": "string",
+                      "example": "test income"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "lineDetails": {
+                  "type": "object",
+                  "properties": {
+                    "lineId": {
+                      "type": "string",
+                      "example": "test line"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "jobDetails": {
+                  "type": "object",
+                  "properties": {
+                    "job": {
+                      "type": "string",
+                      "example": "test job"
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "test1",
+                    "test2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "exposureSettings": {
+                  "type": "object",
+                  "properties": {
+                    "rating": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "isShow": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "isMatch": {
                       "type": "boolean",
                       "example": true
                     }
@@ -770,46 +1095,202 @@
                       "type": "string",
                       "example": "6642bfaec60d4f7c475d8401"
                     },
-                    "personalInfo": {
+                    "unlockComment": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "userStatus": {
                       "type": "object",
                       "properties": {
-                        "email": {
-                          "type": "string",
-                          "example": "a444455555@hotmail.com"
+                        "rating": {
+                          "type": "number",
+                          "example": 0
                         },
-                        "username": {
-                          "type": "string",
-                          "example": "咚咚"
+                        "isMatch": {
+                          "type": "boolean",
+                          "example": false
                         },
-                        "gender": {},
-                        "birthday": {}
+                        "point": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161f9"
+                        }
                       }
                     },
-                    "isSubscribe": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "points": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "resetPasswordToken": {
+                    "userId": {
                       "type": "string",
-                      "example": ""
+                      "example": "665c2f502ab2d6460452171c"
                     },
-                    "isActive": {
-                      "type": "boolean",
-                      "example": true
+                    "nickNameDetails": {
+                      "type": "object",
+                      "properties": {
+                        "nickName": {
+                          "type": "string",
+                          "example": "Jack"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ec"
+                        }
+                      }
                     },
-                    "blockedUsers": {
+                    "tags": {
                       "type": "array",
-                      "example": [],
-                      "items": {}
+                      "example": [
+                        "test1",
+                        "test2"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
                     },
-                    "notifications": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
+                    "companyDetails": {
+                      "type": "object",
+                      "properties": {
+                        "company": {
+                          "type": "string",
+                          "example": "test company"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ea"
+                        }
+                      }
+                    },
+                    "exposureSettings": {
+                      "type": "object",
+                      "properties": {
+                        "rating": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "isMatch": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e6"
+                        }
+                      }
+                    },
+                    "incomeDetails": {
+                      "type": "object",
+                      "properties": {
+                        "income": {
+                          "type": "string",
+                          "example": "test income"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e9"
+                        }
+                      }
+                    },
+                    "introDetails": {
+                      "type": "object",
+                      "properties": {
+                        "intro": {
+                          "type": "string",
+                          "example": "test intro"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ed"
+                        }
+                      }
+                    },
+                    "jobDetails": {
+                      "type": "object",
+                      "properties": {
+                        "job": {
+                          "type": "string",
+                          "example": "test job"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e7"
+                        }
+                      }
+                    },
+                    "lineDetails": {
+                      "type": "object",
+                      "properties": {
+                        "lineId": {
+                          "type": "string",
+                          "example": "test line"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161e8"
+                        }
+                      }
+                    },
+                    "phoneDetails": {
+                      "type": "object",
+                      "properties": {
+                        "phone": {
+                          "type": "string",
+                          "example": "0987654321"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161eb"
+                        }
+                      }
+                    },
+                    "photoDetails": {
+                      "type": "object",
+                      "properties": {
+                        "photo": {
+                          "type": "string",
+                          "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                        },
+                        "isShow": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "66670afb8e86cd62fa3161ee"
+                        }
+                      }
                     },
                     "createdAt": {
                       "type": "string",
@@ -2157,6 +2638,75 @@
                                   "type": "string",
                                   "example": "664c427bb56b34d999f86c83"
                                 },
+                                "photoDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "photo": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "introDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "intro": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "incomeDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "income": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "lineDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "lineId": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "exposureSettings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
                                 "nickNameDetails": {
                                   "type": "object",
                                   "properties": {
@@ -2167,10 +2717,6 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": true
-                                    },
-                                    "_id": {
-                                      "type": "string",
-                                      "example": "664c42ea58453572378249c0"
                                     }
                                   }
                                 },
@@ -2178,6 +2724,31 @@
                                   "type": "array",
                                   "example": [],
                                   "items": {}
+                                },
+                                "userStatus": {
+                                  "type": "object",
+                                  "properties": {
+                                    "commentScore": {
+                                      "type": "number",
+                                      "example": 3.7
+                                    },
+                                    "commentCount": {
+                                      "type": "number",
+                                      "example": 6
+                                    },
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "point": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
                                 }
                               }
                             }

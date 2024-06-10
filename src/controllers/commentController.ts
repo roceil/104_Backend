@@ -32,6 +32,33 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "評分範圍為1-5", next)
   }
   const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
+  const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
+    {
+      $set: {
+        "userStatus.commentScore": {
+          $round: [// 四捨五入
+            {
+              $divide: [// 計算平均分數  (評分總和+新評分)/(評分次數+1)
+                {
+                  $add: [// 總分數計算
+                    { $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] },
+                    numberScore
+                  ]
+                },
+                { $add: ["$userStatus.commentCount", 1] }
+              ]
+            },
+            1
+          ]
+        },
+        "userStatus.commentCount": { $add: ["$userStatus.commentCount", 1] }
+      }
+    }
+  ])
+  if (!commentUserProfile) {
+    appErrorHandler(404, "被評價者不存在", next)
+    return
+  }
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
 

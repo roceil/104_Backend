@@ -51,6 +51,8 @@ interface IUserStatus {
   rating: number
   isMatch: boolean
   point: number
+  commentScore: number
+  commentCount: number
 }
 
 interface IPersonalInfo {
@@ -215,6 +217,14 @@ const profileSchema = new Schema<IPersonalInfo>({
         default: false
       },
       point: {
+        type: Number,
+        default: 0
+      },
+      commentScore: {
+        type: Number,
+        default: 0
+      },
+      commentCount: {
         type: Number,
         default: 0
       }
