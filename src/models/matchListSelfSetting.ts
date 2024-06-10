@@ -2,6 +2,10 @@ import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 
 interface IMatchListSelfSetting extends Document {
+  _id: {
+    type: mongo.ObjectId
+    select: false
+  }
   userId: IUserId
   personalInfo: {
     age: number
@@ -23,8 +27,14 @@ interface IMatchListSelfSetting extends Document {
     workLocation: number
     expectedSalary: number
   }
-  createdAt: Date
-  updatedAt: Date
+  createdAt: {
+    type: Date
+    select: false
+  }
+  updatedAt: {
+    type: Date
+    select: false
+  }
 }
 
 const options = [

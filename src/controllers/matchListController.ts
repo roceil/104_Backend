@@ -66,7 +66,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     } = matchListData
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
-    const users = await MatchListSelfSetting.find({
+    const resultUsers = await MatchListSelfSetting.find({
       // "userId": { $ne: userId },
       $and: [
         { "personalInfo.age": personalInfo.age },
@@ -87,39 +87,46 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
       ]
     })
 
-    if (users.length === 0) {
+    if (resultUsers.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
     } else {
-      const resultUserIds = users.map(user => user.userId)
-      // const resultUsersData = await User.find({ _id: { $in: resultUserIds } })
+      const resultUserIds = resultUsers.map(user => user.userId)
 
-      // 取得對方用戶的封鎖狀態
-      const blackList = await BlackList.findOne({ userId })
-      const lockedUserIds = blackList ? blackList.lockedUserId : []
-
-      // 取得對方用戶的邀約狀態
-      const invitations = await Invitation.find({
-        userId, // 邀請者
-        invitedUserId: { $in: resultUserIds } // 被邀請者
-      })
-
-      console.log("invitations", invitations)
-
-      const invitationStatuses = invitations.reduce<Record<string, string>>((acc, invitation) => {
-        /* eslint-disable-next-line */
-        acc[invitation.userId.toString()] = invitation.status
-        return acc
-      }, {})
-
-      // 將每個用戶的邀約狀態加入到返回的用戶資料中
       const resultUsersData = await Promise.all(resultUserIds.map(async (id) => {
-        const user = await User.findById(id)
+        // 取得每個用戶的資料
+        const resultUserInfo = await User.findById(id)
+
+        // 取得每個用戶的封鎖狀態
+        const blackList = await BlackList.findOne({ userId })
+        const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
+        /* eslint-disable-next-line */
+        const isLocked = lockedUserIds.includes(id.toString())
+
+        // 取得每個用戶的邀約狀態
+        const invitations = await Invitation.find({
+          userId, // 邀請者
+          invitedUserId: id // 被邀請者
+        })
+        const invitationStatus = invitations.length > 0 ? invitations[0].status : "no invitation"
+
+        // 取得每個用戶的個人條件和工作條件
+        const matchListSelfSetting = await MatchListSelfSetting.findOne({
+          userId: id
+        })
+
+        // 取得每個用戶的收藏狀態
+        // const collection = await Collection.findOne({ userId, collectionUserId: id })
+        // const isCollected = collection ? collection.isCollected : false
+
+        // 取得每個用戶的評價狀態
+
+        // 取得每個用戶的解鎖狀態
+
         return {
-          ...user?.toObject(),
-          /* eslint-disable-next-line */
-          isLocked: lockedUserIds.map(id => id.toString()).includes(id.toString()),
-          /* eslint-disable-next-line */
-          invitationStatus: invitationStatuses[id.toString()] || "no invitation"
+          ...resultUserInfo?.toObject(),
+          isLocked,
+          invitationStatus,
+          matchListSelfSetting
         }
       }))
 
