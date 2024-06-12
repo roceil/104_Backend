@@ -20,13 +20,11 @@ const unlockComment = async (req: Request, res: Response, next: NextFunction): P
       appErrorHandler(404, "無法取解鎖評價，請稍後在試", next)
       return
     }
-    console.log("userPointConsume", userPointConsume)
     const profile = await Profile.findOneAndUpdate({ userId }, { $push: { unlockComment: id } }, { new: true })
-    console.log("profile", profile)
     if (!profile) {
       appErrorHandler(404, "無法取解鎖評價，請稍後在試", next)
     } else {
-      appSuccessHandler(200, "解鎖評價成功", profile, res)
+      appSuccessHandler(200, "解鎖評價成功", "", res)
     }
   }
 }

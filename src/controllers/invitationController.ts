@@ -2,12 +2,32 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData } from "@/types/login"
 import { Invitation } from "@/models/invitation"
 import { BeInvitation } from "@/models/beInvitation"
+import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { createNotification } from "./notificationsController"
 import { isInBlackList } from "@/utils/blackListHandler"
-import { eraseProperty } from "@/utils/responseDataHandler"
+interface ParsedInvitation {
+  userId: string
+  invitedUserId: string
+  message: {
+    title: string
+    content: string
+  }
+  id?: string
+  profileByInvitedUser: {
+    photoDetails: string
+    introDetails: string
+    nickNameDetails: string
+    incomeDetails: string
+    lineDetails: string
+    tags: string[]
+    exposureSettings: string
+    userStatus: string
+  }
+}
+// import { eraseProperty } from "@/utils/responseDataHandler"
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { invitedUserId, message } = req.body
@@ -56,6 +76,9 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
 
   const { userId } = req.user as LoginResData
+
+  const profile = await Profile.findOne({ userId }).select("unlockComment")
+  const unlockComment = profile?.unlockComment ?? []
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings userStatus"
@@ -64,11 +87,19 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   if (!invitationList || invitationList.length === 0) {
     appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
   } else {
-    const invitations = JSON.parse(JSON.stringify(invitationList))
-    invitations.forEach((_: undefined, index: number) => {
-      eraseProperty(invitations[index], ["profileByInvitedUser", "nickNameDetails", "photoDetails", "introDetails", "incomeDetails", "lineDetails", "exposureSettings", "userStatus"
-      ], ["_id"])
+    const parseInvitationList = JSON.parse(JSON.stringify(invitationList))
+    const invitations: ParsedInvitation[] = parseInvitationList.map((invitation: ParsedInvitation) => {
+      if (unlockComment.length === 0) {
+        return { ...invitation, isUnlock: false }
+      } else {
+        return { ...invitation, isUnlock: unlockComment.includes(invitation.invitedUserId) }
+      }
     })
+    // invitations.forEach((_, i: number) => {
+    //   // 會報錯Maximum call stack size exceede
+    //   eraseProperty(invitations[i], ["profileByInvitedUser", "nickNameDetails", "photoDetails", "introDetails", "incomeDetails", "lineDetails", "exposureSettings", "userStatus"
+    //   ], ["_id"])
+    // })
     appSuccessHandler(200, "查詢成功", { invitations, invitationsLength }, res)
   }
 }

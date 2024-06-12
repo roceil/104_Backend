@@ -11,16 +11,14 @@ export function unlockCommentSwagger (_req: Request, _res: Response, next: NextF
         name: "id",
         required: true,
         type: "string",
-        description: "評價id"
+        description: "被評價人id"
     }
    * #swagger.responses[200] = {
       description: '解鎖評價成功',
       schema: {
           status: true,
           message: "解鎖評價成功",
-          data: {
-            unlockComment: "123"
-          }
+          data: ""
       }
     }
    */

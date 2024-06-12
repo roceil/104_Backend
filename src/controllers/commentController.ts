@@ -67,7 +67,10 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
   const [rawComments, userProfile] = await Promise.all([
-    Comment.find().skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
+    Comment.find().populate({
+      path: "commentedUserId",
+      select: "userStatus"
+    }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
     Profile.findOne({ userId }).select("unlockComment")
   ])
   if (!userProfile) {
@@ -82,7 +85,7 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   }
   // 添加解鎖狀態到評論
   const comments = rawComments.map(comment => {
-    comment.isUnlock = unlockComment.includes(comment._id.toString())
+    comment.isUnlock = unlockComment.includes(comment.commentedUserId as unknown as string)
     return comment
   })
   appSuccessHandler(200, "查詢成功", comments, res)

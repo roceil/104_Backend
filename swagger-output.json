@@ -5915,7 +5915,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "評價id"
+            "description": "被評價人id"
           },
           {
             "name": "origin",
@@ -5938,13 +5938,8 @@
                   "example": "解鎖評價成功"
                 },
                 "data": {
-                  "type": "object",
-                  "properties": {
-                    "unlockComment": {
-                      "type": "string",
-                      "example": "123"
-                    }
-                  }
+                  "type": "string",
+                  "example": ""
                 }
               },
               "xml": {
