@@ -47,56 +47,143 @@ export function postInvitationSwagger (_req: Request, _res: Response, next: Next
   next()
 }
 export function getInvitationListSwagger (_req: Request, _res: Response, next: NextFunction): void {
-  // invitations": [
-  //   {
-  //     "message": {
-  //       "title": "hello7777",
-  //       "content": "7777777",
-  //       "createdAt": "2024-06-08T09:55:57.208Z",
-  //       "updatedAt": "2024-06-08T09:55:57.208Z"
-  //     },
-  //     "_id": "66642aad9b29a26e17c97280",
-  //     "userId": "665fe01431e8f0630d407037",
-  //     "invitedUserId": "665c2f502ab2d6460452171c",
-  //     "isFinishDating": true,
-  //     "status": "pending",
-  //     "date": "2024-06-08T09:55:57.208Z",
-  //     "createdAt": "2024-06-08T09:55:57.208Z",
-  //     "updatedAt": "2024-06-08T09:57:21.645Z",
-  //     "profileByInvitedUser": [
+  // {
+  //   "status": true,
+  //   "message": "查詢成功",
+  //   "data": {
+  //     "invitations": [
   //       {
-  //         "photoDetails": {
-  //           "photo": "",
-  //           "isShow": false
+  //         "message": {
+  //           "title": "hello7777",
+  //           "content": "7777777",
+  //           "createdAt": "2024-06-08T09:55:57.208Z",
+  //           "updatedAt": "2024-06-08T09:55:57.208Z"
   //         },
-  //         "introDetails": {
-  //           "intro": "",
-  //           "isShow": false
-  //         },
-  //         "incomeDetails": {
-  //           "income": "",
-  //           "isShow": false
-  //         },
-  //         "lineDetails": {
-  //           "lineId": "",
-  //           "isShow": false
-  //         },
-  //         "exposureSettings": {
-  //           "rating": 0,
-  //           "isShow": false,
-  //           "isMatch": false
-  //         },
+  //         "_id": "66642aad9b29a26e17c97280",
   //         "userId": "665fe01431e8f0630d407037",
-  //         "nickNameDetails": {
-  //           "nickName": "咚咚",
-  //           "isShow": true
+  //         "invitedUserId": "665c2f502ab2d6460452171c",
+  //         "isFinishDating": true,
+  //         "status": "pending",
+  //         "date": "2024-06-08T09:55:57.208Z",
+  //         "createdAt": "2024-06-08T09:55:57.208Z",
+  //         "updatedAt": "2024-06-08T09:57:21.645Z",
+  //         "profileByInvitedUser": [
+  //           {
+  //             "photoDetails": {
+  //               "photo": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478180"
+  //             },
+  //             "introDetails": {
+  //               "intro": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478181"
+  //             },
+  //             "incomeDetails": {
+  //               "income": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478183"
+  //             },
+  //             "lineDetails": {
+  //               "lineId": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478184"
+  //             },
+  //             "exposureSettings": {
+  //               "rating": 0,
+  //               "isShow": false,
+  //               "isMatch": false,
+  //               "_id": "6669aef272eff6abba478185"
+  //             },
+  //             "_id": "665fe1c831e8f0630d40703d",
+  //             "userId": "665fe01431e8f0630d407037",
+  //             "nickNameDetails": {
+  //               "nickName": "咚咚",
+  //               "isShow": true,
+  //               "_id": "665fe1c831e8f0630d40703e"
+  //             },
+  //             "tags": [],
+  //             "userStatus": {
+  //               "commentScore": 3.7,
+  //               "commentCount": 8,
+  //               "rating": 0,
+  //               "isMatch": false,
+  //               "point": 0,
+  //               "_id": "6669aef272eff6abba478187"
+  //             }
+  //           }
+  //         ],
+  //         "id": "66642aad9b29a26e17c97280",
+  //         "isUnlock": true
+  //       },
+  //       {
+  //         "message": {
+  //           "title": "hello7777",
+  //           "content": "7777777",
+  //           "createdAt": "2024-06-12T10:19:54.715Z",
+  //           "updatedAt": "2024-06-12T10:19:54.715Z"
   //         },
-  //         "tags": []
+  //         "_id": "6669764a2d4ee25f679a8728",
+  //         "userId": "665fe01431e8f0630d407037",
+  //         "invitedUserId": "6654431dedb728aae4b1f24b",
+  //         "isFinishDating": false,
+  //         "status": "pending",
+  //         "date": "2024-06-12T10:19:54.715Z",
+  //         "createdAt": "2024-06-12T10:19:54.715Z",
+  //         "updatedAt": "2024-06-12T10:19:54.715Z",
+  //         "profileByInvitedUser": [
+  //           {
+  //             "photoDetails": {
+  //               "photo": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478180"
+  //             },
+  //             "introDetails": {
+  //               "intro": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478181"
+  //             },
+  //             "incomeDetails": {
+  //               "income": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478183"
+  //             },
+  //             "lineDetails": {
+  //               "lineId": "",
+  //               "isShow": false,
+  //               "_id": "6669aef272eff6abba478184"
+  //             },
+  //             "exposureSettings": {
+  //               "rating": 0,
+  //               "isShow": false,
+  //               "isMatch": false,
+  //               "_id": "6669aef272eff6abba478185"
+  //             },
+  //             "_id": "665fe1c831e8f0630d40703d",
+  //             "userId": "665fe01431e8f0630d407037",
+  //             "nickNameDetails": {
+  //               "nickName": "咚咚",
+  //               "isShow": true,
+  //               "_id": "665fe1c831e8f0630d40703e"
+  //             },
+  //             "tags": [],
+  //             "userStatus": {
+  //               "commentScore": 3.7,
+  //               "commentCount": 8,
+  //               "rating": 0,
+  //               "isMatch": false,
+  //               "point": 0,
+  //               "_id": "6669aef272eff6abba478187"
+  //             }
+  //           }
+  //         ],
+  //         "id": "6669764a2d4ee25f679a8728",
+  //         "isUnlock": false
   //       }
   //     ],
-  //     "id": "66642aad9b29a26e17c97280"
+  //     "invitationsLength": 2
   //   }
-  // ],
+  // }
   /**
    * #swagger.tags = ["invitation-邀約"]
    * #swagger.description = "取得邀約列表"
@@ -115,7 +202,7 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                     title: "hello7777",
                     content: "7777777",
                     createdAt: "2024-05-21T06:49:49.383Z",
-                    updatedAt: "2024-05-21T06:49:49.383Z"
+                    updatedAt: "2024-05-21T06:49:49.383Z",
                 },
                 _id: "664c440d58453572378249c9",
                 userId: "664473d53d428e98fd5fb226",
@@ -131,28 +218,34 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                         userId: "664c427bb56b34d999f86c83",
                         photoDetails: {
                         photo: "",
-                        isShow: false
+                        isShow: false,
+                        _id: "664c42ea58453572378249c0"
                         },
                         introDetails: {
                           intro: "",
-                          isShow: false
+                          isShow: false,
+                          _id: "664c42ea58453572378249c1"
                         },
                         incomeDetails: {
                           income: "",
-                          isShow: false
+                          isShow: false,
+                          _id: "664c42ea58453572378249c2"
                        },
                         lineDetails: {
                           lineId: "",
-                          isShow: false
+                          isShow: false,
+                          _id: "664c4265611132"
                         },
                         exposureSettings: {
                           rating: 0,
                           isShow: false,
-                          isMatch: false
+                          isMatch: false,
+                          _id: "664c42ea58453572378249c3"
                         },
                         nickNameDetails: {
                           nickName: "Kven",
                           isShow: true,
+                          _id: "664c4253213212312"
                         },
                         tags: [],
                         "userStatus": {
@@ -161,10 +254,12 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                           rating: 0,
                           isMatch: false,
                           point: 0,
+                          _id: "664c42ea58453572378249c4"
                           }
                     }
                 ],
-                id: "664c440d58453572378249c9"
+                id: "664c440d58453572378249c9",
+                isUnlock: true
             },
             ],
             invitationsLength: 1

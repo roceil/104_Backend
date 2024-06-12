@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -2648,6 +2648,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
                                     }
                                   }
                                 },
@@ -2661,6 +2665,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c1"
                                     }
                                   }
                                 },
@@ -2674,6 +2682,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c2"
                                     }
                                   }
                                 },
@@ -2687,6 +2699,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c4265611132"
                                     }
                                   }
                                 },
@@ -2704,6 +2720,10 @@
                                     "isMatch": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c3"
                                     }
                                   }
                                 },
@@ -2717,6 +2737,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c4253213212312"
                                     }
                                   }
                                 },
@@ -2747,6 +2771,10 @@
                                     "point": {
                                       "type": "number",
                                       "example": 0
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c4"
                                     }
                                   }
                                 }
@@ -2756,6 +2784,10 @@
                           "id": {
                             "type": "string",
                             "example": "664c440d58453572378249c9"
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": true
                           }
                         }
                       }
