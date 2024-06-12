@@ -47,6 +47,56 @@ export function postInvitationSwagger (_req: Request, _res: Response, next: Next
   next()
 }
 export function getInvitationListSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  // invitations": [
+  //   {
+  //     "message": {
+  //       "title": "hello7777",
+  //       "content": "7777777",
+  //       "createdAt": "2024-06-08T09:55:57.208Z",
+  //       "updatedAt": "2024-06-08T09:55:57.208Z"
+  //     },
+  //     "_id": "66642aad9b29a26e17c97280",
+  //     "userId": "665fe01431e8f0630d407037",
+  //     "invitedUserId": "665c2f502ab2d6460452171c",
+  //     "isFinishDating": true,
+  //     "status": "pending",
+  //     "date": "2024-06-08T09:55:57.208Z",
+  //     "createdAt": "2024-06-08T09:55:57.208Z",
+  //     "updatedAt": "2024-06-08T09:57:21.645Z",
+  //     "profileByInvitedUser": [
+  //       {
+  //         "photoDetails": {
+  //           "photo": "",
+  //           "isShow": false
+  //         },
+  //         "introDetails": {
+  //           "intro": "",
+  //           "isShow": false
+  //         },
+  //         "incomeDetails": {
+  //           "income": "",
+  //           "isShow": false
+  //         },
+  //         "lineDetails": {
+  //           "lineId": "",
+  //           "isShow": false
+  //         },
+  //         "exposureSettings": {
+  //           "rating": 0,
+  //           "isShow": false,
+  //           "isMatch": false
+  //         },
+  //         "userId": "665fe01431e8f0630d407037",
+  //         "nickNameDetails": {
+  //           "nickName": "咚咚",
+  //           "isShow": true
+  //         },
+  //         "tags": []
+  //       }
+  //     ],
+  //     "id": "66642aad9b29a26e17c97280"
+  //   }
+  // ],
   /**
    * #swagger.tags = ["invitation-邀約"]
    * #swagger.description = "取得邀約列表"
@@ -79,12 +129,39 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                     {
                         _id: "664c42ea58453572378249bf",
                         userId: "664c427bb56b34d999f86c83",
-                        nickNameDetails: {
-                            nickName: "Kven",
-                            isShow: true,
-                            _id: "664c42ea58453572378249c0"
+                        photoDetails: {
+                        photo: "",
+                        isShow: false
                         },
-                        tags: []
+                        introDetails: {
+                          intro: "",
+                          isShow: false
+                        },
+                        incomeDetails: {
+                          income: "",
+                          isShow: false
+                       },
+                        lineDetails: {
+                          lineId: "",
+                          isShow: false
+                        },
+                        exposureSettings: {
+                          rating: 0,
+                          isShow: false,
+                          isMatch: false
+                        },
+                        nickNameDetails: {
+                          nickName: "Kven",
+                          isShow: true,
+                        },
+                        tags: [],
+                        "userStatus": {
+                          commentScore: 3.7,
+                          commentCount: 6,
+                          rating: 0,
+                          isMatch: false,
+                          point: 0,
+                          }
                     }
                 ],
                 id: "664c440d58453572378249c9"

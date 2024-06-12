@@ -21,7 +21,8 @@ const commentSchema = new Schema<IComment>({
   },
   commentedUserId: {
     type: mongo.ObjectId,
-    required: [true, "需要被評價者id"]
+    required: [true, "需要被評價者id"],
+    ref: "user"
   },
   content: {
     type: String,

@@ -32,6 +32,33 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "評分範圍為1-5", next)
   }
   const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
+  const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
+    {
+      $set: {
+        "userStatus.commentScore": {
+          $round: [// 四捨五入
+            {
+              $divide: [// 計算平均分數  (評分總和+新評分)/(評分次數+1)
+                {
+                  $add: [// 總分數計算
+                    { $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] },
+                    numberScore
+                  ]
+                },
+                { $add: ["$userStatus.commentCount", 1] }
+              ]
+            },
+            1
+          ]
+        },
+        "userStatus.commentCount": { $add: ["$userStatus.commentCount", 1] }
+      }
+    }
+  ])
+  if (!commentUserProfile) {
+    appErrorHandler(404, "被評價者不存在", next)
+    return
+  }
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
 
@@ -40,7 +67,10 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
   const [rawComments, userProfile] = await Promise.all([
-    Comment.find().skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
+    Comment.find().populate({
+      path: "commentedUserId",
+      select: "userStatus"
+    }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
     Profile.findOne({ userId }).select("unlockComment")
   ])
   if (!userProfile) {
@@ -55,7 +85,7 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   }
   // 添加解鎖狀態到評論
   const comments = rawComments.map(comment => {
-    comment.isUnlock = unlockComment.includes(comment._id.toString())
+    comment.isUnlock = unlockComment.includes(comment.commentedUserId as unknown as string)
     return comment
   })
   appSuccessHandler(200, "查詢成功", comments, res)

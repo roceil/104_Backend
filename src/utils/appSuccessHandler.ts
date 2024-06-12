@@ -8,5 +8,4 @@ function appSuccess<T> (httpStatus: number, message: string, data: T, res: Respo
     data
   })
 }
-
 export default appSuccess

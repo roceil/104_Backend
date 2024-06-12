@@ -1,6 +1,6 @@
 import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../types/userInterface"
-
+import { type IPersonalInfo } from "../models/profile"
 interface IInvitation extends Document {
   userId: IUserId
   invitedUserId: string
@@ -12,6 +12,8 @@ interface IInvitation extends Document {
   }
   date: Date
   isFinishDating: boolean
+  isUnlock?: boolean
+  profileByInvitedUser?: IPersonalInfo
   status: "accepted" | "rejected" | "cancel" | "pending"
   createdAt: Date
   updatedAt: Date
