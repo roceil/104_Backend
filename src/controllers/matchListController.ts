@@ -55,6 +55,9 @@ export const getMatchListOptions = async (_req: Request, res: Response, _next: N
 
 export const findUsersByMultipleConditions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
+  const { page, sort } = req.query
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
+
   const matchListData = await MatchList.findOne({ userId })
 
   if (!matchListData) {
@@ -85,7 +88,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         { "workInfo.expectedSalary": { $in: workInfo.expectedSalary, $nin: blacklist.banExpectedSalary } }
         // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
       ]
-    })
+    }).sort(dateSort).skip(((Number(page) ?? 1) - 1) * 6).limit(6)
 
     if (resultUsers.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
@@ -107,7 +110,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           userId, // 邀請者
           invitedUserId: id // 被邀請者
         })
-        const invitationStatus = invitations.length > 0 ? invitations[0].status : "no invitation"
+        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
@@ -122,11 +125,37 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 
         // 取得每個用戶的解鎖狀態
 
+        // 目前分頁和總筆數
+        const pagination = {
+          page: Number(page) ?? 1,
+          totalPage: 1
+        }
+        pagination.totalPage = await MatchListSelfSetting.countDocuments({
+          $and: [
+            { "personalInfo.age": personalInfo.age },
+            { "personalInfo.gender": personalInfo.gender },
+            { "personalInfo.height": personalInfo.height },
+            { "personalInfo.weight": personalInfo.weight },
+            { "personalInfo.location": personalInfo.location },
+            { "personalInfo.education": personalInfo.education },
+            { "personalInfo.liveWithParents": personalInfo.liveWithParents },
+            { "personalInfo.religion": personalInfo.religion },
+            { "personalInfo.socialCircle": personalInfo.socialCircle },
+            { "personalInfo.activities": { $in: personalInfo.activities } },
+            { "personalInfo.smoking": { $in: personalInfo.smoking, $nin: blacklist.banSmoking } }, // 剔除名單
+            { "workInfo.occupation": { $in: workInfo.occupation, $nin: blacklist.banOccupation } },
+            { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.banIndustry } },
+            { "workInfo.expectedSalary": { $in: workInfo.expectedSalary, $nin: blacklist.banExpectedSalary } }
+            // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
+          ]
+        })
+
         return {
           ...resultUserInfo?.toObject(),
           isLocked,
           invitationStatus,
-          matchListSelfSetting
+          matchListSelfSetting,
+          pagination
         }
       }))
 

@@ -1049,6 +1049,18 @@ export const findUsersByMultipleConditionsSwagger = (_req: Request, _res: Respon
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
+    * #swagger.parameters['page'] = {
+          in: 'query',
+          type: 'string',
+          required: false,
+          description: '目前頁數'
+      }    
+   * #swagger.parameters['sort'] = {
+         in: 'query',
+         type: 'string',
+         required: false,
+         description: '排序：desc/asc'
+     }
    * #swagger.responses[201] = {
       description: "查詢配對成功",
       schema: {
