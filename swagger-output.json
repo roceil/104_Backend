@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -4245,588 +4245,400 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "取得配對設定成功"
+                  "example": "取得配對設定選項"
                 },
                 "data": {
-                  "type": "object",
-                  "properties": {
-                    "ageOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "20-22 歲"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "23-25 歲"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "26-28 歲"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "29-31 歲"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "32-34 歲"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "35-37 歲"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "38-40 歲"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "41-43 歲"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "44-46 歲"
-                        },
-                        "10": {
-                          "type": "string",
-                          "example": "47-50 歲"
-                        },
-                        "11": {
-                          "type": "string",
-                          "example": "50 歲以上"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "66640491ecea631ba30e19dd"
+                      },
+                      "age": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 11
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "50 歲以上"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e19e9"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "genderOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "男性"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "女性"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "其他"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "不透露"
+                      },
+                      "gender": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 4
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "不透露"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e19ee"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "heightOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "150cm 以下"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "150-155cm"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "155-160cm"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "160-165cm"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "165-170cm"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "170-175cm"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "175-180cm"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "180-185cm"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "185-190cm"
-                        },
-                        "10": {
-                          "type": "string",
-                          "example": "190cm 以上"
-                        },
-                        "11": {
-                          "type": "string",
-                          "example": "不透露"
+                      },
+                      "height": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 11
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "不透露"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e19fa"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "weightOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "50kg 以下"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "50-55kg"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "55-60kg"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "60-65kg"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "65-70kg"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "70-75kg"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "75-80kg"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "80-85kg"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "85-90kg"
-                        },
-                        "10": {
-                          "type": "string",
-                          "example": "90kg 以上"
-                        },
-                        "11": {
-                          "type": "string",
-                          "example": "不透露"
+                      },
+                      "weight": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 11
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "不透露"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a06"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "isMarriedOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "已婚"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "未婚"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "離婚"
+                      },
+                      "isMarried": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 3
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "離婚"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a0a"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "locationOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "北部"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "南部"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "東部"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "西部"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "中部"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "海外"
+                      },
+                      "location": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 6
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "海外"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a11"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "educationOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "國小"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "國中"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "高中"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "大學"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "研究所"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "博士後研究"
+                      },
+                      "education": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 6
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "博士後研究"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a18"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "liveWithParentsOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "與父母同住"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "獨立居住"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "liveWithParents": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 3
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a1c"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "religionOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "基督教"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "佛教"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "道教"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "伊斯蘭教"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "天主教"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "印度教"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "錫克教"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "猶太教"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "religion": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 9
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a26"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "smokingOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "不抽菸"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "偶爾抽菸"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "經常抽菸"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "電子菸"
+                      },
+                      "smoking": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 4
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "電子菸"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a2b"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "socialCircleOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "外籍人士"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "本地人"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "藝術"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "音樂"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "運動"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "電影"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "烹飪"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "旅遊"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "攝影"
-                        },
-                        "10": {
-                          "type": "string",
-                          "example": "閱讀"
-                        },
-                        "11": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "socialCircle": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 11
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a37"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "activitiesOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "健行"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "園藝"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "慈善"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "activities": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 4
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a3c"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "occupationOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "軍人"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "警察"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "消防員"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "教育"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "醫療"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "自由業"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "家庭主婦"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "學生"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "occupation": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 9
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a46"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "industryOptions": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "餐旅"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "科技"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "金融"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "零售"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "製造"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "農業"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "礦業"
-                        },
-                        "8": {
-                          "type": "string",
-                          "example": "營建業"
-                        },
-                        "9": {
-                          "type": "string",
-                          "example": "運輸業"
-                        },
-                        "10": {
-                          "type": "string",
-                          "example": "倉儲業"
-                        },
-                        "11": {
-                          "type": "string",
-                          "example": "資訊業"
-                        },
-                        "12": {
-                          "type": "string",
-                          "example": "其他"
+                      },
+                      "industry": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 12
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a53"
+                            }
+                          }
                         }
-                      }
-                    },
-                    "expectedSalary": {
-                      "type": "object",
-                      "properties": {
-                        "0": {
-                          "type": "string",
-                          "example": "無指定"
-                        },
-                        "1": {
-                          "type": "string",
-                          "example": "20-25k"
-                        },
-                        "2": {
-                          "type": "string",
-                          "example": "25-30k"
-                        },
-                        "3": {
-                          "type": "string",
-                          "example": "30-35k"
-                        },
-                        "4": {
-                          "type": "string",
-                          "example": "35-40k"
-                        },
-                        "5": {
-                          "type": "string",
-                          "example": "40-45k"
-                        },
-                        "6": {
-                          "type": "string",
-                          "example": "45-50k"
-                        },
-                        "7": {
-                          "type": "string",
-                          "example": "50k以上"
+                      },
+                      "expectedSalary": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 7
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "50k以上"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a5b"
+                            }
+                          }
                         }
+                      },
+                      "banSmoking": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 4
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "電子菸"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a60"
+                            }
+                          }
+                        }
+                      },
+                      "banOccupation": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 9
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a6a"
+                            }
+                          }
+                        }
+                      },
+                      "banIndustry": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 12
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "其他"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a77"
+                            }
+                          }
+                        }
+                      },
+                      "banExpectedSalary": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "number",
+                              "example": 7
+                            },
+                            "label": {
+                              "type": "string",
+                              "example": "50k以上"
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "66640491ecea631ba30e1a7f"
+                            }
+                          }
+                        }
+                      },
+                      "__v": {
+                        "type": "number",
+                        "example": 0
                       }
                     }
                   }
@@ -5435,6 +5247,20 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "目前頁數"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "排序：desc/asc"
           }
         ],
         "responses": {

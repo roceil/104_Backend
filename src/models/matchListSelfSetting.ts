@@ -2,6 +2,10 @@ import { Schema, model, mongo, type Document } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 
 interface IMatchListSelfSetting extends Document {
+  _id: {
+    type: mongo.ObjectId
+    select: false
+  }
   userId: IUserId
   personalInfo: {
     age: number
@@ -23,8 +27,14 @@ interface IMatchListSelfSetting extends Document {
     workLocation: number
     expectedSalary: number
   }
-  createdAt: Date
-  updatedAt: Date
+  createdAt: {
+    type: Date
+    select: false
+  }
+  updatedAt: {
+    type: Date
+    select: false
+  }
 }
 
 const options = [
@@ -261,6 +271,7 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
   }
+  // 本身條件不需要儲存黑名單選項
 }, {
   timestamps: true,
   versionKey: false
