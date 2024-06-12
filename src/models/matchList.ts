@@ -24,11 +24,10 @@ interface IMatchList extends Document {
     expectedSalary: number
   }
   blacklist: {
-    occupation: number
-    industry: number[]
-    socialCircle: number
-    activities: number[]
-    smokingOptions: number
+    banSmoking: number
+    banOccupation: number
+    banIndustry: number[]
+    banExpectedSalary: number
   }
   noticeInfo: {
     email: string
@@ -239,6 +238,62 @@ const options = [
       6: "45-50k",
       7: "50k以上"
     }
+  },
+  {
+    type: "banSmoking",
+    options: {
+      0: "無指定",
+      1: "不抽菸",
+      2: "偶爾抽菸",
+      3: "經常抽菸",
+      4: "電子菸"
+    }
+  },
+  {
+    type: "banOccupation",
+    options: {
+      0: "無指定",
+      1: "軍人",
+      2: "警察",
+      3: "消防員",
+      4: "教育",
+      5: "醫療",
+      6: "自由業",
+      7: "家庭主婦",
+      8: "學生",
+      9: "其他"
+    }
+  },
+  {
+    type: "banIndustry",
+    options: {
+      0: "無指定",
+      1: "餐旅",
+      2: "科技",
+      3: "金融",
+      4: "零售",
+      5: "製造",
+      6: "農業",
+      7: "礦業",
+      8: "營建業",
+      9: "運輸業",
+      10: "倉儲業",
+      11: "資訊業",
+      12: "其他"
+    }
+  },
+  {
+    type: "banExpectedSalary",
+    options: {
+      0: "無指定",
+      1: "20-25k",
+      2: "25-30k",
+      3: "30-35k",
+      4: "35-40k",
+      5: "40-45k",
+      6: "45-50k",
+      7: "50k以上"
+    }
   }
 ]
 
@@ -271,6 +326,12 @@ const matchListSchema = new Schema<IMatchList>({
     occupation: { type: Number, enum: getOptionKeys("occupationOptions"), default: 0 },
     industry: { type: [Number], enum: getOptionKeys("industryOptions"), default: [0] },
     expectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 0 }
+  },
+  blacklist: {
+    banSmoking: { type: Number, enum: getOptionKeys("banSmoking"), default: 1 },
+    banOccupation: { type: Number, enum: getOptionKeys("banOccupation"), default: 1 },
+    banIndustry: { type: [Number], enum: getOptionKeys("banIndustry"), default: [1] },
+    banExpectedSalary: { type: Number, enum: getOptionKeys("expectedSalary"), default: 1 }
   },
   noticeInfo: {
     email: { type: String, default: "" },

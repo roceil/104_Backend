@@ -67,7 +67,6 @@ const putUser = async (req: Request, res: Response, next: NextFunction): Promise
   }
   const userPut = await Profile.findOneAndUpdate({ userId }, { $set: updateData }, { new: true }
   )
-
   if (!userPut) {
     appErrorHandler(400, "找不到使用者資料Id，請稍後在試", next)
   } else {
