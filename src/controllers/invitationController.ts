@@ -3,6 +3,7 @@ import { type LoginResData } from "@/types/login"
 import { Invitation } from "@/models/invitation"
 import { BeInvitation } from "@/models/beInvitation"
 import { Profile } from "@/models/profile"
+import { Collection } from "@/models/collection"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
@@ -79,6 +80,8 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
 
   const profile = await Profile.findOne({ userId }).select("unlockComment")
   const unlockComment = profile?.unlockComment ?? []
+  const collection = await Collection.find({ userId }).select("collectedUserId")
+  const collectionList = collection.map(doc => doc.collectedUserId.toString()) ?? []
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings userStatus"
@@ -89,11 +92,16 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   } else {
     const parseInvitationList = JSON.parse(JSON.stringify(invitationList))
     const invitations: ParsedInvitation[] = parseInvitationList.map((invitation: ParsedInvitation) => {
-      if (unlockComment.length === 0) {
-        return { ...invitation, isUnlock: false }
-      } else {
-        return { ...invitation, isUnlock: unlockComment.includes(invitation.invitedUserId) }
+      let isUnlock = false
+      if (unlockComment.length !== 0) {
+        isUnlock = unlockComment.includes(invitation.invitedUserId)
       }
+
+      let isCollected = false
+      if (collectionList.length !== 0) {
+        isCollected = collectionList.includes(invitation.invitedUserId)
+      }
+      return { ...invitation, isUnlock, isCollected }
     })
     // invitations.forEach((_, i: number) => {
     //   // 會報錯Maximum call stack size exceede

@@ -2788,6 +2788,10 @@
                           "isUnlock": {
                             "type": "boolean",
                             "example": true
+                          },
+                          "isCollected": {
+                            "type": "boolean",
+                            "example": false
                           }
                         }
                       }
@@ -5680,56 +5684,12 @@
         }
       }
     },
-    "/api/v1/collections": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/v1/user/collections": {
       "get": {
-        "description": "",
+        "tags": [
+          "收藏"
+        ],
+        "description": "取得所有收藏",
         "parameters": [
           {
             "name": "origin",
@@ -5738,10 +5698,311 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "取得所有收藏成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得所有收藏成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                      },
+                      "collectedUserId": {
+                        "type": "array",
+                        "example": [
+                          "6654431dedb728aae4b1f24b"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-06-13T05:36:36.125Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-06-13T05:36:36.125Z"
+                      },
+                      "user": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "665fe01431e8f0630d407037"
+                            },
+                            "personalInfo": {
+                              "type": "object",
+                              "properties": {
+                                "username": {
+                                  "type": "string",
+                                  "example": "Eason"
+                                },
+                                "email": {
+                                  "type": "string",
+                                  "example": "a1221gsdf@hotmail.com"
+                                },
+                                "gender": {},
+                                "birthday": {},
+                                "_id": {
+                                  "type": "string",
+                                  "example": "665fe01431e8f0630d407038"
+                                }
+                              }
+                            },
+                            "isSubscribe": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "points": {
+                              "type": "number",
+                              "example": 29955
+                            },
+                            "resetPasswordToken": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isActive": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "blockedUsers": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
+                            },
+                            "notifications": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2024-06-05T03:48:36.621Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2024-06-12T14:21:27.962Z"
+                            }
+                          }
+                        }
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "666a8564a9249066cc79d1fb"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/collections": {
+      "post": {
+        "tags": [
+          "收藏"
+        ],
+        "description": "新增收藏",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collectedUserId": {
+                  "type": "string",
+                  "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                }
+              },
+              "required": [
+                "collectedUserId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "新增收藏成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "新增收藏成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "collectedUserId": {
+                      "type": "array",
+                      "example": [
+                        "60b5e7b5d2d9e1b6c8e1b3b0"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-06-13T05:36:36.125Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-06-13T05:55:01.382Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "收藏"
+        ],
+        "description": "刪除收藏",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collectedUserId": {
+                  "type": "string",
+                  "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                }
+              },
+              "required": [
+                "collectedUserId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除收藏",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消收藏成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "collectedUserId": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-06-13T06:06:22.897Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-06-13T06:06:22.897Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1/search-list/featured": {
