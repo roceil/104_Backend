@@ -97,7 +97,7 @@ export function editMatchListSwagger (_req: Request, _res: Response, next: NextF
                     "updatedAt": "2024-06-02T09:24:02.313Z",
                     "__v": 0
     }
-      } 
+      }
     }
    */
   next()
@@ -164,7 +164,7 @@ export const getMatchListSwagger = (_req: Request, _res: Response, next: NextFun
     }
       }
     }
-      } 
+      }
     }
    */
   next()

@@ -89,6 +89,11 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                           isShow: false,
                           _id: "664c42ea58453572378249c1"
                         },
+                        companyDetails: {
+                        company: "",
+                        isShow: false,
+                        _id: "666bd4cd6706988ef30f6bbf"
+                        },
                         incomeDetails: {
                           income: "",
                           isShow: false,
@@ -98,6 +103,11 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                           lineId: "",
                           isShow: false,
                           _id: "664c4265611132"
+                        },
+                        "jobDetails": {
+                        job: "",
+                        isShow: false,
+                        _id: "666bd4cd6706988ef30f6bc2"
                         },
                         exposureSettings: {
                           rating: 0,

@@ -77,14 +77,12 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
 
   const { userId } = req.user as LoginResData
-
-  const profile = await Profile.findOne({ userId }).select("unlockComment")
+  const [profile, collection] = await Promise.all([Profile.findOne({ userId }).select("unlockComment"), Collection.find({ userId }).select("collectedUserId")])
   const unlockComment = profile?.unlockComment ?? []
-  const collection = await Collection.find({ userId }).select("collectedUserId")
   const collectionList = collection.map(doc => doc.collectedUserId.toString()) ?? []
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings userStatus"
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {
@@ -115,7 +113,7 @@ const getInvitationById = async (req: Request, res: Response, next: NextFunction
   const { id } = req.params
   const invitation = await Invitation.findById(id).populate({
     path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   })
   if (!invitation) {
     appErrorHandler(404, "No invitation found", next)
@@ -148,7 +146,7 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
 }
 const finishInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findByIdAndUpdate(id, { isFinishDating: true }, { new: true })
+  const invitation = await Invitation.findByIdAndUpdate(id, { isFinishDating: true, status: "finishDating" }, { new: true })
   if (!invitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {

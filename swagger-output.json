@@ -2672,6 +2672,23 @@
                                     }
                                   }
                                 },
+                                "companyDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "company": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666bd4cd6706988ef30f6bbf"
+                                    }
+                                  }
+                                },
                                 "incomeDetails": {
                                   "type": "object",
                                   "properties": {
@@ -2703,6 +2720,23 @@
                                     "_id": {
                                       "type": "string",
                                       "example": "664c4265611132"
+                                    }
+                                  }
+                                },
+                                "jobDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "job": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666bd4cd6706988ef30f6bc2"
                                     }
                                   }
                                 },
@@ -3389,6 +3423,35 @@
                                   "type": "string",
                                   "example": "664c427bb56b34d999f86c83"
                                 },
+                                "userStatus": {
+                                  "type": "object",
+                                  "properties": {
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "point": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "commentScore": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "commentCount": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
                                 "nickNameDetails": {
                                   "type": "object",
                                   "properties": {
@@ -3408,8 +3471,136 @@
                                 },
                                 "tags": {
                                   "type": "array",
-                                  "example": [],
-                                  "items": {}
+                                  "example": [
+                                    "test1",
+                                    "test2"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "companyDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "company": {
+                                      "type": "string",
+                                      "example": "test company"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "exposureSettings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 5
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "incomeDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "income": {
+                                      "type": "string",
+                                      "example": "test income"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "introDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "intro": {
+                                      "type": "string",
+                                      "example": "test intro"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "jobDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "job": {
+                                      "type": "string",
+                                      "example": "test job"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "lineDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "lineId": {
+                                      "type": "string",
+                                      "example": "test line"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "photoDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "photo": {
+                                      "type": "string",
+                                      "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
                                 }
                               }
                             }
@@ -3417,6 +3608,14 @@
                           "id": {
                             "type": "string",
                             "example": "664c440d58453572378249c9"
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isCollected": {
+                            "type": "boolean",
+                            "example": false
                           }
                         }
                       }
