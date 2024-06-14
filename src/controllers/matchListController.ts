@@ -60,6 +60,11 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 
   const matchListData = await MatchList.findOne({ userId })
 
+
+  if (page === undefined || Number(page) < 1) {
+    appErrorHandler(400, "頁數需要大於 1", next)
+  }
+
   if (!matchListData) {
     appErrorHandler(400, "尚未新建配對設定，查詢配對失敗", next)
   } else {
