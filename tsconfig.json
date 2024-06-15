@@ -107,7 +107,7 @@
     "app.ts",
     "swagger.ts",
     "scritp/**/*.ts"
-  ],
+, "src/services/firebase.ts"  ],
   "exclude": [
     "nodce_modules"
   ],
