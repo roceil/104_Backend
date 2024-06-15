@@ -131,6 +131,48 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                           }
                     }
                 ],
+                matchListByInvitedUser: [
+                    {
+                        personalInfo: {
+                            age: 0,
+                            gender: 0,
+                            isMarried: 0,
+                            height: 0,
+                            weight: 0,
+                            socialCircle: 0,
+                            activities: [
+                                0,
+                                2
+                            ],
+                            location: 0,
+                            education: 0,
+                            liveWithParents: 0,
+                            religion: 0,
+                            smoking: 0
+                        },
+                        workInfo: {
+                            occupation: 0,
+                            industry: [
+                                0
+                            ],
+                            expectedSalary: 0
+                        },
+                        blacklist: {
+                            banSmoking: 1,
+                            banOccupation: 1,
+                            banIndustry: [
+                                1
+                            ],
+                            banExpectedSalary: 1
+                        },
+                        noticeInfo: {
+                            email: "",
+                            notice: false
+                        },
+                        _id: "666d9905a13345efc7e94c27",
+                        userId: "665fe01431e8f0630d407037"
+                    }
+                ],
                 id: "664c440d58453572378249c9",
                 isUnlock: true,
                 isCollected: false

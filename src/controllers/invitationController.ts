@@ -83,6 +83,9 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
+  }).populate({
+    path: "matchListByInvitedUser",
+    select: "personalInfo workInfo blacklist noticeInfo"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {

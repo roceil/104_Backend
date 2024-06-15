@@ -2815,6 +2815,142 @@
                               }
                             }
                           },
+                          "matchListByInvitedUser": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "personalInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "age": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "gender": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMarried": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "height": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "weight": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "socialCircle": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "activities": {
+                                      "type": "array",
+                                      "example": [
+                                        0,
+                                        2
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "location": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "education": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "liveWithParents": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "religion": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "smoking": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "workInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occupation": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "industry": {
+                                      "type": "array",
+                                      "example": [
+                                        0
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "expectedSalary": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "blacklist": {
+                                  "type": "object",
+                                  "properties": {
+                                    "banSmoking": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banOccupation": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banIndustry": {
+                                      "type": "array",
+                                      "example": [
+                                        1
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "banExpectedSalary": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "noticeInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "notice": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "_id": {
+                                  "type": "string",
+                                  "example": "666d9905a13345efc7e94c27"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "665fe01431e8f0630d407037"
+                                }
+                              }
+                            }
+                          },
                           "id": {
                             "type": "string",
                             "example": "664c440d58453572378249c9"
@@ -3601,6 +3737,142 @@
                                       "example": "664c42ea58453572378249c0"
                                     }
                                   }
+                                }
+                              }
+                            }
+                          },
+                          "matchListByUser": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "personalInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "age": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "gender": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMarried": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "height": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "weight": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "socialCircle": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "activities": {
+                                      "type": "array",
+                                      "example": [
+                                        0,
+                                        2
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "location": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "education": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "liveWithParents": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "religion": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "smoking": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "workInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occupation": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "industry": {
+                                      "type": "array",
+                                      "example": [
+                                        0
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "expectedSalary": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "blacklist": {
+                                  "type": "object",
+                                  "properties": {
+                                    "banSmoking": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banOccupation": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banIndustry": {
+                                      "type": "array",
+                                      "example": [
+                                        1
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "banExpectedSalary": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "noticeInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "notice": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "_id": {
+                                  "type": "string",
+                                  "example": "666abae78593484e1056b586"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "665c2f502ab231321"
                                 }
                               }
                             }

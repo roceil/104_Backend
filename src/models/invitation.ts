@@ -80,11 +80,17 @@ invitationSchema.virtual("profileByInvitedUser", {
   foreignField: "userId",
   localField: "invitedUserId"
 })
-invitationSchema.virtual("profileByInvitedUser", {
-  ref: "profile",
+// invitationSchema.virtual("profileByInvitedUser", {
+//   ref: "profile",
+//   foreignField: "userId",
+//   localField: "userId"
+// })
+invitationSchema.virtual("matchListByInvitedUser", {
+  ref: "matchList",
   foreignField: "userId",
   localField: "userId"
-})
+}
+)
 
 const Invitation = model<IInvitation>("invitation", invitationSchema)
 export { Invitation, type IInvitation }

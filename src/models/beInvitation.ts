@@ -83,6 +83,10 @@ beInvitationSchema.virtual("profileByUser", {
   foreignField: "userId",
   localField: "userId"
 })
-
+beInvitationSchema.virtual("matchListByUser", {
+  ref: "matchList",
+  foreignField: "userId",
+  localField: "userId"
+})
 const BeInvitation = model<IBeInvitation>("beInvitation", beInvitationSchema)
 export { BeInvitation, type IBeInvitation }

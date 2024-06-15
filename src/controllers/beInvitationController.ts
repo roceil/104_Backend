@@ -46,6 +46,9 @@ const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunc
   const beInvitationList = await BeInvitation.find({ invitedUserId: userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
+  }).populate({
+    path: "matchListByUser",
+    select: "personalInfo workInfo blacklist noticeInfo"
   })
   const beInvitationsLength = await BeInvitation.countDocuments({ invitedUserId: userId })
   if (!beInvitationList || beInvitationList.length === 0) {
