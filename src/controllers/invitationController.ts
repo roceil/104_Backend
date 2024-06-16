@@ -3,6 +3,7 @@ import { type LoginResData } from "@/types/login"
 import { Invitation } from "@/models/invitation"
 import { BeInvitation } from "@/models/beInvitation"
 import { Profile } from "@/models/profile"
+import { Collection } from "@/models/collection"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
@@ -76,12 +77,15 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
 
   const { userId } = req.user as LoginResData
-
-  const profile = await Profile.findOne({ userId }).select("unlockComment")
+  const [profile, collection] = await Promise.all([Profile.findOne({ userId }).select("unlockComment"), Collection.find({ userId }).select("collectedUserId")])
   const unlockComment = profile?.unlockComment ?? []
+  const collectionList = collection.map(doc => doc.collectedUserId.toString()) ?? []
   const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings userStatus"
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
+  }).populate({
+    path: "matchListByInvitedUser",
+    select: "personalInfo workInfo blacklist noticeInfo"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {
@@ -89,11 +93,16 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
   } else {
     const parseInvitationList = JSON.parse(JSON.stringify(invitationList))
     const invitations: ParsedInvitation[] = parseInvitationList.map((invitation: ParsedInvitation) => {
-      if (unlockComment.length === 0) {
-        return { ...invitation, isUnlock: false }
-      } else {
-        return { ...invitation, isUnlock: unlockComment.includes(invitation.invitedUserId) }
+      let isUnlock = false
+      if (unlockComment.length !== 0) {
+        isUnlock = unlockComment.includes(invitation.invitedUserId)
       }
+
+      let isCollected = false
+      if (collectionList.length !== 0) {
+        isCollected = collectionList.includes(invitation.invitedUserId)
+      }
+      return { ...invitation, isUnlock, isCollected }
     })
     // invitations.forEach((_, i: number) => {
     //   // 會報錯Maximum call stack size exceede
@@ -107,7 +116,7 @@ const getInvitationById = async (req: Request, res: Response, next: NextFunction
   const { id } = req.params
   const invitation = await Invitation.findById(id).populate({
     path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails tags exposureSettings"
+    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   })
   if (!invitation) {
     appErrorHandler(404, "No invitation found", next)
@@ -140,7 +149,7 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
 }
 const finishInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findByIdAndUpdate(id, { isFinishDating: true }, { new: true })
+  const invitation = await Invitation.findByIdAndUpdate(id, { isFinishDating: true, status: "finishDating" }, { new: true })
   if (!invitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
