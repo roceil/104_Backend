@@ -233,7 +233,9 @@ const profileSchema = new Schema<IPersonalInfo>({
   }
 }, {
   timestamps: true,
-  versionKey: false
+  versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
 
 profileSchema.virtual("userInfo", {
@@ -241,6 +243,11 @@ profileSchema.virtual("userInfo", {
   localField: "userId",
   foreignField: "_id",
   justOne: true
+})
+profileSchema.virtual("matchListByUserId", {
+  ref: "matchList",
+  localField: "userId",
+  foreignField: "userId"
 })
 
 const Profile = model<IPersonalInfo>("profile", profileSchema)

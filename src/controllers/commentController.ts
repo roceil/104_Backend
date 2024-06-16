@@ -61,7 +61,7 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
   }
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
-
+// getCommentList暫時不用
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
@@ -90,13 +90,24 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   })
   appSuccessHandler(200, "查詢成功", comments, res)
 }
-const getCommentById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getCommentByUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const comment = await Comment.findById(id)
-  if (!comment) {
+  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
+  const beCommentedUserProfile = await Profile.findOne({ userId: id }).populate({
+    path: "matchListByUserId",
+    select: "personalInfo workInfo blacklist noticeInfo"
+  })
+  const commentCount = await Comment.countDocuments({ commentedUserId: id })
+  const comments = await Comment.find({ commentedUserId: id }).populate({
+    path: "commentUserProfile",
+    select: "photoDetails nickNameDetails jobDetails userStatus"
+  }
+  ).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
+  if (!comments) {
     appErrorHandler(404, "No comment found", next)
   } else {
-    appSuccessHandler(200, "查詢成功", comment, res)
+    appSuccessHandler(200, "查詢成功", { beCommentedUserProfile, comments, commentCount }, res)
   }
 }
 const getCommentByIdAndUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -152,4 +163,4 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
   }
 }
 
-export { postComment, getCommentList, getCommentById, getCommentByIdAndUserId, getCommentILiftList, putComment, deleteComment }
+export { postComment, getCommentList, getCommentByUserId, getCommentByIdAndUserId, getCommentILiftList, putComment, deleteComment }

@@ -46,9 +46,15 @@ const commentSchema = new Schema<IComment>({
   }
 }, {
   timestamps: true,
-  versionKey: false
+  versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
-
+commentSchema.virtual("commentUserProfile", {
+  ref: "profile",
+  localField: "userId",
+  foreignField: "userId"
+})
 const Comment = model<IComment>("comment", commentSchema)
 
 export { Comment, type IComment }

@@ -1,5 +1,5 @@
-export function checkPageSizeAndPageNumber (pageSize: string | undefined, pageNumber: string | undefined): { parsedPageNumber: number, parsedPageSize: number } {
-  pageSize = pageSize ?? "6"
+export function checkPageSizeAndPageNumber (pageSize: string | undefined, pageNumber: string | undefined, defaultPageSize: string = "6"): { parsedPageNumber: number, parsedPageSize: number } {
+  pageSize = pageSize ?? defaultPageSize
   pageNumber = pageNumber ?? "1"
 
   // 確保 pageSize 和 pageNumber 是合法的數字
@@ -8,13 +8,13 @@ export function checkPageSizeAndPageNumber (pageSize: string | undefined, pageNu
   let parsedPageNumber = parseInt(pageNumber)
   // 若不是數字與不對的數值，則設定預設值
   if (isNaN(parsedPageSize)) {
-    parsedPageSize = 6
+    parsedPageSize = Number(defaultPageSize)
   }
   if (isNaN(parsedPageNumber)) {
     parsedPageNumber = 1
   }
   if (parsedPageSize <= 0) {
-    parsedPageSize = 6
+    parsedPageSize = Number(defaultPageSize)
   }
   if (parsedPageNumber <= 0) {
     parsedPageNumber = 1
