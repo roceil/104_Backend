@@ -31,15 +31,96 @@ export function getWhoInvitationListSwagger (_req: Request, _res: Response, next
                     {
                         _id: "664c42ea58453572378249bf",
                         userId: "664c427bb56b34d999f86c83",
+                        userStatus: {
+                            rating: 0,
+                            isMatch: false,
+                            point: 0,
+                            commentScore: 0,
+                            commentCount: 0,
+                            _id: "664c42ea58453572378249c0"
+                        },
                         nickNameDetails: {
                             nickName: "Kven",
                             isShow: true,
                             _id: "664c42ea58453572378249c0"
                         },
-                        tags: []
+                        tags: ["test1", "test2"],
+                        companyDetails: {
+                            company: "test company",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        exposureSettings: {
+                            rating: 5,
+                            isShow: true,
+                            isMatch: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        incomeDetails: {
+                            income: "test income",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        introDetails: {
+                            intro: "test intro",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        jobDetails: {
+                            job: "test job",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        lineDetails: {
+                            lineId: "test line",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        },
+                        photoDetails: {
+                            photo: "https://i.imgur.com/XgbZdeA.jpeg",
+                            isShow: true,
+                            _id: "664c42ea58453572378249c0"
+                        }
                     }
                 ],
-                id: "664c440d58453572378249c9"
+                matchListByUser: [
+                    {
+                        personalInfo: {
+                            age: 0,
+                            gender: 0,
+                            isMarried: 0,
+                            height: 0,
+                            weight: 0,
+                            socialCircle: 0,
+                            activities: [0, 2],
+                            location: 0,
+                            education: 0,
+                            liveWithParents: 0,
+                            religion: 0,
+                            smoking: 0
+                        },
+                        workInfo: {
+                            occupation: 0,
+                            industry: [0],
+                            expectedSalary: 0
+                        },
+                        blacklist: {
+                            banSmoking: 1,
+                            banOccupation: 1,
+                            banIndustry: [1],
+                            banExpectedSalary: 1
+                        },
+                        noticeInfo: {
+                            email: "",
+                            notice: false
+                        },
+                        _id: "666abae78593484e1056b586",
+                        userId: "665c2f502ab231321"
+                    }
+                ],
+                id: "664c440d58453572378249c9",
+                isUnlock: false,
+                isCollected: false
             },
             ],
             invitationsLength: 1
