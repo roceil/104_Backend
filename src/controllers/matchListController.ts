@@ -9,9 +9,9 @@ import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
 
-// import { Collection } from "@/models/collection"
 import { BlackList } from "@/models/blackList"
 import { Invitation } from "@/models/invitation"
+import { Collection } from "@/models/collection"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -60,7 +60,6 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 
   const matchListData = await MatchList.findOne({ userId })
 
-
   if (page === undefined || Number(page) < 1) {
     appErrorHandler(400, "頁數需要大於 1", next)
   }
@@ -73,8 +72,8 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
       personalInfo, workInfo, blacklist
     } = matchListData
 
-    // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
-    const resultUsers = await MatchListSelfSetting.find({
+    // 使用相同的查询条件
+    const queryCondition = {
       // "userId": { $ne: userId },
       $and: [
         { "personalInfo.age": personalInfo.age },
@@ -93,7 +92,16 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         { "workInfo.expectedSalary": { $in: workInfo.expectedSalary, $nin: blacklist.banExpectedSalary } }
         // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
       ]
-    }).sort(dateSort).skip(((Number(page) ?? 1) - 1) * 6).limit(6)
+    }
+
+    // 計算總筆數
+    const totalCount = await MatchListSelfSetting.countDocuments(queryCondition)
+    const perPage = 6
+
+    // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
+    const resultUsers = await MatchListSelfSetting.find(
+      queryCondition
+    ).sort(dateSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
     if (resultUsers.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
@@ -115,7 +123,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           userId, // 邀請者
           invitedUserId: id // 被邀請者
         })
-        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
+        const status = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
@@ -123,48 +131,38 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         })
 
         // 取得每個用戶的收藏狀態
-        // const collection = await Collection.findOne({ userId, collectionUserId: id })
-        // const isCollected = collection ? collection.isCollected : false
+        const collection = await Collection.findOne({ userId, collectedUserId: id }, { isCollected: 1 })
+        const isCollected = Boolean(collection)
 
         // 取得每個用戶的評價狀態
 
         // 取得每個用戶的解鎖狀態
 
-        // 目前分頁和總筆數
-        const pagination = {
-          page: Number(page) ?? 1,
-          totalPage: 1
-        }
-        pagination.totalPage = await MatchListSelfSetting.countDocuments({
-          $and: [
-            { "personalInfo.age": personalInfo.age },
-            { "personalInfo.gender": personalInfo.gender },
-            { "personalInfo.height": personalInfo.height },
-            { "personalInfo.weight": personalInfo.weight },
-            { "personalInfo.location": personalInfo.location },
-            { "personalInfo.education": personalInfo.education },
-            { "personalInfo.liveWithParents": personalInfo.liveWithParents },
-            { "personalInfo.religion": personalInfo.religion },
-            { "personalInfo.socialCircle": personalInfo.socialCircle },
-            { "personalInfo.activities": { $in: personalInfo.activities } },
-            { "personalInfo.smoking": { $in: personalInfo.smoking, $nin: blacklist.banSmoking } }, // 剔除名單
-            { "workInfo.occupation": { $in: workInfo.occupation, $nin: blacklist.banOccupation } },
-            { "workInfo.industry": { $in: workInfo.industry, $nin: blacklist.banIndustry } },
-            { "workInfo.expectedSalary": { $in: workInfo.expectedSalary, $nin: blacklist.banExpectedSalary } }
-            // { "personalInfo.activities": { $all: personalInfo.activities } }, // 精準搜尋
-          ]
-        })
-
         return {
-          ...resultUserInfo?.toObject(),
+          userInfo: {
+            ...resultUserInfo?.toObject()
+          },
+          isCollected,
           isLocked,
-          invitationStatus,
-          matchListSelfSetting,
-          pagination
+          status,
+          matchListSelfSetting
         }
       }))
 
-      appSuccessHandler(200, "查詢配對結果成功", resultUsersData, res)
+      // 分頁資訊
+      const pagination = {
+        page: Number(page) ?? 1,
+        perPage,
+        totalCount
+      }
+
+      // 將分頁資訊和查詢結果合併在一個物件中
+      const response = {
+        resultList: resultUsersData,
+        pagination
+      }
+
+      appSuccessHandler(200, "查詢配對結果成功", response, res)
     }
   }
 }
