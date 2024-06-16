@@ -1,6 +1,5 @@
 import { Schema, model, mongo, type Types } from "mongoose"
 import { type IUserId } from "../types/userInterface"
-
 interface ICollection {
   userId: IUserId
   collectedUserId: Types.ObjectId[]

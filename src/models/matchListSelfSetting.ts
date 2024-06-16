@@ -7,6 +7,10 @@ interface IMatchListSelfSetting extends Document {
     select: false
   }
   userId: IUserId
+  searchDataBase: {
+    type: [string]
+    default: []
+  }
   personalInfo: {
     age: number
     gender: number
@@ -37,7 +41,14 @@ interface IMatchListSelfSetting extends Document {
   }
 }
 
-const options = [
+type Option = Record<string, string>
+
+interface Options {
+  type: string
+  options: Option
+}
+
+const options: Options[] = [
   {
     type: "ageOptions",
     options: {
@@ -252,6 +263,10 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
     required: [true, "需要使用者id"],
     ref: "User"
   },
+  searchDataBase: {
+    type: [String],
+    default: []
+  },
   personalInfo: {
     age: { type: Number, enum: getOptionKeys("ageOptions"), default: 0 },
     gender: { type: Number, enum: getOptionKeys("genderOptions"), default: 0 },
@@ -279,4 +294,4 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
 
 const MatchListSelfSetting = model<IMatchListSelfSetting>("matchListSelfSetting", matchListSchema)
 
-export { MatchListSelfSetting, type IMatchListSelfSetting }
+export { MatchListSelfSetting, type IMatchListSelfSetting, options }

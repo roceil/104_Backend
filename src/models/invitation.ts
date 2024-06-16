@@ -14,7 +14,7 @@ interface IInvitation extends Document {
   isFinishDating: boolean
   isUnlock?: boolean
   profileByInvitedUser?: IPersonalInfo
-  status: "accepted" | "rejected" | "cancel" | "pending"
+  status: "accepted" | "rejected" | "cancel" | "pending" | "finishDating"
   createdAt: Date
   updatedAt: Date
 }
@@ -57,7 +57,7 @@ const invitationSchema = new Schema<IInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected", "cancel", "pending"],
+    enum: ["accepted", "rejected", "cancel", "pending", "finishDating"],
     default: "pending"
   },
   createdAt: {
@@ -80,11 +80,17 @@ invitationSchema.virtual("profileByInvitedUser", {
   foreignField: "userId",
   localField: "invitedUserId"
 })
-invitationSchema.virtual("profileByInvitedUser", {
-  ref: "profile",
+// invitationSchema.virtual("profileByInvitedUser", {
+//   ref: "profile",
+//   foreignField: "userId",
+//   localField: "userId"
+// })
+invitationSchema.virtual("matchListByInvitedUser", {
+  ref: "matchList",
   foreignField: "userId",
   localField: "userId"
-})
+}
+)
 
 const Invitation = model<IInvitation>("invitation", invitationSchema)
 export { Invitation, type IInvitation }

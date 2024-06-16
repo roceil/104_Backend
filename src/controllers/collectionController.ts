@@ -41,7 +41,6 @@ const getCollectionsByUserId = async (req: Request, res: Response, next: NextFun
 const addCollection = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { collectedUserId } = req.body
-
   // 檢查使用者是否自己收藏自己
   if (userId === collectedUserId) {
     appErrorHandler(400, "不能收藏自己", next)
@@ -57,26 +56,28 @@ const addCollection = async (req: Request, res: Response, next: NextFunction): P
   }
 
   // 檢查是否已經存在相同的收藏
-  const existingCollection = await Collection.findOne({ userId, collectedUserId })
-  if (existingCollection) {
+  const existingCollectionUserId = await Collection.findOne({ userId, collectedUserId })
+  if (existingCollectionUserId) {
     appErrorHandler(400, "已經存在相同的收藏", next)
     return
   }
-
-  // 建立新的收藏記錄
-  const collection = new Collection({
-    userId,
-    collectedUserId
-  })
-
-  await collection.save()
-
-  if (!collection) {
-    appErrorHandler(500, "收藏建立失敗", next)
-    return
+  const existingCollection = await Collection.findOne({ userId })
+  if (!existingCollection) {
+    // 建立新的收藏記錄
+    const collection = await Collection.create({ userId, collectedUserId })
+    if (!collection) {
+      appErrorHandler(500, "收藏失敗", next)
+      return
+    }
+    appSuccessHandler(201, "收藏成功", collection, res)
+  } else {
+    const collection = await Collection.findOneAndUpdate({ userId }, { $push: { collectedUserId } }, { new: true })
+    if (!collection) {
+      appErrorHandler(500, "收藏失敗", next)
+      return
+    }
+    appSuccessHandler(201, "收藏成功", collection, res)
   }
-
-  appSuccessHandler(201, "收藏建立成功", collection, res)
 }
 /**
  * 刪除收藏 By userId 和 collectedUserId
@@ -99,7 +100,7 @@ const deleteCollectionById = async (req: Request, res: Response, next: NextFunct
   // }
 
   // 尋找並刪除收藏記錄
-  const collection = await Collection.findOneAndDelete({ userId, collectedUserId })
+  const collection = await Collection.findOneAndUpdate({ userId }, { $pull: { collectedUserId } }, { new: true })
 
   if (!collection) {
     appErrorHandler(404, "查無收藏", next)

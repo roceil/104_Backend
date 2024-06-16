@@ -1402,6 +1402,38 @@
         ]
       }
     },
+    "/api/v1/image": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/user-params": {
       "get": {
         "tags": [
@@ -1743,7 +1775,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "評價Id"
+            "description": "userId"
           },
           {
             "name": "origin",
@@ -1768,110 +1800,429 @@
                 "data": {
                   "type": "object",
                   "properties": {
-                    "_id": {
-                      "type": "string",
-                      "example": "66497a7c9acbc3bfb1a21621"
-                    },
-                    "userId": {
-                      "type": "string",
-                      "example": "664473d53d428e98fd5fb226"
-                    },
-                    "commentedUserId": {
-                      "type": "string",
-                      "example": "66487581f6f2c93ddd16ff00"
-                    },
-                    "content": {
-                      "type": "string",
-                      "example": "test666666"
-                    },
-                    "score": {
-                      "type": "number",
-                      "example": 4
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2024-05-19T04:05:16.243Z"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "example": "2024-05-19T04:05:16.243Z"
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
-      }
-    },
-    "/api/v1/comment-list": {
-      "get": {
-        "tags": [
-          "Comment-評價"
-        ],
-        "description": "取得評價列表",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "評價列表",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string",
-                  "example": "查詢成功"
-                },
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "_id": {
-                        "type": "string",
-                        "example": "66497a7c9acbc3bfb1a21621"
-                      },
-                      "userId": {
-                        "type": "string",
-                        "example": "664473d53d428e98fd5fb226"
-                      },
-                      "commentedUserId": {
-                        "type": "string",
-                        "example": "66487581f6f2c93ddd16ff00"
-                      },
-                      "content": {
-                        "type": "string",
-                        "example": "test666666"
-                      },
-                      "score": {
-                        "type": "number",
-                        "example": 4
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "example": "2024-05-19T04:05:16.243Z"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "example": "2024-05-19T04:05:16.243Z"
+                    "beCommentedUserProfile": {
+                      "type": "object",
+                      "properties": {
+                        "photoDetails": {
+                          "type": "object",
+                          "properties": {
+                            "photo": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b6"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b6"
+                            }
+                          }
+                        },
+                        "introDetails": {
+                          "type": "object",
+                          "properties": {
+                            "intro": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b7"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b7"
+                            }
+                          }
+                        },
+                        "phoneDetails": {
+                          "type": "object",
+                          "properties": {
+                            "phone": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b9"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5b9"
+                            }
+                          }
+                        },
+                        "companyDetails": {
+                          "type": "object",
+                          "properties": {
+                            "company": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5ba"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5ba"
+                            }
+                          }
+                        },
+                        "incomeDetails": {
+                          "type": "object",
+                          "properties": {
+                            "income": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bb"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bb"
+                            }
+                          }
+                        },
+                        "lineDetails": {
+                          "type": "object",
+                          "properties": {
+                            "lineId": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bc"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bc"
+                            }
+                          }
+                        },
+                        "jobDetails": {
+                          "type": "object",
+                          "properties": {
+                            "job": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bd"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5bd"
+                            }
+                          }
+                        },
+                        "unlockComment": {
+                          "type": "array",
+                          "example": [],
+                          "items": {}
+                        },
+                        "exposureSettings": {
+                          "type": "object",
+                          "properties": {
+                            "rating": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "isMatch": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5be"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5be"
+                            }
+                          }
+                        },
+                        "_id": {
+                          "type": "string",
+                          "example": "6656d1c22f1545bc8d671ba2"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "66487581f6f2c93ddd16ff00"
+                        },
+                        "nickNameDetails": {
+                          "type": "object",
+                          "properties": {
+                            "nickName": {
+                              "type": "string",
+                              "example": "Eason"
+                            },
+                            "isShow": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "6656d1c22f1545bc8d671ba3"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "6656d1c22f1545bc8d671ba3"
+                            }
+                          }
+                        },
+                        "tags": {
+                          "type": "array",
+                          "example": [],
+                          "items": {}
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-29T06:57:06.807Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-06-16T04:51:15.852Z"
+                        },
+                        "userStatus": {
+                          "type": "object",
+                          "properties": {
+                            "commentScore": {},
+                            "commentCount": {},
+                            "rating": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "isMatch": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "point": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "_id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5c0"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "666e703374ca9f27515da5c0"
+                            }
+                          }
+                        },
+                        "matchListByUserId": {
+                          "type": "array",
+                          "example": [],
+                          "items": {}
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "6656d1c22f1545bc8d671ba2"
+                        }
                       }
+                    },
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "666e6f3429840a156b11afbf"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "665fe01431e8f0630d407037"
+                          },
+                          "commentedUserId": {
+                            "type": "string",
+                            "example": "66487581f6f2c93ddd16ff00"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "test666666555555"
+                          },
+                          "score": {
+                            "type": "number",
+                            "example": 4
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-06-16T04:51:00.512Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-06-16T04:51:00.512Z"
+                          },
+                          "commentUserProfile": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "photoDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "photo": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5c8"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5c8"
+                                    }
+                                  }
+                                },
+                                "jobDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "job": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5ca"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5ca"
+                                    }
+                                  }
+                                },
+                                "_id": {
+                                  "type": "string",
+                                  "example": "665fe1c831e8f0630d40703d"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "665fe01431e8f0630d407037"
+                                },
+                                "nickNameDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nickName": {
+                                      "type": "string",
+                                      "example": "咚咚"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "665fe1c831e8f0630d40703e"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "example": "665fe1c831e8f0630d40703e"
+                                    }
+                                  }
+                                },
+                                "userStatus": {
+                                  "type": "object",
+                                  "properties": {
+                                    "commentScore": {
+                                      "type": "number",
+                                      "example": 3.7
+                                    },
+                                    "commentCount": {
+                                      "type": "number",
+                                      "example": 8
+                                    },
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "point": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5cc"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "example": "666e703374ca9f27515da5cc"
+                                    }
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "example": "665fe1c831e8f0630d40703d"
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "666e6f3429840a156b11afbf"
+                          }
+                        }
+                      }
+                    },
+                    "commentCount": {
+                      "type": "number",
+                      "example": 2
                     }
                   }
                 }
@@ -2648,6 +2999,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
                                     }
                                   }
                                 },
@@ -2661,6 +3016,27 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c1"
+                                    }
+                                  }
+                                },
+                                "companyDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "company": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666bd4cd6706988ef30f6bbf"
                                     }
                                   }
                                 },
@@ -2674,6 +3050,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c2"
                                     }
                                   }
                                 },
@@ -2687,6 +3067,27 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c4265611132"
+                                    }
+                                  }
+                                },
+                                "jobDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "job": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "666bd4cd6706988ef30f6bc2"
                                     }
                                   }
                                 },
@@ -2704,6 +3105,10 @@
                                     "isMatch": {
                                       "type": "boolean",
                                       "example": false
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c3"
                                     }
                                   }
                                 },
@@ -2717,6 +3122,10 @@
                                     "isShow": {
                                       "type": "boolean",
                                       "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c4253213212312"
                                     }
                                   }
                                 },
@@ -2747,8 +3156,148 @@
                                     "point": {
                                       "type": "number",
                                       "example": 0
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c4"
                                     }
                                   }
+                                }
+                              }
+                            }
+                          },
+                          "matchListByInvitedUser": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "personalInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "age": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "gender": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMarried": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "height": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "weight": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "socialCircle": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "activities": {
+                                      "type": "array",
+                                      "example": [
+                                        0,
+                                        2
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "location": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "education": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "liveWithParents": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "religion": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "smoking": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "workInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occupation": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "industry": {
+                                      "type": "array",
+                                      "example": [
+                                        0
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "expectedSalary": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "blacklist": {
+                                  "type": "object",
+                                  "properties": {
+                                    "banSmoking": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banOccupation": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banIndustry": {
+                                      "type": "array",
+                                      "example": [
+                                        1
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "banExpectedSalary": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "noticeInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "notice": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "_id": {
+                                  "type": "string",
+                                  "example": "666d9905a13345efc7e94c27"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "665fe01431e8f0630d407037"
                                 }
                               }
                             }
@@ -2756,6 +3305,14 @@
                           "id": {
                             "type": "string",
                             "example": "664c440d58453572378249c9"
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "isCollected": {
+                            "type": "boolean",
+                            "example": false
                           }
                         }
                       }
@@ -3353,6 +3910,35 @@
                                   "type": "string",
                                   "example": "664c427bb56b34d999f86c83"
                                 },
+                                "userStatus": {
+                                  "type": "object",
+                                  "properties": {
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": false
+                                    },
+                                    "point": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "commentScore": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "commentCount": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
                                 "nickNameDetails": {
                                   "type": "object",
                                   "properties": {
@@ -3372,8 +3958,272 @@
                                 },
                                 "tags": {
                                   "type": "array",
-                                  "example": [],
-                                  "items": {}
+                                  "example": [
+                                    "test1",
+                                    "test2"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "companyDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "company": {
+                                      "type": "string",
+                                      "example": "test company"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "exposureSettings": {
+                                  "type": "object",
+                                  "properties": {
+                                    "rating": {
+                                      "type": "number",
+                                      "example": 5
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "isMatch": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "incomeDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "income": {
+                                      "type": "string",
+                                      "example": "test income"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "introDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "intro": {
+                                      "type": "string",
+                                      "example": "test intro"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "jobDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "job": {
+                                      "type": "string",
+                                      "example": "test job"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "lineDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "lineId": {
+                                      "type": "string",
+                                      "example": "test line"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                },
+                                "photoDetails": {
+                                  "type": "object",
+                                  "properties": {
+                                    "photo": {
+                                      "type": "string",
+                                      "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                                    },
+                                    "isShow": {
+                                      "type": "boolean",
+                                      "example": true
+                                    },
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "664c42ea58453572378249c0"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "matchListByUser": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "personalInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "age": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "gender": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "isMarried": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "height": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "weight": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "socialCircle": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "activities": {
+                                      "type": "array",
+                                      "example": [
+                                        0,
+                                        2
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "location": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "education": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "liveWithParents": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "religion": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "smoking": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "workInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occupation": {
+                                      "type": "number",
+                                      "example": 0
+                                    },
+                                    "industry": {
+                                      "type": "array",
+                                      "example": [
+                                        0
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "expectedSalary": {
+                                      "type": "number",
+                                      "example": 0
+                                    }
+                                  }
+                                },
+                                "blacklist": {
+                                  "type": "object",
+                                  "properties": {
+                                    "banSmoking": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banOccupation": {
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "banIndustry": {
+                                      "type": "array",
+                                      "example": [
+                                        1
+                                      ],
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "banExpectedSalary": {
+                                      "type": "number",
+                                      "example": 1
+                                    }
+                                  }
+                                },
+                                "noticeInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": ""
+                                    },
+                                    "notice": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                "_id": {
+                                  "type": "string",
+                                  "example": "666abae78593484e1056b586"
+                                },
+                                "userId": {
+                                  "type": "string",
+                                  "example": "665c2f502ab231321"
                                 }
                               }
                             }
@@ -3381,6 +4231,14 @@
                           "id": {
                             "type": "string",
                             "example": "664c440d58453572378249c9"
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isCollected": {
+                            "type": "boolean",
+                            "example": false
                           }
                         }
                       }
@@ -5648,56 +6506,12 @@
         }
       }
     },
-    "/api/v1/collections": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "origin",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/v1/user/collections": {
       "get": {
-        "description": "",
+        "tags": [
+          "收藏"
+        ],
+        "description": "取得所有收藏",
         "parameters": [
           {
             "name": "origin",
@@ -5706,13 +6520,331 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "取得所有收藏成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得所有收藏成功"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                      },
+                      "collectedUserId": {
+                        "type": "array",
+                        "example": [
+                          "6654431dedb728aae4b1f24b"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-06-13T05:36:36.125Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-06-13T05:36:36.125Z"
+                      },
+                      "user": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "665fe01431e8f0630d407037"
+                            },
+                            "personalInfo": {
+                              "type": "object",
+                              "properties": {
+                                "username": {
+                                  "type": "string",
+                                  "example": "Eason"
+                                },
+                                "email": {
+                                  "type": "string",
+                                  "example": "a1221gsdf@hotmail.com"
+                                },
+                                "gender": {},
+                                "birthday": {},
+                                "_id": {
+                                  "type": "string",
+                                  "example": "665fe01431e8f0630d407038"
+                                }
+                              }
+                            },
+                            "isSubscribe": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "points": {
+                              "type": "number",
+                              "example": 29955
+                            },
+                            "resetPasswordToken": {
+                              "type": "string",
+                              "example": ""
+                            },
+                            "isActive": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "blockedUsers": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
+                            },
+                            "notifications": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2024-06-05T03:48:36.621Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2024-06-12T14:21:27.962Z"
+                            }
+                          }
+                        }
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "666a8564a9249066cc79d1fb"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/collections": {
+      "post": {
+        "tags": [
+          "收藏"
+        ],
+        "description": "新增收藏",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collectedUserId": {
+                  "type": "string",
+                  "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                }
+              },
+              "required": [
+                "collectedUserId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "新增收藏成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "新增收藏成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "collectedUserId": {
+                      "type": "array",
+                      "example": [
+                        "60b5e7b5d2d9e1b6c8e1b3b0"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-06-13T05:36:36.125Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-06-13T05:55:01.382Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "收藏"
+        ],
+        "description": "刪除收藏",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collectedUserId": {
+                  "type": "string",
+                  "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                }
+              },
+              "required": [
+                "collectedUserId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除收藏",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消收藏成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    },
+                    "collectedUserId": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-06-13T06:06:22.897Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-06-13T06:06:22.897Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "60b5e7b5d2d9e1b6c8e1b3b0"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1/search-list/featured": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/search-list/keyword": {
       "get": {
         "description": "",
         "parameters": [
