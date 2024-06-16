@@ -7,6 +7,10 @@ interface IMatchListSelfSetting extends Document {
     select: false
   }
   userId: IUserId
+  searchDataBase: {
+    type: [string]
+    default: []
+  }
   personalInfo: {
     age: number
     gender: number
@@ -258,6 +262,10 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
     type: mongo.ObjectId,
     required: [true, "需要使用者id"],
     ref: "User"
+  },
+  searchDataBase: {
+    type: [String],
+    default: []
   },
   personalInfo: {
     age: { type: Number, enum: getOptionKeys("ageOptions"), default: 0 },
