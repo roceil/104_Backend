@@ -15,30 +15,30 @@ const nickNameDetailsSchema = z.object({
   isShow: z.boolean().default(false)
 }).strict()
 
-const phoneDetailsSchema = z.object({
-  phone: z.string().default(""),
-  isShow: z.boolean().default(false)
-}).strict()
-
-const companyDetailsSchema = z.object({
-  company: z.string().default(""),
-  isShow: z.boolean().default(false)
-}).strict()
-
-const incomeDetailsSchema = z.object({
-  income: z.string().default(""),
-  isShow: z.boolean().default(false)
-}).strict()
-
 const lineDetailsSchema = z.object({
   lineId: z.string().default(""),
   isShow: z.boolean().default(false)
 }).strict()
 
-const jobDetailsSchema = z.object({
-  job: z.string().default(""),
-  isShow: z.boolean().default(false)
-}).strict()
+// const phoneDetailsSchema = z.object({
+//   phone: z.string().default(""),
+//   isShow: z.boolean().default(false)
+// }).strict()
+
+// const companyDetailsSchema = z.object({
+//   company: z.string().default(""),
+//   isShow: z.boolean().default(false)
+// }).strict()
+
+// const incomeDetailsSchema = z.object({
+//   income: z.string().default(""),
+//   isShow: z.boolean().default(false)
+// }).strict()
+
+// const jobDetailsSchema = z.object({
+//   job: z.string().default(""),
+//   isShow: z.boolean().default(false)
+// }).strict()
 
 const exposureSettingsSchema = z.object({
   rating: z.number().default(0),
@@ -57,11 +57,11 @@ const personalInfoSchema = z.object({
   photoDetails: photoDetailsSchema,
   introDetails: introDetailsSchema,
   nickNameDetails: nickNameDetailsSchema,
-  phoneDetails: phoneDetailsSchema,
-  companyDetails: companyDetailsSchema,
-  incomeDetails: incomeDetailsSchema,
   lineDetails: lineDetailsSchema,
-  jobDetails: jobDetailsSchema,
+  // phoneDetails: phoneDetailsSchema,
+  // companyDetails: companyDetailsSchema,
+  // incomeDetails: incomeDetailsSchema,
+  // jobDetails: jobDetailsSchema,
   tags: z.array(z.string()).default([]),
   exposureSettings: exposureSettingsSchema,
   userStatus: userStatusSchema

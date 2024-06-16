@@ -16,30 +16,30 @@ interface INickNameDetails {
   isShow: boolean
 }
 
-interface IPhoneDetails {
-  phone: string
-  isShow: boolean
-}
-
-interface ICompanyDetails {
-  company: string
-  isShow: boolean
-}
-
-interface IIncomeDetails {
-  income: string
-  isShow: boolean
-}
-
 interface ILineDetails {
   lineId: string
   isShow: boolean
 }
 
-interface IJobDetails {
-  job: string
-  isShow: boolean
-}
+// interface IPhoneDetails {
+//   phone: string
+//   isShow: boolean
+// }
+
+// interface ICompanyDetails {
+//   company: string
+//   isShow: boolean
+// }
+
+// interface IIncomeDetails {
+//   income: string
+//   isShow: boolean
+// }
+
+// interface IJobDetails {
+//   job: string
+//   isShow: boolean
+// }
 
 interface IExposureSettings {
   rating: number
@@ -60,11 +60,11 @@ interface IPersonalInfo {
   photoDetails: IPhotoDetails
   introDetails: IIntroDetails
   nickNameDetails: INickNameDetails
-  phoneDetails: IPhoneDetails
-  companyDetails: ICompanyDetails
-  incomeDetails: IIncomeDetails
   lineDetails: ILineDetails
-  jobDetails: IJobDetails
+  // phoneDetails: IPhoneDetails
+  // companyDetails: ICompanyDetails
+  // incomeDetails: IIncomeDetails
+  // jobDetails: IJobDetails
   tags: string[]
   userStatus: IUserStatus
   exposureSettings: IExposureSettings
@@ -116,45 +116,6 @@ const profileSchema = new Schema<IPersonalInfo>({
     },
     default: {} // 確保這裡有預設值
   },
-  phoneDetails: {
-    type: {
-      phone: {
-        type: String,
-        default: ""
-      },
-      isShow: {
-        type: Boolean,
-        default: false
-      }
-    },
-    default: {} // 確保這裡有預設值
-  },
-  companyDetails: {
-    type: {
-      company: {
-        type: String,
-        default: ""
-      },
-      isShow: {
-        type: Boolean,
-        default: false
-      }
-    },
-    default: {} // 確保這裡有預設值
-  },
-  incomeDetails: {
-    type: {
-      income: {
-        type: String,
-        default: ""
-      },
-      isShow: {
-        type: Boolean,
-        default: false
-      }
-    },
-    default: {} // 確保這裡有預設值
-  },
   lineDetails: {
     type: {
       lineId: {
@@ -168,19 +129,58 @@ const profileSchema = new Schema<IPersonalInfo>({
     },
     default: {} // 確保這裡有預設值
   },
-  jobDetails: {
-    type: {
-      job: {
-        type: String,
-        default: ""
-      },
-      isShow: {
-        type: Boolean,
-        default: false
-      }
-    },
-    default: {} // 確保這裡有預設值
-  },
+  // phoneDetails: {
+  //   type: {
+  //     phone: {
+  //       type: String,
+  //       default: ""
+  //     },
+  //     isShow: {
+  //       type: Boolean,
+  //       default: false
+  //     }
+  //   },
+  //   default: {} // 確保這裡有預設值
+  // },
+  // companyDetails: {
+  //   type: {
+  //     company: {
+  //       type: String,
+  //       default: ""
+  //     },
+  //     isShow: {
+  //       type: Boolean,
+  //       default: false
+  //     }
+  //   },
+  //   default: {} // 確保這裡有預設值
+  // },
+  // incomeDetails: {
+  //   type: {
+  //     income: {
+  //       type: String,
+  //       default: ""
+  //     },
+  //     isShow: {
+  //       type: Boolean,
+  //       default: false
+  //     }
+  //   },
+  //   default: {} // 確保這裡有預設值
+  // },
+  // jobDetails: {
+  //   type: {
+  //     job: {
+  //       type: String,
+  //       default: ""
+  //     },
+  //     isShow: {
+  //       type: Boolean,
+  //       default: false
+  //     }
+  //   },
+  //   default: {} // 確保這裡有預設值
+  // },
   tags: {
     type: [String],
     default: []
