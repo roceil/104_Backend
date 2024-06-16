@@ -37,7 +37,14 @@ interface IMatchListSelfSetting extends Document {
   }
 }
 
-const options = [
+type Option = Record<string, string>
+
+interface Options {
+  type: string
+  options: Option
+}
+
+const options: Options[] = [
   {
     type: "ageOptions",
     options: {
@@ -279,4 +286,4 @@ const matchListSchema = new Schema<IMatchListSelfSetting>({
 
 const MatchListSelfSetting = model<IMatchListSelfSetting>("matchListSelfSetting", matchListSchema)
 
-export { MatchListSelfSetting, type IMatchListSelfSetting }
+export { MatchListSelfSetting, type IMatchListSelfSetting, options }

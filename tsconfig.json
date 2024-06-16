@@ -106,7 +106,7 @@
     "src/**/*.ts",
     "app.ts",
     "swagger.ts",
-    "scritp/**/*.ts"
+    "script/**/*.ts"
   ],
   "exclude": [
     "nodce_modules"
