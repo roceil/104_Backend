@@ -3166,7 +3166,7 @@
                               }
                             }
                           },
-                          "matchListByInvitedUser": {
+                          "matchListSelfSettingByInvitedUser": {
                             "type": "array",
                             "items": {
                               "type": "object",
@@ -3201,8 +3201,7 @@
                                     "activities": {
                                       "type": "array",
                                       "example": [
-                                        0,
-                                        2
+                                        0
                                       ],
                                       "items": {
                                         "type": "number"
@@ -3240,7 +3239,10 @@
                                     "industry": {
                                       "type": "array",
                                       "example": [
-                                        0
+                                        0,
+                                        4,
+                                        3,
+                                        2
                                       ],
                                       "items": {
                                         "type": "number"
@@ -3252,52 +3254,18 @@
                                     }
                                   }
                                 },
-                                "blacklist": {
-                                  "type": "object",
-                                  "properties": {
-                                    "banSmoking": {
-                                      "type": "number",
-                                      "example": 1
-                                    },
-                                    "banOccupation": {
-                                      "type": "number",
-                                      "example": 1
-                                    },
-                                    "banIndustry": {
-                                      "type": "array",
-                                      "example": [
-                                        1
-                                      ],
-                                      "items": {
-                                        "type": "number"
-                                      }
-                                    },
-                                    "banExpectedSalary": {
-                                      "type": "number",
-                                      "example": 1
-                                    }
-                                  }
-                                },
-                                "noticeInfo": {
-                                  "type": "object",
-                                  "properties": {
-                                    "email": {
-                                      "type": "string",
-                                      "example": ""
-                                    },
-                                    "notice": {
-                                      "type": "boolean",
-                                      "example": false
-                                    }
-                                  }
+                                "searchDataBase": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
                                 },
                                 "_id": {
                                   "type": "string",
-                                  "example": "666d9905a13345efc7e94c27"
+                                  "example": "666abad88593484e1056b4dd"
                                 },
                                 "userId": {
                                   "type": "string",
-                                  "example": "665fe01431e8f0630d407037"
+                                  "example": "665c2f502ab2d6460452171c"
                                 }
                               }
                             }
@@ -4092,7 +4060,7 @@
                               }
                             }
                           },
-                          "matchListByUser": {
+                          "matchListSelfSettingByUser": {
                             "type": "array",
                             "items": {
                               "type": "object",
@@ -4127,8 +4095,7 @@
                                     "activities": {
                                       "type": "array",
                                       "example": [
-                                        0,
-                                        2
+                                        0
                                       ],
                                       "items": {
                                         "type": "number"
@@ -4166,7 +4133,10 @@
                                     "industry": {
                                       "type": "array",
                                       "example": [
-                                        0
+                                        0,
+                                        4,
+                                        3,
+                                        2
                                       ],
                                       "items": {
                                         "type": "number"
@@ -4178,52 +4148,18 @@
                                     }
                                   }
                                 },
-                                "blacklist": {
-                                  "type": "object",
-                                  "properties": {
-                                    "banSmoking": {
-                                      "type": "number",
-                                      "example": 1
-                                    },
-                                    "banOccupation": {
-                                      "type": "number",
-                                      "example": 1
-                                    },
-                                    "banIndustry": {
-                                      "type": "array",
-                                      "example": [
-                                        1
-                                      ],
-                                      "items": {
-                                        "type": "number"
-                                      }
-                                    },
-                                    "banExpectedSalary": {
-                                      "type": "number",
-                                      "example": 1
-                                    }
-                                  }
-                                },
-                                "noticeInfo": {
-                                  "type": "object",
-                                  "properties": {
-                                    "email": {
-                                      "type": "string",
-                                      "example": ""
-                                    },
-                                    "notice": {
-                                      "type": "boolean",
-                                      "example": false
-                                    }
-                                  }
+                                "searchDataBase": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
                                 },
                                 "_id": {
                                   "type": "string",
-                                  "example": "666abae78593484e1056b586"
+                                  "example": "666abad88593484e1056b4dd"
                                 },
                                 "userId": {
                                   "type": "string",
-                                  "example": "665c2f502ab231321"
+                                  "example": "665c2f502ab2d6460452171c"
                                 }
                               }
                             }

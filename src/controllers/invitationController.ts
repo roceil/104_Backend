@@ -84,8 +84,8 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   }).populate({
-    path: "matchListByInvitedUser",
-    select: "personalInfo workInfo blacklist noticeInfo"
+    path: "matchListSelfSettingByInvitedUser",
+    select: "searchDataBase personalInfo workInfo"
   })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {

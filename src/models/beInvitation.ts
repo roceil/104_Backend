@@ -83,8 +83,8 @@ beInvitationSchema.virtual("profileByUser", {
   foreignField: "userId",
   localField: "userId"
 })
-beInvitationSchema.virtual("matchListByUser", {
-  ref: "matchList",
+beInvitationSchema.virtual("matchListSelfSettingByUser", {
+  ref: "matchListSelfSetting",
   foreignField: "userId",
   localField: "userId"
 })
