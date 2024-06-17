@@ -12,6 +12,7 @@ import { User } from "@/models/user"
 import { BlackList } from "@/models/blackList"
 import { Invitation } from "@/models/invitation"
 import { Collection } from "@/models/collection"
+import { Profile } from "@/models/profile"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -108,44 +109,50 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     } else {
       const resultUserIds = resultUsers.map(user => user.userId)
 
-      const resultUsersData = await Promise.all(resultUserIds.map(async (id) => {
+      const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
         // 取得每個用戶的資料
-        const resultUserInfo = await User.findById(id)
+        const resultUserInfo = await User.findById(resultId)
 
         // 取得每個用戶的封鎖狀態
         const blackList = await BlackList.findOne({ userId })
         const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
         /* eslint-disable-next-line */
-        const isLocked = lockedUserIds.includes(id.toString())
+        const isLocked = lockedUserIds.includes(resultId.toString()) ?? false
 
         // 取得每個用戶的邀約狀態
         const invitations = await Invitation.find({
           userId, // 邀請者
-          invitedUserId: id // 被邀請者
+          invitedUserId: resultId // 被邀請者
         })
-        const status = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
+        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
-          userId: id
+          userId: resultId
         })
 
         // 取得每個用戶的收藏狀態
-        const collection = await Collection.findOne({ userId, collectedUserId: id }, { isCollected: 1 })
+        const collection = await Collection.findOne({ userId, collectedUserId: resultId }, { isCollected: 1 })
         const isCollected = Boolean(collection)
 
         // 取得每個用戶的評價狀態
 
-        // 取得每個用戶的解鎖狀態
+        // 取得每個用戶的解鎖狀態和評分
+        const profile = await Profile.findOne({ userId })
+        /* eslint-disable-next-line */
+        const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
+        const userStatus = profile?.userStatus ?? {}
 
         return {
           userInfo: {
             ...resultUserInfo?.toObject()
           },
+          matchListSelfSetting,
+          userStatus,
+          invitationStatus,
           isCollected,
           isLocked,
-          status,
-          matchListSelfSetting
+          isUnlock
         }
       }))
 
