@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -1697,6 +1697,33 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁數 不可為0",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每頁幾筆",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "依時間排序，desc: 由新到舊，asc: 由舊到新",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1768,7 +1795,7 @@
         "tags": [
           "Comment-評價"
         ],
-        "description": "取得評價",
+        "description": "取得特定使用者評價",
         "parameters": [
           {
             "name": "id",
@@ -1781,6 +1808,33 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁數 不可為0",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每頁幾筆",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "依時間排序，desc: 由新到舊，asc: 由舊到新",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2220,9 +2274,22 @@
                         }
                       }
                     },
-                    "commentCount": {
-                      "type": "number",
-                      "example": 2
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 6
+                        },
+                        "totalCount": {
+                          "type": "number",
+                          "example": 11
+                        }
+                      }
                     }
                   }
                 }
@@ -2346,6 +2413,10 @@
             "schema": {
               "type": "object",
               "properties": {
+                "commentedUserId": {
+                  "type": "string",
+                  "example": "66487581f6f2c93ddd16ff00"
+                },
                 "content": {
                   "type": "string",
                   "example": "test777777"
@@ -2356,6 +2427,7 @@
                 }
               },
               "required": [
+                "commentedUserId",
                 "content",
                 "score"
               ]
@@ -2439,6 +2511,24 @@
             "name": "origin",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "刪除評價",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentedUserId": {
+                  "type": "string",
+                  "example": "66487581f6f2c93ddd16ff00"
+                }
+              },
+              "required": [
+                "commentedUserId"
+              ]
+            }
           }
         ],
         "responses": {

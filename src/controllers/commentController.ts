@@ -28,7 +28,7 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
   if (isNaN(numberScore)) {
     appErrorHandler(400, "評分需要數字", next)
   }
-  if (numberScore <= 1 || numberScore >= 5) {
+  if (numberScore < 1 || numberScore > 5) {
     appErrorHandler(400, "評分範圍為1-5", next)
   }
   const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
@@ -64,8 +64,8 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 // getCommentList暫時不用
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
-  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
+  const { pageSize, page } = req.query as { pageSize?: string, page?: string }
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const [rawComments, userProfile] = await Promise.all([
     Comment.find().populate({
       path: "commentedUserId",
@@ -92,22 +92,32 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
 }
 const getCommentByUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
-  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const beCommentedUserProfile = await Profile.findOne({ userId: id }).populate({
     path: "matchListByUserId",
     select: "personalInfo workInfo blacklist noticeInfo"
   })
-  const commentCount = await Comment.countDocuments({ commentedUserId: id })
-  const comments = await Comment.find({ commentedUserId: id }).populate({
-    path: "commentUserProfile",
-    select: "photoDetails nickNameDetails jobDetails userStatus"
-  }
-  ).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
+  const [totalCount, comments] = await Promise.all([Comment.countDocuments({ commentedUserId: id }), Comment.find({ commentedUserId: id }).sort(dateSort).populate({ path: "commentUserProfile", select: "photoDetails nickNameDetails jobDetails userStatus" }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)])
+  // const totalCount = await Comment.countDocuments({ commentedUserId: id })
+  // const comments = await Comment.find({ commentedUserId: id }).sort(dateSort).populate({
+  //   path: "commentUserProfile",
+  //   select: "photoDetails nickNameDetails jobDetails userStatus"
+  // }
+  // ).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
   if (!comments) {
     appErrorHandler(404, "No comment found", next)
   } else {
-    appSuccessHandler(200, "查詢成功", { beCommentedUserProfile, comments, commentCount }, res)
+    const pagination = {
+      page: parsedPageNumber,
+      perPage: parsedPageSize,
+      totalCount
+    }
+    const response = {
+      beCommentedUserProfile, comments, pagination
+    }
+    appSuccessHandler(200, "查詢成功", response, res)
   }
 }
 const getCommentByIdAndUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -127,25 +137,65 @@ const getCommentByIdAndUserId = async (req: Request, res: Response, next: NextFu
 }
 const getCommentILiftList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
-  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
-
-  const comment = await Comment.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
+  const [totalCount, comment] = await Promise.all([Comment.countDocuments({ userId }), Comment.find({ userId }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)])
   if (!comment || comment.length === 0) {
     appSuccessHandler(200, "沒有評價", [], res)
     return
   }
-  appSuccessHandler(200, "查詢成功", comment, res)
+  const pagination = {
+    page: parsedPageNumber,
+    perPage: parsedPageSize,
+    totalCount
+  }
+  const response = {
+    comment, pagination
+  }
+  appSuccessHandler(200, "查詢成功", response, res)
 }
 const putComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const { content } = req.body
-
+  const { content, score, commentedUserId } = req.body
+  if (!score) {
+    appErrorHandler(400, "缺少評分", next)
+  }
+  const numberScore = Number(score)
+  if (isNaN(numberScore)) {
+    appErrorHandler(400, "評分需要數字", next)
+  }
   if (!content) {
     appErrorHandler(400, "缺少評價", next)
   }
 
-  const comment = await Comment.findByIdAndUpdate(id, { content }, { new: true })
+  const comment = await Comment.findByIdAndUpdate(id, { content, score: numberScore }, { new: true })
+  const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
+    {
+      $set: {
+        "userStatus.commentScore": {
+          $round: [// 四捨五入
+            {
+              $divide: [// 重計算平均分數  (評價總和-平均評價分數+新評分)/評價次數
+                {
+                  $add: [// 總分數計算
+                    { $subtract: [{ $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] }, "$userStatus.commentScore"] },
+                    numberScore
+                  ]
+                },
+                "$userStatus.commentCount"
+              ]
+            },
+            1
+          ]
+        }
+      }
+    }
+  ])
+  if (!commentUserProfile) {
+    appErrorHandler(404, "被評價者不存在", next)
+    return
+  }
   if (!comment) {
     appErrorHandler(400, "修改失敗,找不到評價Id", next)
   } else {
@@ -155,6 +205,44 @@ const putComment = async (req: Request, res: Response, next: NextFunction): Prom
 
 const deleteComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
+  const { commentedUserId } = req.body
+  const commentScore = await Comment.findById(id).select("score")
+  if (!commentScore) {
+    appErrorHandler(404, "找不到評分", next)
+    return
+  }
+  const { score } = commentScore as { score: number }
+  if (!score) {
+    appErrorHandler(404, "找不到評分", next)
+    return
+  }
+  const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
+    {
+      $set: {
+        "userStatus.commentScore": {
+          $round: [// 四捨五入
+            {
+              $divide: [// 計算平均分數  (評分總和-評分)/(評分次數-1)
+                {
+                  $subtract: [// 總分數計算
+                    { $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] },
+                    score
+                  ]
+                },
+                { $subtract: ["$userStatus.commentCount", 1] }
+              ]
+            },
+            1
+          ]
+        },
+        "userStatus.commentCount": { $subtract: ["$userStatus.commentCount", 1] }
+      }
+    }
+  ])
+
+  if (!commentUserProfile) {
+    appErrorHandler(404, "被評價者不存在", next)
+  }
   const comment = await Comment.findByIdAndDelete(id)
   if (!comment) {
     appErrorHandler(400, "刪除失敗,找不到評價Id", next)

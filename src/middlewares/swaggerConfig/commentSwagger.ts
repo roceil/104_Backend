@@ -43,6 +43,24 @@ export function getCommentILiftListSwagger (_req: Request, _res: Response, next:
    * #swagger.security = [{
        "apiKeyAuth":[]
      }]
+   * #swagger.parameters['page'] = {
+    in: 'query',
+    description: '頁數 不可為0',
+    required: false,
+    schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+    in: 'query',
+    description: '每頁幾筆',
+    required: false,
+    schema: { type: 'number' }
+  }
+    * #swagger.parameters['sort'] = {
+    in: 'query',
+    description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+    required: false,
+    schema: { type: 'string' }
+  }
    * #swagger.responses[200] = {
            description: "評價列表",
            schema: {
@@ -71,6 +89,24 @@ export function getCommentListSwagger (_req: Request, _res: Response, next: Next
    * #swagger.security = [{
        "apiKeyAuth":[]
      }]
+    * #swagger.parameters['page'] = {
+    in: 'query',
+    description: '頁數 不可為0',
+    required: false,
+    schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+    in: 'query',
+    description: '每頁幾筆',
+    required: false,
+    schema: { type: 'number' }
+  }
+    * #swagger.parameters['sort'] = {
+    in: 'query',
+    description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+    required: false,
+    schema: { type: 'string' }
+  }
    * #swagger.responses[200] = {
            description: '評價列表',
            schema: {
@@ -125,10 +161,10 @@ export function getCommentByIdSwagger (_req: Request, _res: Response, next: Next
    */
   next()
 }
-export function getCommentByBeUserIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
+export function getCommentByUserIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
    * #swagger.tags = ["Comment-評價"]
-   * #swagger.description = "取得評價"
+   * #swagger.description = "取得特定使用者評價"
    * #swagger.security = [{
        "apiKeyAuth":[]
      }]
@@ -139,6 +175,24 @@ export function getCommentByBeUserIdSwagger (_req: Request, _res: Response, next
        name: "id",
        description: "userId"
      }
+    * #swagger.parameters['page'] = {
+    in: 'query',
+    description: '頁數 不可為0',
+    required: false,
+    schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+    in: 'query',
+    description: '每頁幾筆',
+    required: false,
+    schema: { type: 'number' }
+  }
+    * #swagger.parameters['sort'] = {
+    in: 'query',
+    description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+    required: false,
+    schema: { type: 'string' }
+  }
    * #swagger.responses[200] = {
            description: '評價',
            schema: {
@@ -354,7 +408,11 @@ export function getCommentByBeUserIdSwagger (_req: Request, _res: Response, next
                     id: "666e6f3429840a156b11afbf"
                   }
                 ],
-                commentCount: 2
+                pagination: {
+                  page: 1,
+                  perPage: 6,
+                  totalCount: 11
+                }
                }
            }
        }
@@ -380,6 +438,7 @@ export function putCommentSwagger (_req: Request, _res: Response, next: NextFunc
        description: "修改評價",
        required: true,
        schema: {
+         $commentedUserId:"66487581f6f2c93ddd16ff00",
          $content:"test777777",
          $score: 5
        }
@@ -416,6 +475,14 @@ export function deleteCommentSwagger (_req: Request, _res: Response, next: NextF
        type: "string",
        name: "id",
        description: "評價Id"
+     }
+       * #swagger.parameters["body"] = {
+       in: "body",
+       description: "刪除評價",
+       required: true,
+       schema: {
+         $commentedUserId:"66487581f6f2c93ddd16ff00",
+       }
      }
    * #swagger.responses[200] = {
            description: '刪除評價',
