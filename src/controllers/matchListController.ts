@@ -4,15 +4,16 @@ import { type NextFunction, type Request, type Response } from "express"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
+
 import { MatchList } from "@/models/matchList"
 import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
-
 import { BlackList } from "@/models/blackList"
 import { Invitation } from "@/models/invitation"
 import { Collection } from "@/models/collection"
 import { Profile } from "@/models/profile"
+import { Comment } from "@/models/comment"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -124,7 +125,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           userId, // 邀請者
           invitedUserId: resultId // 被邀請者
         })
-        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
+        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
@@ -135,9 +136,11 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         const collection = await Collection.findOne({ userId, collectedUserId: resultId }, { isCollected: 1 })
         const isCollected = Boolean(collection)
 
-        // 取得每個用戶的評價狀態
+        // 取得每個用戶的評價狀態 和 被評價數量
+        const hasComment = await Comment.findOne({ userId, commentedUserId: resultId }).countDocuments() > 0
+        // const beCommentCount = await Comment.find({ commentedUserId: resultId }).countDocuments() // userStatus.commentCount
 
-        // 取得每個用戶的解鎖狀態和評分
+        // 取得每個用戶的 解鎖狀態 和 評分
         const profile = await Profile.findOne({ userId })
         /* eslint-disable-next-line */
         const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
@@ -152,7 +155,8 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           invitationStatus,
           isCollected,
           isLocked,
-          isUnlock
+          isUnlock,
+          hasComment
         }
       }))
 
