@@ -80,15 +80,10 @@ invitationSchema.virtual("profileByInvitedUser", {
   foreignField: "userId",
   localField: "invitedUserId"
 })
-// invitationSchema.virtual("profileByInvitedUser", {
-//   ref: "profile",
-//   foreignField: "userId",
-//   localField: "userId"
-// })
-invitationSchema.virtual("matchListByInvitedUser", {
-  ref: "matchList",
+invitationSchema.virtual("matchListSelfSettingByInvitedUser", {
+  ref: "matchListSelfSetting",
   foreignField: "userId",
-  localField: "userId"
+  localField: "invitedUserId"
 }
 )
 

@@ -53,6 +53,24 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
+  * #swagger.parameters['page'] = {
+    in: 'query',
+    description: '頁數 不可為0',
+    required: false,
+    schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+    in: 'query',
+    description: '每頁幾筆',
+    required: false,
+    schema: { type: 'number' }
+  }
+    * #swagger.parameters['sort'] = {
+    in: 'query',
+    description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+    required: false,
+    schema: { type: 'string' }
+  }
    * #swagger.responses[200] = {
       description: '邀約列表',
       schema: {
@@ -131,48 +149,39 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
                           }
                     }
                 ],
-                matchListByInvitedUser: [
-                    {
-                        personalInfo: {
-                            age: 0,
-                            gender: 0,
-                            isMarried: 0,
-                            height: 0,
-                            weight: 0,
-                            socialCircle: 0,
-                            activities: [
-                                0,
-                                2
-                            ],
-                            location: 0,
-                            education: 0,
-                            liveWithParents: 0,
-                            religion: 0,
-                            smoking: 0
-                        },
-                        workInfo: {
-                            occupation: 0,
-                            industry: [
-                                0
-                            ],
-                            expectedSalary: 0
-                        },
-                        blacklist: {
-                            banSmoking: 1,
-                            banOccupation: 1,
-                            banIndustry: [
-                                1
-                            ],
-                            banExpectedSalary: 1
-                        },
-                        noticeInfo: {
-                            email: "",
-                            notice: false
-                        },
-                        _id: "666d9905a13345efc7e94c27",
-                        userId: "665fe01431e8f0630d407037"
-                    }
-                ],
+                matchListSelfSettingByInvitedUser: [
+                  {
+                   personalInfo: {
+                     age: 0,
+                     gender: 0,
+                     isMarried: 0,
+                     height: 0,
+                     weight: 0,
+                      socialCircle: 0,
+                      activities: [
+                        0
+                      ],
+                     location: 0,
+                     education: 0,
+                     liveWithParents: 0,
+                      religion: 0,
+                      smoking: 0
+                   },
+                    workInfo: {
+                      occupation: 0,
+                      industry: [
+                        0,
+                       4,
+                        3,
+                        2
+                      ],
+                     "expectedSalary": 0
+                   },
+                   searchDataBase: [],
+                   _id: "666abad88593484e1056b4dd",
+                   userId: "665c2f502ab2d6460452171c"
+                 }
+               ],
                 id: "664c440d58453572378249c9",
                 isUnlock: true,
                 isCollected: false
