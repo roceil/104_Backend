@@ -14,6 +14,7 @@ import { Invitation } from "@/models/invitation"
 import { Collection } from "@/models/collection"
 import { Profile } from "@/models/profile"
 import { Comment } from "@/models/comment"
+import { BeInvitation } from "@/models/beInvitation"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -120,12 +121,19 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         /* eslint-disable-next-line */
         const isLocked = lockedUserIds.includes(resultId.toString()) ?? false
 
-        // 取得每個用戶的邀約狀態
+        // 取得卡片用戶的邀約狀態
         const invitations = await Invitation.find({
           userId, // 邀請者
           invitedUserId: resultId // 被邀請者
         })
         const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
+
+        // 取得登入者被邀約的狀態 (invitations / beInvitations 都是用invitedUserId存被邀請者)
+        const beInvitations = await BeInvitation.find({
+          userId: resultId,
+          invitedUserId: userId
+        })
+        const beInvitationStatus = beInvitations.length > 0 ? beInvitations[0].status : "not invited"
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
@@ -145,18 +153,25 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         /* eslint-disable-next-line */
         const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
         const userStatus = profile?.userStatus ?? {}
+        const photoDetails = profile?.photoDetails ?? {}
+        const tags = profile?.tags ?? []
 
         return {
           userInfo: {
             ...resultUserInfo?.toObject()
           },
           matchListSelfSetting,
-          userStatus,
+          profile: {
+            userStatus,
+            photoDetails,
+            tags,
+          },
           invitationStatus,
           isCollected,
           isLocked,
           isUnlock,
-          hasComment
+          hasComment,
+          beInvitationStatus
         }
       }))
 
