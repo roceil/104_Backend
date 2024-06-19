@@ -1,8 +1,8 @@
-import { Schema, model, mongo, type Types } from "mongoose"
+import { Schema, model, mongo } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 interface ICollection {
   userId: IUserId
-  collectedUserId: Types.ObjectId[]
+  collectedUserId: IUserId
   createdAt: Date
   updatedAt: Date
 }
@@ -11,12 +11,12 @@ const collectionSchema = new Schema<ICollection>({
   userId: {
     type: mongo.ObjectId,
     required: [true, "需要使用者id"],
-    ref: "user",
-    unique: true // 確保 userId 不重複
+    ref: "user"
   },
   collectedUserId: {
-    type: [mongo.ObjectId],
-    default: []
+    type: mongo.ObjectId,
+    required: [true, "需要被邀請者id"],
+    ref: "user"
   },
   createdAt: {
     type: Date,
@@ -32,13 +32,6 @@ const collectionSchema = new Schema<ICollection>({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 })
-
-collectionSchema.virtual("user", {
-  ref: "user",
-  foreignField: "_id",
-  localField: "userId"
-})
-
 collectionSchema.virtual("collectedUsers", {
   ref: "user",
   foreignField: "_id",

@@ -17,7 +17,7 @@ router.put("/user-data", putProfileSwagger, isAuth, asyncErrorHandler(putUser) a
 
 router.get("/image", asyncErrorHandler(getImageList) as RequestHandler)
 
-router.post("/image", uploadSingleFile, asyncErrorHandler(uploadImage) as RequestHandler)
+router.post("/image", isAuth, uploadSingleFile, asyncErrorHandler(uploadImage) as RequestHandler)
 
 // router.delete("/:id", asyncErrorHandler(deleteUser) as RequestHandler)
 

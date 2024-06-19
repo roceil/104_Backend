@@ -4,14 +4,17 @@ import { type NextFunction, type Request, type Response } from "express"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
+
 import { MatchList } from "@/models/matchList"
 import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { matchListOption } from "@/models/matchListOption"
 import { User } from "@/models/user"
-
 import { BlackList } from "@/models/blackList"
 import { Invitation } from "@/models/invitation"
 import { Collection } from "@/models/collection"
+import { Profile } from "@/models/profile"
+import { Comment } from "@/models/comment"
+import { BeInvitation } from "@/models/beInvitation"
 
 export const editMatchList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -108,44 +111,70 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     } else {
       const resultUserIds = resultUsers.map(user => user.userId)
 
-      const resultUsersData = await Promise.all(resultUserIds.map(async (id) => {
+      const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
         // 取得每個用戶的資料
-        const resultUserInfo = await User.findById(id)
+        const resultUserInfo = await User.findById(resultId)
 
         // 取得每個用戶的封鎖狀態
         const blackList = await BlackList.findOne({ userId })
         const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
         /* eslint-disable-next-line */
-        const isLocked = lockedUserIds.includes(id.toString())
+        const isLocked = lockedUserIds.includes(resultId.toString()) ?? false
 
-        // 取得每個用戶的邀約狀態
+        // 取得卡片用戶的邀約狀態
         const invitations = await Invitation.find({
           userId, // 邀請者
-          invitedUserId: id // 被邀請者
+          invitedUserId: resultId // 被邀請者
         })
-        const status = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
+        const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
+
+        // 取得登入者被邀約的狀態 (invitations / beInvitations 都是用invitedUserId存被邀請者)
+        const beInvitations = await BeInvitation.find({
+          userId: resultId,
+          invitedUserId: userId
+        })
+        const beInvitationStatus = beInvitations.length > 0 ? beInvitations[0].status : "not invited"
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
-          userId: id
+          userId: resultId
         })
 
         // 取得每個用戶的收藏狀態
-        const collection = await Collection.findOne({ userId, collectedUserId: id }, { isCollected: 1 })
+        const collection = await Collection.findOne({ userId, collectedUserId: resultId }, { isCollected: 1 })
         const isCollected = Boolean(collection)
 
-        // 取得每個用戶的評價狀態
+        // 取得每個用戶的評價狀態 和 被評價數量
+        const hasComment = await Comment.findOne({ userId, commentedUserId: resultId }).countDocuments() > 0
+        // const beCommentCount = await Comment.find({ commentedUserId: resultId }).countDocuments() // userStatus.commentCount
 
-        // 取得每個用戶的解鎖狀態
+        // 取得每個用戶的 解鎖狀態 和 評分
+        const profile = await Profile.findOne({ userId })
+        /* eslint-disable-next-line */
+        const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
+
+        // 取得每個用戶的評分 和 標籤
+        const resultIdProfile = await Profile.findOne({ userId: resultId })
+        const userStatus = resultIdProfile?.userStatus ?? {}
+        const photoDetails = resultIdProfile?.photoDetails ?? {}
+        const tags = resultIdProfile?.tags ?? []
 
         return {
           userInfo: {
             ...resultUserInfo?.toObject()
           },
+          matchListSelfSetting,
+          profile: {
+            userStatus,
+            photoDetails,
+            tags
+          },
+          invitationStatus,
           isCollected,
           isLocked,
-          status,
-          matchListSelfSetting
+          isUnlock,
+          hasComment,
+          beInvitationStatus
         }
       }))
 

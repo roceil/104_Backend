@@ -7,6 +7,12 @@ interface IPersonalInfo {
   sex: string
   birthday: string
 }
+
+interface IChatRecord {
+  receiverId: Types.ObjectId
+  roomId: Types.ObjectId
+}
+
 interface IUserSchema {
   personalInfo: IPersonalInfo
   preferences: object // 資料代訂，不確定型別
@@ -16,9 +22,15 @@ interface IUserSchema {
   isActive: boolean
   blockedUsers: Types.ObjectId[]
   notifications: Types.ObjectId[]
+  chatRecord: IChatRecord[]
   createdAt: Date
   updatedAt: Date
 }
+
+const chatRecordSchema = new Schema<IChatRecord>({
+  receiverId: { type: Schema.Types.ObjectId, required: true, ref: "user" },
+  roomId: { type: Schema.Types.ObjectId, required: true, ref: "chatRoom" }
+})
 
 const userSchema = new Schema<IUserSchema>(
   {
@@ -73,6 +85,7 @@ const userSchema = new Schema<IUserSchema>(
       type: [Schema.Types.ObjectId],
       default: []
     },
+    chatRecord: { type: [chatRecordSchema], default: [] },
     createdAt: {
       type: Date,
       default: Date.now

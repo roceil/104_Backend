@@ -76,11 +76,6 @@ const keywordSearch = async (req: Request, res: Response, _next: NextFunction): 
     // 尋找符合的選項
     const matchedOptions = Object.keys(flattenedOptions).filter(option => regex.test(option))
 
-    if (matchedOptions.length === 0) {
-      res.status(404).json({ error: "No matching options found" })
-      return
-    }
-
     // 建構查詢條件
     queryConditions = matchedOptions.map(option => {
       const field = `personalInfo.${flattenedOptions[option].type.replace("Options", "")}`
@@ -147,6 +142,6 @@ const keywordSearch = async (req: Request, res: Response, _next: NextFunction): 
     }
   }))
 
-  appSuccessHandler(200, "查询成功", resultUsersData, res)
+  appSuccessHandler(200, "查詢成功", resultUsersData, res)
 }
 export { searchFeaturedUser, keywordSearch }
