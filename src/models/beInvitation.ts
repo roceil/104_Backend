@@ -61,7 +61,7 @@ const beInvitationSchema = new Schema<IBeInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected", "cancel", "pending", "finishDating"],
+    enum: ["accept", "rejected", "cancel", "pending", "finishDating"],
     default: "pending"
   },
   createdAt: {
@@ -83,8 +83,8 @@ beInvitationSchema.virtual("profileByUser", {
   foreignField: "userId",
   localField: "userId"
 })
-beInvitationSchema.virtual("matchListByUser", {
-  ref: "matchList",
+beInvitationSchema.virtual("matchListSelfSettingByUser", {
+  ref: "matchListSelfSetting",
   foreignField: "userId",
   localField: "userId"
 })

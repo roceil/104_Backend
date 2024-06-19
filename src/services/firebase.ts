@@ -3,6 +3,7 @@ import * as admin from "firebase-admin"
 import { getStorage } from "firebase-admin/storage"
 import { v4 as uuidv4 } from "uuid"
 import sharp from "sharp"
+import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 
@@ -76,6 +77,7 @@ const uploadToFirebase = async (buffer: Buffer, fileName: string): Promise<strin
  */
 export const uploadImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const file = req.file
+  const { userId } = req.user as { userId: string }
   if (!file) {
     appErrorHandler(400, "請上傳檔案", next)
     return
@@ -91,7 +93,14 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
     // 上傳圖片到 Firebase
     const url = await uploadToFirebase(compressedImage, fileName)
 
-    appSuccessHandler(200, "上傳成功", { url }, res)
+    // 更新用戶頭像
+    const user = await Profile.findOneAndUpdate(
+      { userId },
+      { $set: { "photoDetails.photo": url } },
+      { new: true }
+    )
+
+    appSuccessHandler(200, "上傳成功", { user: user?.photoDetails }, res)
   } catch (err) {
     console.error(err)
     appErrorHandler(500, "圖片處理或上傳失敗", next)

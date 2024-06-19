@@ -23,8 +23,13 @@ import unlockCommentRouter from "@/routes/unlockCommentRouter"
 import addPointRouter from "@/routes/addPointRouter"
 import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
+import http from "http"
+import initializeSocket from "@/services/ws"
+import chatRoomRouter from "@/routes/chatRoomRouter"
+
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 const app: Express = express()
+
 const port = process.env.PORT ?? 3001
 
 /* 未捕捉的 Error */
@@ -46,6 +51,15 @@ app.use(express.urlencoded({ extended: true }))
 /* Mongo DB */
 void connectDB()
 
+const httpServer = http.createServer(app)
+
+// 初始化 Socket.IO
+initializeSocket(httpServer)
+
+httpServer.listen(3002, () => {
+  console.log("socket listening on *:3002")
+})
+
 /* Router */
 app.use("/api/v1", healthyCheckRouter)
 app.use("/api/v1", loginRouter)
@@ -61,6 +75,7 @@ app.use("/api/v1", collectionRouter)
 app.use("/api/v1", searchRouter)
 app.use("/api/v1", unlockCommentRouter)
 app.use("/api/v1", addPointRouter)
+app.use("/api/v1", chatRoomRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()

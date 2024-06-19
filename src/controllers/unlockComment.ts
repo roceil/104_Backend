@@ -8,6 +8,12 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 const unlockComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
+  const unlockComment = await Profile.findOne({ userId }).select("unlockComment")
+  const isUnlock = unlockComment?.unlockComment.includes(id)
+  if (isUnlock) {
+    appSuccessHandler(200, "已解鎖過評價", "", res)
+    return
+  }
   const userPoint = await User.findById(userId).select("points -_id")
   if (!userPoint) {
     appErrorHandler(404, "無法取解鎖評價，請稍後在試", next)

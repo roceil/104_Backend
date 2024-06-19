@@ -16,15 +16,17 @@ const upload = multer({
 })
 
 const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
-  const uploadHandler = upload.single("file")
+  const uploadHandler = upload.single("image")
 
   uploadHandler(req, res, (err: unknown) => {
     if (err instanceof Error) {
+      console.error(err)
       appErrorHandler(422, err.message, next)
       return
     }
 
     if (err instanceof multer.MulterError) {
+      console.error(err)
       appErrorHandler(500, err.message, next)
       return
     }
