@@ -72,21 +72,28 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
   }
 }
 const getInvitationList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
   // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
-  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
-
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { userId } = req.user as LoginResData
   const [profile, collection] = await Promise.all([Profile.findOne({ userId }).select("unlockComment"), Collection.find({ userId }).select("collectedUserId")])
   const unlockComment = profile?.unlockComment ?? []
-  const collectionList = collection.map(doc => doc.collectedUserId.toString()) ?? []
-  const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
+  const collectionList = collection.map(doc => doc.id.toString()) ?? []
+  const [totalCount, invitationList] = await Promise.all([Invitation.countDocuments({ userId }), Invitation.find({ userId }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByInvitedUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   }).populate({
     path: "matchListSelfSettingByInvitedUser",
     select: "searchDataBase personalInfo workInfo"
-  })
+  })])
+  // const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
+  //   path: "profileByInvitedUser",
+  //   select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
+  // }).populate({
+  //   path: "matchListSelfSettingByInvitedUser",
+  //   select: "searchDataBase personalInfo workInfo"
+  // })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {
     appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
@@ -109,7 +116,17 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
     //   eraseProperty(invitations[i], ["profileByInvitedUser", "nickNameDetails", "photoDetails", "introDetails", "incomeDetails", "lineDetails", "exposureSettings", "userStatus"
     //   ], ["_id"])
     // })
-    appSuccessHandler(200, "查詢成功", { invitations, invitationsLength }, res)
+    const pagination = {
+      page: parsedPageNumber,
+      perPage: parsedPageSize,
+      totalCount
+    }
+    const response = {
+      invitations,
+      invitationsLength,
+      pagination
+    }
+    appSuccessHandler(200, "查詢成功", response, res)
   }
 }
 const getInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

@@ -53,6 +53,24 @@ export function getInvitationListSwagger (_req: Request, _res: Response, next: N
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
+  * #swagger.parameters['page'] = {
+    in: 'query',
+    description: '頁數 不可為0',
+    required: false,
+    schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+    in: 'query',
+    description: '每頁幾筆',
+    required: false,
+    schema: { type: 'number' }
+  }
+    * #swagger.parameters['sort'] = {
+    in: 'query',
+    description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+    required: false,
+    schema: { type: 'string' }
+  }
    * #swagger.responses[200] = {
       description: '邀約列表',
       schema: {

@@ -33,24 +33,23 @@ interface BeInvitationWithUnlockAndCollection extends ParsedBeInvitation {
 }
 
 const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
-  const { pageSize, pageNumber } = req.query as { pageSize?: string, pageNumber?: string }
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
-  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, pageNumber)
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
 
   const { userId } = req.user as LoginResData
 
   const [profile, collection] = await Promise.all([Profile.findOne({ userId }).select("unlockComment"), Collection.find({ userId }).select("collectedUserId")])
   const unlockComment = profile?.unlockComment ?? []
-  const collectionList = collection.map(doc => doc.collectedUserId.toString()) ?? []
-
-  const beInvitationList = await BeInvitation.find({ invitedUserId: userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
+  const collectionList = collection.map(doc => doc.id.toString()) ?? []
+  const [totalCount, beInvitationList] = await Promise.all([BeInvitation.countDocuments({ invitedUserId: userId }), BeInvitation.find({ invitedUserId: userId }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
     path: "profileByUser",
     select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
   }).populate({
     path: "matchListSelfSettingByUser",
     select: "searchDataBase personalInfo workInfo"
-  })
-  const beInvitationsLength = await BeInvitation.countDocuments({ invitedUserId: userId })
+  })])
   if (!beInvitationList || beInvitationList.length === 0) {
     appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
   } else {
@@ -66,7 +65,16 @@ const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunc
       }
       return { ...beInvitation, isUnlock, isCollected }
     })
-    appSuccessHandler(200, "查詢成功", { beInvitations, beInvitationsLength }, res)
+    const pagination = {
+      page: parsedPageNumber,
+      perPage: parsedPageSize,
+      totalCount
+    }
+    const response = {
+      beInvitations,
+      pagination
+    }
+    appSuccessHandler(200, "查詢成功", response, res)
   }
 }
 const getWhoInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

@@ -61,7 +61,7 @@ const beInvitationSchema = new Schema<IBeInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected", "cancel", "pending", "finishDating"],
+    enum: ["accept", "rejected", "cancel", "pending", "finishDating"],
     default: "pending"
   },
   createdAt: {

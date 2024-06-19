@@ -11,6 +11,6 @@ router.get("/user/collections", getCollectionsByUserIdSwagger, isAuth, asyncErro
 
 router.post("/collections", addCollectionSwagger, isAuth, asyncErrorHandler(addCollection) as RequestHandler)
 
-router.delete("/collections", deleteCollectionByIdSwagger, isAuth, asyncErrorHandler(deleteCollectionById) as RequestHandler)
+router.delete("/collections/:id", deleteCollectionByIdSwagger, isAuth, asyncErrorHandler(deleteCollectionById) as RequestHandler)
 
 export default router
