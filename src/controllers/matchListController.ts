@@ -152,9 +152,12 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         const profile = await Profile.findOne({ userId })
         /* eslint-disable-next-line */
         const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
-        const userStatus = profile?.userStatus ?? {}
-        const photoDetails = profile?.photoDetails ?? {}
-        const tags = profile?.tags ?? []
+
+        // 取得每個用戶的評分 和 標籤
+        const resultIdProfile = await Profile.findOne({ userId: resultId })
+        const userStatus = resultIdProfile?.userStatus ?? {}
+        const photoDetails = resultIdProfile?.photoDetails ?? {}
+        const tags = resultIdProfile?.tags ?? []
 
         return {
           userInfo: {
@@ -164,7 +167,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           profile: {
             userStatus,
             photoDetails,
-            tags,
+            tags
           },
           invitationStatus,
           isCollected,
