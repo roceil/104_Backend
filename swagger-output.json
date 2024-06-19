@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -7088,6 +7088,46 @@
             "apiKeyAuth": []
           }
         ]
+      }
+    },
+    "/api/v1/chat": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/chatHistory/{roomId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     }
   }
