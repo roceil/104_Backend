@@ -160,4 +160,57 @@ const deleteCollectionById = async (req: Request, res: Response, next: NextFunct
   appSuccessHandler(200, "取消收藏成功", collection, res)
 }
 
-export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById }
+const getCollectionsByUserIdTest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { userId } = req.user as LoginResData
+  const { page, pageSize, sort } = req.query as { page?: string, pageSize?: string, sort?: string }
+  // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
+  // 取得使用者邀請列表來判斷收藏的對象中是否有邀請中的使用者
+  const rowInvitationList = await Invitation.find({ userId }).select("invitedUserId status")
+  if (!rowInvitationList || rowInvitationList.length === 0) {
+    appErrorHandler(404, "查無邀請", next)
+    return
+  }
+  const invitationList: InvitationList[] = rowInvitationList.map((item) => {
+    return {
+      invitedUserId: item.invitedUserId,
+      status: item.status
+    }
+  })
+  const invitationListConfig: Record<string, string> = {}
+  invitationList.forEach((item) => {
+    invitationListConfig[item.invitedUserId] = item.status
+  })
+  const [totalCount, collections] = await Promise.all([Collection.countDocuments({ userId }), Collection.find({ userId }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate("collectedUsers")])
+  const parseCollections = JSON.parse(JSON.stringify(collections))
+  if (parseCollections.length === 0) {
+    appSuccessHandler(200, "查詢成功", collections, res)
+  }
+  if (!collections || collections.length === 0) {
+    appErrorHandler(404, "查無收藏", next)
+    return
+  }
+  const collectionsWithInvitationStatus = parseCollections.map((item: ICollectionItem) => {
+    const { _id } = item
+    const collectedUserId = _id
+    const status = invitationListConfig[collectedUserId] ?? "notInvited"
+    return {
+      ...item,
+      status
+    }
+  }
+  )
+  const pagination = {
+    page: parsedPageNumber,
+    perPage: parsedPageSize,
+    totalCount
+  }
+  const response = {
+    collections: collectionsWithInvitationStatus,
+    pagination
+  }
+  appSuccessHandler(200, "查詢成功", response, res)
+}
+
+export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdTest }

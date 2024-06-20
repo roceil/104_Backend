@@ -32,6 +32,7 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "評分範圍為1-5", next)
   }
   const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
+  console.log(commentedUserId)
   const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
     {
       $set: {
@@ -100,12 +101,6 @@ const getCommentByUserId = async (req: Request, res: Response, next: NextFunctio
     select: "personalInfo workInfo blacklist noticeInfo"
   })
   const [totalCount, comments] = await Promise.all([Comment.countDocuments({ commentedUserId: id }), Comment.find({ commentedUserId: id }).sort(dateSort).populate({ path: "commentUserProfile", select: "photoDetails nickNameDetails jobDetails userStatus" }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)])
-  // const totalCount = await Comment.countDocuments({ commentedUserId: id })
-  // const comments = await Comment.find({ commentedUserId: id }).sort(dateSort).populate({
-  //   path: "commentUserProfile",
-  //   select: "photoDetails nickNameDetails jobDetails userStatus"
-  // }
-  // ).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)
   if (!comments) {
     appErrorHandler(404, "No comment found", next)
   } else {
@@ -220,22 +215,34 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
     {
       $set: {
         "userStatus.commentScore": {
-          $round: [// 四捨五入
-            {
-              $divide: [// 計算平均分數  (評分總和-評分)/(評分次數-1)
+          $cond: {
+            if: { $eq: ["$userStatus.commentCount", 1] },
+            then: 0,
+            else: {
+              $round: [
                 {
-                  $subtract: [// 總分數計算
-                    { $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] },
-                    score
+                  $divide: [
+                    {
+                      $subtract: [
+                        { $multiply: ["$userStatus.commentScore", "$userStatus.commentCount"] },
+                        score
+                      ]
+                    },
+                    { $subtract: ["$userStatus.commentCount", 1] }
                   ]
                 },
-                { $subtract: ["$userStatus.commentCount", 1] }
+                1
               ]
-            },
-            1
-          ]
+            }
+          }
         },
-        "userStatus.commentCount": { $subtract: ["$userStatus.commentCount", 1] }
+        "userStatus.commentCount": {
+          $cond: {
+            if: { $eq: ["$userStatus.commentCount", 1] },
+            then: 0,
+            else: { $subtract: ["$userStatus.commentCount", 1] }
+          }
+        }
       }
     }
   ])
