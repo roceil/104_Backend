@@ -38,6 +38,12 @@ collectionSchema.virtual("collectedUsers", {
   localField: "collectedUserId"
 })
 
+collectionSchema.virtual("matchListSelfSetting", {
+  ref: "matchListSelfSetting",
+  foreignField: "userId",
+  localField: "userId"
+})
+
 const Collection = model<ICollection>("collection", collectionSchema)
 
 export { Collection, type ICollection }

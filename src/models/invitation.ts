@@ -57,7 +57,7 @@ const invitationSchema = new Schema<IInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected", "cancel", "pending", "finishDating"],
+    enum: ["accept", "rejected", "cancel", "pending", "finishDating", "not invited"],
     default: "pending"
   },
   createdAt: {
