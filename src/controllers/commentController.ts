@@ -32,7 +32,6 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "評分範圍為1-5", next)
   }
   const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
-  console.log(commentedUserId)
   const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
     {
       $set: {

@@ -6777,6 +6777,197 @@
         ]
       }
     },
+    "/api/v1/user/collectionsTest": {
+      "get": {
+        "tags": [
+          "收藏"
+        ],
+        "description": "取得所有收藏測試",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "頁數 不可為0",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每頁幾筆",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "依時間排序，desc: 由新到舊，asc: 由舊到新",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查詢成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "查詢成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "collections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6672a71fcf7d8ade64acdf58"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "665fe01431e8f0630d407037"
+                          },
+                          "collectedUserId": {
+                            "type": "string",
+                            "example": "66571be82f1545bc8d671be4"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-06-19T09:38:39.918Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-06-19T09:38:39.918Z"
+                          },
+                          "collectedUsers": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_id": {
+                                  "type": "string",
+                                  "example": "66571be82f1545bc8d671be4"
+                                },
+                                "personalInfo": {
+                                  "type": "object",
+                                  "properties": {
+                                    "username": {
+                                      "type": "string",
+                                      "example": "Node2024"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "sdfadsf5321@hotmail.com"
+                                    },
+                                    "gender": {},
+                                    "birthday": {},
+                                    "_id": {
+                                      "type": "string",
+                                      "example": "66571be82f1545bc8d671be5"
+                                    }
+                                  }
+                                },
+                                "isSubscribe": {
+                                  "type": "boolean",
+                                  "example": false
+                                },
+                                "points": {
+                                  "type": "number",
+                                  "example": 0
+                                },
+                                "resetPasswordToken": {
+                                  "type": "string",
+                                  "example": ""
+                                },
+                                "isActive": {
+                                  "type": "boolean",
+                                  "example": true
+                                },
+                                "blockedUsers": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
+                                },
+                                "notifications": {
+                                  "type": "array",
+                                  "example": [],
+                                  "items": {}
+                                },
+                                "createdAt": {
+                                  "type": "string",
+                                  "example": "2024-05-29T12:13:28.120Z"
+                                },
+                                "updatedAt": {
+                                  "type": "string",
+                                  "example": "2024-05-29T12:13:28.120Z"
+                                }
+                              }
+                            }
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "notInvited"
+                          },
+                          "id": {
+                            "type": "string",
+                            "example": "6672a71fcf7d8ade64acdf58"
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 6
+                        },
+                        "totalCount": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/collections": {
       "post": {
         "tags": [

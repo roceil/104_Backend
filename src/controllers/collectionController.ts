@@ -6,6 +6,7 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
 import checkMissingFields from "@/utils/checkMissingFields"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
+import mongoose from "mongoose"
 interface InvitationList {
   invitedUserId: string
   status: string
@@ -160,37 +161,99 @@ const deleteCollectionById = async (req: Request, res: Response, next: NextFunct
   appSuccessHandler(200, "取消收藏成功", collection, res)
 }
 
-const getCollectionsByUserIdTest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getCollectionsByUserIdAggregation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { page, pageSize, sort } = req.query as { page?: string, pageSize?: string, sort?: string }
-  // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
-  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
-  // 取得使用者邀請列表來判斷收藏的對象中是否有邀請中的使用者
+
   const rowInvitationList = await Invitation.find({ userId }).select("invitedUserId status")
   if (!rowInvitationList || rowInvitationList.length === 0) {
     appErrorHandler(404, "查無邀請", next)
     return
   }
-  const invitationList: InvitationList[] = rowInvitationList.map((item) => {
-    return {
-      invitedUserId: item.invitedUserId,
-      status: item.status
-    }
-  })
+
+  const invitationList: InvitationList[] = rowInvitationList.map((item) => ({
+    invitedUserId: item.invitedUserId,
+    status: item.status
+  }))
+
   const invitationListConfig: Record<string, string> = {}
   invitationList.forEach((item) => {
     invitationListConfig[item.invitedUserId] = item.status
   })
-  const [totalCount, collections] = await Promise.all([Collection.countDocuments({ userId }), Collection.find({ userId }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate("collectedUsers")])
+
+  const [totalCount] = await Promise.all([Collection.countDocuments({ userId })])
+  const collections = await Collection.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+    { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },
+    { $skip: (parsedPageNumber - 1) * parsedPageSize },
+    { $limit: parsedPageSize },
+    { // 關聯users表
+      $lookup: {
+        from: "users",
+        localField: "collectedUserId",
+        foreignField: "_id",
+        as: "collectedUser"
+      }
+    },
+    { // 關聯invitations表
+      $lookup: {
+        from: "invitations",
+        // let暫存collectedUserId並轉呈sting，因為collectedUserId是string
+        let: { collectedUserId: { $toString: "$collectedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] },
+                  { $eq: ["$invitedUserId", "$$collectedUserId"] }
+                ]
+              }
+            }
+          }
+        ],
+        as: "invitation"
+      }
+    },
+    {
+      $project: {
+        "collectedUsers.password": 0,
+        "collectedUsers._id": 0,
+        "collectedUsers.personalInfo._id": 0,
+        "collectedUsers.isSubscribe": 0,
+        "collectedUsers.points": 0,
+        "collectedUsers.resetPasswordToken": 0,
+        "collectedUsers.isActive": 0,
+        "collectedUsers.blockedUsers": 0,
+        "collectedUsers.notifications": 0,
+        "collectedUsers.createdAt": 0,
+        "collectedUsers.updatedAt": 0,
+        "invitations.userId": 0,
+        "invitations.invitedUserId": 0,
+        "invitations.message": 0,
+        "invitations.date": 0,
+        "invitations.createdAt": 0,
+        "invitations.updatedAt": 0
+      }
+    },
+    { // 展開collectedUsers
+      $unwind: "$collectedUser"
+    },
+    { // 展開invitations
+      $unwind: "$invitation"
+    }
+  ])
   const parseCollections = JSON.parse(JSON.stringify(collections))
   if (parseCollections.length === 0) {
     appSuccessHandler(200, "查詢成功", collections, res)
+    return
   }
   if (!collections || collections.length === 0) {
     appErrorHandler(404, "查無收藏", next)
     return
   }
+
   const collectionsWithInvitationStatus = parseCollections.map((item: ICollectionItem) => {
     const { _id } = item
     const collectedUserId = _id
@@ -199,8 +262,8 @@ const getCollectionsByUserIdTest = async (req: Request, res: Response, next: Nex
       ...item,
       status
     }
-  }
-  )
+  })
+
   const pagination = {
     page: parsedPageNumber,
     perPage: parsedPageSize,
@@ -213,4 +276,4 @@ const getCollectionsByUserIdTest = async (req: Request, res: Response, next: Nex
   appSuccessHandler(200, "查詢成功", response, res)
 }
 
-export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdTest }
+export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation }
