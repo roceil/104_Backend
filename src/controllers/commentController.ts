@@ -63,7 +63,7 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 }
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string}
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
   const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const [rawComments, userProfile, totalCount] = await Promise.all([
