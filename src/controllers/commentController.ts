@@ -105,8 +105,8 @@ const getCommentByUserId = async (req: Request, res: Response, next: NextFunctio
   const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const beCommentedUserProfile = await Profile.findOne({ userId: id }).populate({
-    path: "matchListByUserId",
-    select: "personalInfo workInfo blacklist noticeInfo"
+    path: "matchListSelfSettingByUserId",
+    select: "personalInfo workInfo"
   })
   const [totalCount, comments] = await Promise.all([Comment.countDocuments({ commentedUserId: id }), Comment.find({ commentedUserId: id }).sort(dateSort).populate({ path: "commentUserProfile", select: "photoDetails nickNameDetails jobDetails userStatus" }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize)])
   if (!comments) {
