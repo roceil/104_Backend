@@ -6,6 +6,7 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type LoginResData } from "@/types/login"
 import checkMissingFields from "@/utils/checkMissingFields"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
+import mongoose from "mongoose"
 interface InvitationList {
   invitedUserId: string
   status: string
@@ -160,4 +161,96 @@ const deleteCollectionById = async (req: Request, res: Response, next: NextFunct
   appSuccessHandler(200, "取消收藏成功", collection, res)
 }
 
-export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById }
+const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { userId } = req.user as LoginResData
+  const { page, pageSize, sort } = req.query as { page?: string, pageSize?: string, sort?: string }
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
+  const [totalCount] = await Promise.all([Collection.countDocuments({ userId })])
+  const collections = await Collection.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+    { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },
+    { $skip: (parsedPageNumber - 1) * parsedPageSize },
+    { $limit: parsedPageSize },
+    { // 關聯users表
+      $lookup: {
+        from: "users",
+        localField: "collectedUserId",
+        foreignField: "_id",
+        as: "collectedUsers"
+      }
+    },
+    { // 關聯invitations表
+      $lookup: {
+        from: "invitations",
+        // let暫存collectedUserId並轉呈sting，因為collectedUserId是string
+        let: { collectedUserId: { $toString: "$collectedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] },
+                  { $eq: ["$invitedUserId", "$$collectedUserId"] }
+                ]
+              }
+            }
+          }
+        ],
+        as: "invitation"
+      }
+    },
+    {
+      $project: {
+        "collectedUsers.personalInfo.password": 0,
+        "collectedUsers._id": 0,
+        "collectedUsers.personalInfo._id": 0,
+        "collectedUsers.isSubscribe": 0,
+        "collectedUsers.points": 0,
+        "collectedUsers.resetPasswordToken": 0,
+        "collectedUsers.isActive": 0,
+        "collectedUsers.blockedUsers": 0,
+        "collectedUsers.notifications": 0,
+        "collectedUsers.createdAt": 0,
+        "collectedUsers.updatedAt": 0,
+        "invitations.userId": 0,
+        "invitations.invitedUserId": 0,
+        "invitations.message": 0,
+        "invitations.date": 0,
+        "invitations.createdAt": 0,
+        "invitations.updatedAt": 0
+      }
+    },
+    // 展開collectedUsers
+    {
+      $unwind: {
+        path: "$collectedUsers",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    // 展開invitation
+    {
+      $unwind: {
+        path: "$invitation",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    // 如果invitation不存在則設定invitation為notInvite
+    {
+      $addFields: {
+        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+      }
+    }
+  ])
+  const pagination = {
+    page: parsedPageNumber,
+    perPage: parsedPageSize,
+    totalCount
+  }
+  const response = {
+    collections,
+    pagination
+  }
+  appSuccessHandler(200, "查詢成功", response, res)
+}
+
+export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation }
