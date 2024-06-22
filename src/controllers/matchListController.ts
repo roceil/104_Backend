@@ -1,5 +1,4 @@
 import { type NextFunction, type Request, type Response } from "express"
-// import { Types } from "mongoose"
 
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
@@ -77,7 +76,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 
     // 使用相同的查询条件
     const queryCondition = {
-      // "userId": { $ne: userId },
+      userId: { $ne: userId },
       $and: [
         { "personalInfo.age": personalInfo.age },
         { "personalInfo.gender": personalInfo.gender },
@@ -118,8 +117,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         // 取得每個用戶的封鎖狀態
         const blackList = await BlackList.findOne({ userId })
         const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
-        /* eslint-disable-next-line */
-        const isLocked = lockedUserIds.includes(resultId.toString()) ?? false
+        const isLocked = lockedUserIds.includes(resultId as unknown as string) ?? false
 
         // 取得卡片用戶的邀約狀態
         const invitations = await Invitation.find({
@@ -127,6 +125,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           invitedUserId: resultId // 被邀請者
         })
         const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
+        const invitationTableId = invitations[0]?._id
 
         // 取得登入者被邀約的狀態 (invitations / beInvitations 都是用invitedUserId存被邀請者)
         const beInvitations = await BeInvitation.find({
@@ -134,6 +133,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           invitedUserId: userId
         })
         const beInvitationStatus = beInvitations.length > 0 ? beInvitations[0].status : "not invited"
+        const beInvitationTableId = beInvitations[0]?._id
 
         // 取得每個用戶的個人條件和工作條件
         const matchListSelfSetting = await MatchListSelfSetting.findOne({
@@ -143,15 +143,26 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         // 取得每個用戶的收藏狀態
         const collection = await Collection.findOne({ userId, collectedUserId: resultId }, { isCollected: 1 })
         const isCollected = Boolean(collection)
+        const collectionTableId = collection?._id
 
         // 取得每個用戶的評價狀態 和 被評價數量
         const hasComment = await Comment.findOne({ userId, commentedUserId: resultId }).countDocuments() > 0
-        // const beCommentCount = await Comment.find({ commentedUserId: resultId }).countDocuments() // userStatus.commentCount
+        const beCommentCount = await Comment.find({ commentedUserId: resultId }).countDocuments() // userStatus.commentCount
+        const commentTableId = await Comment.findOne({ userId, commentedUserId: resultId }).select("id").lean().then(doc => doc?._id)
+
+        // 計算評分
+        const comments = await Comment.find({ commentedUserId: resultId })
+        const averageScore = comments.length > 0 ? (comments.reduce((acc, comment) => acc + comment.score, 0) / comments.length).toFixed(1) : 0
+        await Profile.findOneAndUpdate({ userId: resultId }, {
+          $set: {
+            "userStatus.commentScore": averageScore,
+            "userStatus.commentCount": beCommentCount
+          }
+        })
 
         // 取得每個用戶的 解鎖狀態 和 評分
         const profile = await Profile.findOne({ userId })
-        /* eslint-disable-next-line */
-        const isUnlock = profile?.unlockComment.includes(resultId.toString()) ?? false
+        const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
 
         // 取得每個用戶的評分 和 標籤
         const resultIdProfile = await Profile.findOne({ userId: resultId })
@@ -174,7 +185,11 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           isLocked,
           isUnlock,
           hasComment,
-          beInvitationStatus
+          beInvitationStatus,
+          collectionTableId,
+          invitationTableId,
+          beInvitationTableId,
+          commentTableId
         }
       }))
 

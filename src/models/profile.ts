@@ -244,8 +244,8 @@ profileSchema.virtual("userInfo", {
   foreignField: "_id",
   justOne: true
 })
-profileSchema.virtual("matchListByUserId", {
-  ref: "matchList",
+profileSchema.virtual("matchListSelfSettingByUserId", {
+  ref: "matchListSelfSetting",
   localField: "userId",
   foreignField: "userId"
 })

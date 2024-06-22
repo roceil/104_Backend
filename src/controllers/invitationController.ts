@@ -53,8 +53,24 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
   // 檢查邀約人是否在被邀約人的黑名單中
   if (await isInBlackList(userId, invitedUserId, next)) {
     appErrorHandler(400, "邀請失敗", next)
+    return
   }
-
+  // 檢查是否已經邀請過
+  const isExistInvitation = await Invitation.findOne({ userId, invitedUserId })
+  if (isExistInvitation) {
+    // 若邀請狀態為pending或accept，則不可再次邀請
+    if (isExistInvitation.status === "pending" || isExistInvitation.status === "accept") {
+      appErrorHandler(400, "已邀請過", next)
+    } else { // 若邀請狀態為cancel reject，則可再次邀請
+      const [invitationAgain, beInvitation] = await Promise.all([Invitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true }), BeInvitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true })])
+      if (!invitationAgain || !beInvitation) {
+        appErrorHandler(400, "再次邀請失敗", next)
+        return
+      }
+      appSuccessHandler(200, "再次邀請成功", invitationAgain, res)
+      return
+    }
+  }
   const invitation = await Invitation.create({ userId, invitedUserId, message })
   const isNotificationCreated = await createNotification(userId, invitedUserId, message, 1)
   if (!invitation || !isNotificationCreated) {

@@ -14,7 +14,7 @@ interface IInvitation extends Document {
   isFinishDating: boolean
   isUnlock?: boolean
   profileByInvitedUser?: IPersonalInfo
-  status: "accepted" | "rejected" | "cancel" | "pending" | "finishDating"
+  status: "accept" | "reject" | "cancel" | "pending" | "finishDating"
   createdAt: Date
   updatedAt: Date
 }
@@ -57,7 +57,7 @@ const invitationSchema = new Schema<IInvitation>({
   },
   status: {
     type: String,
-    enum: ["accepted", "rejected", "cancel", "pending", "finishDating"],
+    enum: ["accept", "reject", "cancel", "pending", "finishDating"],
     default: "pending"
   },
   createdAt: {
