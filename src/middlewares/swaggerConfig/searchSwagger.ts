@@ -7,18 +7,28 @@ export function searchSwagger (_req: Request, _res: Response, next: NextFunction
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
+   * #swagger.parameters['page'] = {
+          in: 'query',
+          type: 'string',
+          required: false,
+          description: '目前頁數'
+      }    
+   * #swagger.parameters['sort'] = {
+         in: 'query',
+         type: 'string',
+         required: false,
+         description: '排序：desc/asc'
+     }
    * #swagger.parameters["body"] = {
             in: "body",
             type: Object,
             required: true,
             description: "資料格式",
             schema: {
-              "searchForm": {
                 "keyword": "軍人",
                 "gender": 0,
-                "tags": "test1,test2",
+                "tags": "雙子座,金牛座",
                 "location": 0
-              }
             } 
     }
    * #swagger.responses[200] = {

@@ -16,34 +16,54 @@ import { BeInvitation } from "@/models/beInvitation"
 
 export const keywordSearch = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { keyword, location, gender, tags, page = 1, sort } = req.body.searchForm
+  const { page = 1, sort } = req.query
+  const { keyWord, location, gender, tags, notTags } = req.body
 
-  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
-  const tagsArray = tags.split(",").filter((tag: string) => tag.trim() !== "")
+  let tagsArray: string[] = tags
+  let notTagsArray: string[] = notTags
+  if (tags && typeof tags === "string") {
+    tagsArray = tags.split(",").filter((tag: string) => tag.trim() !== "")
+  }
+  if (notTags && typeof notTags === "string") {
+    notTagsArray = notTags.split(",").filter((tag: string) => tag.trim() !== "")
+  }
+
+  const selectedSort: string = sort === "" ? "-updatedAt" : sort as string
   let resultUserIds = []
   let totalCount = 0
   const perPage = 6
 
-  if (!keyword.trim() && location === 0 && gender === 0 && tagsArray.length === 0) {
-    resultUserIds = await User.find().select("userId")
-    totalCount = resultUserIds.length
+  // 替除黑名單的用戶
+  const blackList = await BlackList.findOne({
+    userId
+  })
+  const lockedUserId = blackList ? blackList.lockedUserId : []
+
+  if (!keyWord && location === 0 && gender === 0 && tagsArray.length === 0 && notTagsArray.length === 0) {
+    // resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
+
+    // totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
+    totalCount = await User.countDocuments() // 測試用
+
+    resultUserIds = resultUserIds.map((i) => i._id)
+
+    // const temp = await User.find()
+    //   .populate({ path: "scoreByProfile", select: "userStatus" })
+    //   .sort({ "scoreByProfile.userStatus.commentScore": -1 });
+    // console.log("temp", JSON.stringify(temp));
   } else {
     // 替除配對設定的排除條件
     // const matchListData = await MatchList.findOne({ userId })
     // const blacklistSetting = matchListData?.blacklist || []
-
-    // 替除黑名單的用戶
-    const blackList = await BlackList.findOne({
-      userId
-    })
-    const lockedUserId = blackList ? blackList.lockedUserId : []
 
     // 進行搜尋
     const pipeline = [
       {
         $match: {
           userId: { $ne: userId, $nin: lockedUserId },
-          searchDataBase: { $regex: keyword, $options: "i" },
+          searchDataBase: { $regex: keyWord, $options: "i" },
+          // searchDataBase: { $regex: keyWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), $options: "i" },
           "personalInfo.gender": gender,
           "personalInfo.location": location
           // "personalInfo.smoking": { $nin: blacklistSetting.banSmoking },
@@ -67,13 +87,13 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
           // "profile.tags": 1
         }
       }
-    /* eslint-disable */
+      /* eslint-disable */
     ] as any
 
-    if (tagsArray.length > 0) {
+    if (tagsArray.length > 0 || notTagsArray.length > 0) {
       pipeline.splice(3, 0, {
         $match: {
-          "profile.tags": { $in: tagsArray }
+          "profile.tags": { $in: tagsArray, $nin: notTagsArray }
         }
       })
     }
@@ -81,9 +101,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     // 計算總筆數
     totalCount = (await MatchListSelfSetting.aggregate(pipeline).count("userId")).length
 
-    const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(dateSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
-
-    resultUserIds = resultUsers.map((i) => i.userId)
+    const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    resultUserIds = resultUsers.map((i) => i.userId._id)
   }
 
   // 組合卡片用戶的資料
@@ -94,7 +113,7 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     // 取得每個用戶的封鎖狀態
     const blackList = await BlackList.findOne({ userId })
     const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
-    const isLocked = lockedUserIds.includes(resultId as unknown as string) ?? false
+    const isLocked = lockedUserIds.includes(resultId.toString() as unknown as string) ?? false
 
     // 取得卡片用戶的邀約狀態
     const invitations = await Invitation.find({
@@ -184,5 +203,5 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     pagination
   }
 
-  appSuccessHandler(200, "查詢配對結果成功", response, res)
+  appSuccessHandler(200, "搜尋列表成功", response, res)
 }
