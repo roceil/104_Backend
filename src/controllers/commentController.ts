@@ -61,17 +61,18 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
   }
   appSuccessHandler(201, "新增評價成功", comment, res)
 }
-// getCommentList暫時不用
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { pageSize, page } = req.query as { pageSize?: string, page?: string }
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string}
+  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
-  const [rawComments, userProfile] = await Promise.all([
+  const [rawComments, userProfile, totalCount] = await Promise.all([
     Comment.find().populate({
       path: "commentedUserId",
       select: "userStatus"
-    }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
-    Profile.findOne({ userId }).select("unlockComment")
+    }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
+    Profile.findOne({ userId }).select("unlockComment"),
+    Comment.countDocuments()
   ])
   if (!userProfile) {
     appErrorHandler(404, "用戶不存在", next)
@@ -88,7 +89,15 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
     comment.isUnlock = unlockComment.includes(comment.commentedUserId as unknown as string)
     return comment
   })
-  appSuccessHandler(200, "查詢成功", comments, res)
+  const pagination = {
+    page: parsedPageNumber,
+    perPage: parsedPageSize,
+    totalCount
+  }
+  const response = {
+    comments, pagination
+  }
+  appSuccessHandler(200, "查詢成功", response, res)
 }
 const getCommentByUserId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params

@@ -161,27 +161,10 @@ const deleteCollectionById = async (req: Request, res: Response, next: NextFunct
   appSuccessHandler(200, "取消收藏成功", collection, res)
 }
 
-const getCollectionsByUserIdAggregation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { page, pageSize, sort } = req.query as { page?: string, pageSize?: string, sort?: string }
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
-
-  const rowInvitationList = await Invitation.find({ userId }).select("invitedUserId status")
-  if (!rowInvitationList || rowInvitationList.length === 0) {
-    appErrorHandler(404, "查無邀請", next)
-    return
-  }
-
-  const invitationList: InvitationList[] = rowInvitationList.map((item) => ({
-    invitedUserId: item.invitedUserId,
-    status: item.status
-  }))
-
-  const invitationListConfig: Record<string, string> = {}
-  invitationList.forEach((item) => {
-    invitationListConfig[item.invitedUserId] = item.status
-  })
-
   const [totalCount] = await Promise.all([Collection.countDocuments({ userId })])
   const collections = await Collection.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId) } },
@@ -193,7 +176,7 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, ne
         from: "users",
         localField: "collectedUserId",
         foreignField: "_id",
-        as: "collectedUser"
+        as: "collectedUsers"
       }
     },
     { // 關聯invitations表
@@ -218,7 +201,7 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, ne
     },
     {
       $project: {
-        "collectedUsers.password": 0,
+        "collectedUsers.personalInfo.password": 0,
         "collectedUsers._id": 0,
         "collectedUsers.personalInfo._id": 0,
         "collectedUsers.isSubscribe": 0,
@@ -237,40 +220,34 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, ne
         "invitations.updatedAt": 0
       }
     },
-    { // 展開collectedUsers
-      $unwind: "$collectedUser"
+    // 展開collectedUsers
+    {
+      $unwind: {
+        path: "$collectedUsers",
+        preserveNullAndEmptyArrays: true
+      }
     },
-    { // 展開invitations
-      $unwind: "$invitation"
+    // 展開invitation
+    {
+      $unwind: {
+        path: "$invitation",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    // 如果invitation不存在則設定invitation為notInvite
+    {
+      $addFields: {
+        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+      }
     }
   ])
-  const parseCollections = JSON.parse(JSON.stringify(collections))
-  if (parseCollections.length === 0) {
-    appSuccessHandler(200, "查詢成功", collections, res)
-    return
-  }
-  if (!collections || collections.length === 0) {
-    appErrorHandler(404, "查無收藏", next)
-    return
-  }
-
-  const collectionsWithInvitationStatus = parseCollections.map((item: ICollectionItem) => {
-    const { _id } = item
-    const collectedUserId = _id
-    const status = invitationListConfig[collectedUserId] ?? "notInvited"
-    return {
-      ...item,
-      status
-    }
-  })
-
   const pagination = {
     page: parsedPageNumber,
     perPage: parsedPageSize,
     totalCount
   }
   const response = {
-    collections: collectionsWithInvitationStatus,
+    collections,
     pagination
   }
   appSuccessHandler(200, "查詢成功", response, res)

@@ -114,15 +114,21 @@ export function getCommentListSwagger (_req: Request, _res: Response, next: Next
                message: "查詢成功",
                data: [
                  {
-                   _id: "66497a7c9acbc3bfb1a21621",
-                   userId: "664473d53d428e98fd5fb226",
-                   commentedUserId: "66487581f6f2c93ddd16ff00",
-                   content: "test666666",
-                   score: 4,
-                   createdAt: "2024-05-19T04:05:16.243Z",
-                   updatedAt: "2024-05-19T04:05:16.243Z"
-                 }
-               ]
+                  isUnlock: false,
+                  _id: "66497756614bcdecdca3f011",
+                  userId: "664473d53d428e98fd5fb226",
+                  commentedUserId: null,
+                  content: "test123123",
+                  createdAt: "2024-05-19T03:51:50.740Z",
+                  updatedAt: "2024-05-19T03:51:50.740Z",
+                  id: "66497756614bcdecdca3f011"
+                },
+               ],
+                pagination: {
+                page: 1,
+                perPage: 6,
+                totalCount: 30
+                }
            }
        }
    */
