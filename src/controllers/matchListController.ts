@@ -76,7 +76,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
 
     // 使用相同的查询条件
     const queryCondition = {
-      "userId": { $ne: userId },
+      userId: { $ne: userId },
       $and: [
         { "personalInfo.age": personalInfo.age },
         { "personalInfo.gender": personalInfo.gender },
