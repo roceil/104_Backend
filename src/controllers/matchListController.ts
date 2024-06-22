@@ -236,7 +236,6 @@ export const editMatchListSelfSetting = async (req: Request, res: Response, next
 export const getMatchListSelfSetting = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const matchListData = await MatchListSelfSetting.findOne({ userId })
-
   if (!matchListData) {
     const newMatchList = new MatchListSelfSetting({ userId })
     await newMatchList.save()
