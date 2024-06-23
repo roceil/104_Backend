@@ -67,7 +67,7 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
   const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const [rawComments, userProfile, totalCount] = await Promise.all([
-    Comment.find().populate({
+    Comment.find({ commentedUserId: userId }).populate({
       path: "commentedUserId",
       select: "userStatus"
     }).populate({
