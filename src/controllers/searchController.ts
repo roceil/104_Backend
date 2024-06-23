@@ -21,6 +21,7 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
   let tagsArray: string[] = tags
   let notTagsArray: string[] = notTags
+  // 用swagger測試時，tags和notTags是字串，所以要轉換成陣列
   if (tags && typeof tags === "string") {
     tagsArray = tags.split(",").filter((tag: string) => tag.trim() !== "")
   }
@@ -90,10 +91,18 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       /* eslint-disable */
     ] as any
 
-    if (tagsArray.length > 0 || notTagsArray.length > 0) {
+    // 如果有標籤就加入搜尋條件，先找出符合條件，再找出替除條件，合併會讓第二個條件失效
+    if (tagsArray.length > 0 ) {
       pipeline.splice(3, 0, {
         $match: {
-          "profile.tags": { $in: tagsArray, $nin: notTagsArray }
+          "profile.tags": { $in: tagsArray }
+        }
+      })
+    }
+    if (notTagsArray.length > 0) {
+      pipeline.splice(3, 0, {
+        $match: {
+          "profile.tags": { $nin: notTagsArray }
         }
       })
     }
