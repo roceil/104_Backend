@@ -21,6 +21,7 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
   let tagsArray: string[] = tags
   let notTagsArray: string[] = notTags
+  // 用swagger測試時，tags和notTags是字串，所以要轉換成陣列
   if (tags && typeof tags === "string") {
     tagsArray = tags.split(",").filter((tag: string) => tag.trim() !== "")
   }
@@ -40,11 +41,11 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
   const lockedUserId = blackList ? blackList.lockedUserId : []
 
   if (!keyWord && location === 0 && gender === 0 && tagsArray.length === 0 && notTagsArray.length === 0) {
-    // resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
-    resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
+    resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    // resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
 
-    // totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
-    totalCount = await User.countDocuments() // 測試用
+    totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
+    // totalCount = await User.countDocuments() // 測試用
 
     resultUserIds = resultUserIds.map((i) => i._id)
 
@@ -90,10 +91,18 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       /* eslint-disable */
     ] as any
 
-    if (tagsArray.length > 0 || notTagsArray.length > 0) {
+    // 如果有標籤就加入搜尋條件，先找出符合條件，再找出替除條件，合併會讓第二個條件失效
+    if (tagsArray.length > 0 ) {
       pipeline.splice(3, 0, {
         $match: {
-          "profile.tags": { $in: tagsArray, $nin: notTagsArray }
+          "profile.tags": { $in: tagsArray }
+        }
+      })
+    }
+    if (notTagsArray.length > 0) {
+      pipeline.splice(3, 0, {
+        $match: {
+          "profile.tags": { $nin: notTagsArray }
         }
       })
     }
@@ -102,7 +111,14 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     totalCount = (await MatchListSelfSetting.aggregate(pipeline).count("userId")).length
 
     const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    
     resultUserIds = resultUsers.map((i) => i.userId._id)
+    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); // 直接比较字符串形式，代替排除自己失敗的方法
+
+    if (resultUserIds.length === 0) {
+      appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
+      return
+    }
   }
 
   // 組合卡片用戶的資料
