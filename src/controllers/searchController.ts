@@ -40,11 +40,11 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
   const lockedUserId = blackList ? blackList.lockedUserId : []
 
   if (!keyWord && location === 0 && gender === 0 && tagsArray.length === 0 && notTagsArray.length === 0) {
-    // resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
-    resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
+    resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    // resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
 
-    // totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
-    totalCount = await User.countDocuments() // 測試用
+    totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
+    // totalCount = await User.countDocuments() // 測試用
 
     resultUserIds = resultUserIds.map((i) => i._id)
 
@@ -102,7 +102,14 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     totalCount = (await MatchListSelfSetting.aggregate(pipeline).count("userId")).length
 
     const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    
     resultUserIds = resultUsers.map((i) => i.userId._id)
+    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); // 直接比较字符串形式，代替排除自己失敗的方法
+
+    if (resultUserIds.length === 0) {
+      appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
+      return
+    }
   }
 
   // 組合卡片用戶的資料
