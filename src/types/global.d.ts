@@ -1,5 +1,4 @@
 export {}
-
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -18,6 +17,13 @@ declare global {
       FIREBASE_TOKEN_URI: string
       FIREBASE_AUTH_PROVIDER_X509_CERT_URL: string
       FIREBASE_CLIENT_X509_CERT_URL: string
+      MERCHANT_ID: string
+      HASH_KEY: string
+      HASH_IV: string
+      VERSION: string
+      RETURN_URL: string
+      NOTIFY_URL: string
+      PAY_GATEWAY: string
     }
   }
 }
