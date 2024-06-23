@@ -379,7 +379,7 @@ export function getInvitationListAggregationSwagger (_req: Request, _res: Respon
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
-  * #swagger.parameters['page'] = {
+   * #swagger.parameters['page'] = {
     in: 'query',
     description: '頁數 不可為0',
     required: false,
@@ -391,7 +391,7 @@ export function getInvitationListAggregationSwagger (_req: Request, _res: Respon
     required: false,
     schema: { type: 'number' }
   }
-    * #swagger.parameters['sort'] = {
+   * #swagger.parameters['sort'] = {
     in: 'query',
     description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
     required: false,
@@ -405,118 +405,65 @@ export function getInvitationListAggregationSwagger (_req: Request, _res: Respon
           data: {
             invitations: [
                 {
-                message: {
-                    title: "hello7777",
-                    content: "7777777",
-                    createdAt: "2024-05-21T06:49:49.383Z",
-                    updatedAt: "2024-05-21T06:49:49.383Z",
-                },
-                _id: "664c440d58453572378249c9",
-                userId: "664473d53d428e98fd5fb226",
-                invitedUserId: "664c427bb56b34d999f86c83",
-                status: "pending",
-                isFinishDating: false,
-                date: "2024-05-21T06:49:49.383Z",
-                createdAt: "2024-05-21T06:49:49.383Z",
-                updatedAt: "2024-05-21T06:49:49.383Z",
-                profileByInvitedUser: [
-                    {
-                        _id: "664c42ea58453572378249bf",
-                        userId: "664c427bb56b34d999f86c83",
-                        photoDetails: {
-                        photo: "",
-                        isShow: false,
-                        _id: "664c42ea58453572378249c0"
-                        },
-                        introDetails: {
-                          intro: "",
-                          isShow: false,
-                          _id: "664c42ea58453572378249c1"
-                        },
-                        companyDetails: {
-                        company: "",
-                        isShow: false,
-                        _id: "666bd4cd6706988ef30f6bbf"
-                        },
-                        incomeDetails: {
-                          income: "",
-                          isShow: false,
-                          _id: "664c42ea58453572378249c2"
-                       },
-                        lineDetails: {
-                          lineId: "",
-                          isShow: false,
-                          _id: "664c4265611132"
-                        },
-                        "jobDetails": {
-                        job: "",
-                        isShow: false,
-                        _id: "666bd4cd6706988ef30f6bc2"
-                        },
-                        exposureSettings: {
-                          rating: 0,
-                          isShow: false,
-                          isMatch: false,
-                          _id: "664c42ea58453572378249c3"
-                        },
-                        nickNameDetails: {
+                  message: {
+                      title: "hello7777",
+                      content: "7777777",
+                      createdAt: "2024-05-21T06:49:49.383Z",
+                      updatedAt: "2024-05-21T06:49:49.383Z"
+                  },
+                  _id: "664c440d58453572378249c9",
+                  userId: "664473d53d428e98fd5fb226",
+                  invitedUserId: "664c427bb56b34d999f86c83",
+                  status: "pending",
+                  isFinishDating: false,
+                  date: "2024-05-21T06:49:49.383Z",
+                  createdAt: "2024-05-21T06:49:49.383Z",
+                  updatedAt: "2024-05-21T06:49:49.383Z",
+                  profileByInvitedUser: {
+                      nickNameDetails: {
                           nickName: "Kven",
-                          isShow: true,
-                          _id: "664c4253213212312"
-                        },
-                        tags: [],
-                        "userStatus": {
+                          isShow: true
+                      },
+                      tags: ["test1", "test2"],
+                      userStatus: {
                           commentScore: 3.7,
-                          commentCount: 6,
-                          rating: 0,
-                          isMatch: false,
-                          point: 0,
-                          _id: "664c42ea58453572378249c4"
-                          }
-                    }
-                ],
-                matchListSelfSettingByInvitedUser: [
-                  {
-                   personalInfo: {
-                     age: 0,
-                     gender: 0,
-                     isMarried: 0,
-                     height: 0,
-                     weight: 0,
-                      socialCircle: 0,
-                      activities: [
-                        0
-                      ],
-                     location: 0,
-                     education: 0,
-                     liveWithParents: 0,
-                      religion: 0,
-                      smoking: 0
-                   },
-                    workInfo: {
-                      occupation: 0,
-                      industry: [
-                        0,
-                       4,
-                        3,
-                        2
-                      ],
-                     "expectedSalary": 0
-                   },
-                   searchDataBase: [],
-                   _id: "666abad88593484e1056b4dd",
-                   userId: "665c2f502ab2d6460452171c"
-                 }
-               ],
-                id: "664c440d58453572378249c9",
-                isUnlock: true,
-                isCollected: false
-            },
+                          commentCount: 6
+                      }
+                  },
+                  matchListSelfSettingByInvitedUser: {
+                      searchDataBase: [],
+                      personalInfo: {
+                          age: 0,
+                          gender: 0,
+                          isMarried: 0,
+                          height: 0,
+                          weight: 0,
+                          socialCircle: 0,
+                          activities: [0],
+                          location: 0,
+                          education: 0,
+                          liveWithParents: 0,
+                          religion: 0,
+                          smoking: 0
+                      },
+                      workInfo: {
+                          occupation: 0,
+                          industry: [0],
+                          expectedSalary: 0
+                      }
+                  },
+                  isUnlock: true,
+                  isCollected: false
+                }
             ],
-            invitationsLength: 1
+            pagination: {
+              page: 1,
+              perPage: 6,
+              totalCount: 5
           }
       }
     }
-   */
+   }
+ */
   next()
 }
