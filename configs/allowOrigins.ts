@@ -10,7 +10,8 @@ const allowOrigin = [
   "https://104-dev.zeabur.app",
   "http://104-dev.zeabur.app",
   "http://localhost:3000",
-  "http://localhost:3001"
+  "http://localhost:3001",
+  "http://localhost:8001",
 ]
 
 // 如果 port 存在且是數字，則將相應的本地端口添加到 allowOrigin 中
