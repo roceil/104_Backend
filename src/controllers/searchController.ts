@@ -65,8 +65,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
           userId: { $ne: userId, $nin: lockedUserId },
           searchDataBase: { $regex: keyWord, $options: "i" },
           // searchDataBase: { $regex: keyWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), $options: "i" },
-          "personalInfo.gender": gender,
-          "personalInfo.location": location
+          ...(gender > 0 ? { "personalInfo.gender": gender } : {}),
+          ...location > 0 ? { "personalInfo.location": location } : {}
           // "personalInfo.smoking": { $nin: blacklistSetting.banSmoking },
         }
       },
