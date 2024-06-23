@@ -117,7 +117,8 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         // 取得每個用戶的封鎖狀態
         const blackList = await BlackList.findOne({ userId })
         const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
-        const isLocked = lockedUserIds.includes(resultId as unknown as string) ?? false
+        /* eslint-disable */
+        const isLocked = lockedUserIds.includes(resultId.toString() as unknown as string) ?? false
 
         // 取得卡片用戶的邀約狀態
         const invitations = await Invitation.find({
@@ -163,6 +164,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         // 取得每個用戶的 解鎖狀態 和 評分
         const profile = await Profile.findOne({ userId })
         const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
+        // const unlockCommentIds = profile?.unlockComment ?? []
 
         // 取得每個用戶的評分 和 標籤
         const resultIdProfile = await Profile.findOne({ userId: resultId })
