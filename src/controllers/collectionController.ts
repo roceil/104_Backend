@@ -166,12 +166,27 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _n
   const { page, pageSize, sort } = req.query as { page?: string, pageSize?: string, sort?: string }
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const [totalCount] = await Promise.all([Collection.countDocuments({ userId })])
-  const collections = await Collection.aggregate([
+  const collections = await getCollectionByUserIdWithAggregation(userId, sort, parsedPageNumber, parsedPageSize)
+  const pagination = {
+    page: parsedPageNumber,
+    perPage: parsedPageSize,
+    totalCount
+  }
+  const response = {
+    collections,
+    pagination
+  }
+  appSuccessHandler(200, "查詢成功", response, res)
+}
+
+export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation }
+async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number) {
+  return await Collection.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId) } },
     { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },
     { $skip: (parsedPageNumber - 1) * parsedPageSize },
     { $limit: parsedPageSize },
-    { // 關聯users表
+    {
       $lookup: {
         from: "users",
         localField: "collectedUserId",
@@ -179,7 +194,7 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _n
         as: "collectedUsers"
       }
     },
-    { // 關聯invitations表
+    {
       $lookup: {
         from: "invitations",
         // let暫存collectedUserId並轉呈sting，因為collectedUserId是string
@@ -241,16 +256,4 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _n
       }
     }
   ])
-  const pagination = {
-    page: parsedPageNumber,
-    perPage: parsedPageSize,
-    totalCount
-  }
-  const response = {
-    collections,
-    pagination
-  }
-  appSuccessHandler(200, "查詢成功", response, res)
 }
-
-export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation }

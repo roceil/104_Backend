@@ -1054,7 +1054,7 @@ export const findUsersByMultipleConditionsSwagger = (_req: Request, _res: Respon
           type: 'string',
           required: false,
           description: '目前頁數'
-      }    
+      }
    * #swagger.parameters['sort'] = {
          in: 'query',
          type: 'string',
@@ -1158,7 +1158,7 @@ export function editMatchListSelfSettingSwagger (_req: Request, _res: Response, 
                     "updatedAt": "2024-06-02T09:24:02.313Z",
                     "__v": 0
     }
-      } 
+      }
     }
    */
   next()
@@ -1210,7 +1210,7 @@ export const getMatchListSelfSettingSwagger = (_req: Request, _res: Response, ne
     }
       }
     }
-      } 
+      }
     }
    */
   next()
