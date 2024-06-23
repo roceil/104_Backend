@@ -9,6 +9,8 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { createNotification } from "./notificationsController"
 import { isInBlackList } from "@/utils/blackListHandler"
+import { type IInvitations } from "@/types/invitationInterface"
+import mongoose from "mongoose"
 interface ParsedInvitation {
   userId: string
   invitedUserId: string
@@ -103,13 +105,6 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
     path: "matchListSelfSettingByInvitedUser",
     select: "searchDataBase personalInfo workInfo"
   })])
-  // const invitationList = await Invitation.find({ userId }).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize).populate({
-  //   path: "profileByInvitedUser",
-  //   select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
-  // }).populate({
-  //   path: "matchListSelfSettingByInvitedUser",
-  //   select: "searchDataBase personalInfo workInfo"
-  // })
   const invitationsLength = await Invitation.countDocuments({ userId })
   if (!invitationList || invitationList.length === 0) {
     appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
@@ -127,11 +122,6 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
       }
       return { ...invitation, isUnlock, isCollected }
     })
-    // invitations.forEach((_, i: number) => {
-    //   // 會報錯Maximum call stack size exceede
-    //   eraseProperty(invitations[i], ["profileByInvitedUser", "nickNameDetails", "photoDetails", "introDetails", "incomeDetails", "lineDetails", "exposureSettings", "userStatus"
-    //   ], ["_id"])
-    // })
     const pagination = {
       page: parsedPageNumber,
       perPage: parsedPageSize,
@@ -189,4 +179,163 @@ const finishInvitationDating = async (req: Request, res: Response, next: NextFun
     appSuccessHandler(200, "已完成約會", invitation, res)
   }
 }
-export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating }
+
+const getInvitationListAggregation = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
+  // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
+  const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
+  const { userId } = req.user as LoginResData
+  const [totalCount, invitations] = await Promise.all([Invitation.countDocuments({ userId }), getInvitationListWithAggregation(userId, sort, parsedPageNumber, parsedPageSize)])
+  if (!invitations || invitations.length === 0) {
+    appSuccessHandler(200, "沒有邀請", { invitations: [] }, res)
+  } else {
+    const pagination = {
+      page: parsedPageNumber,
+      perPage: parsedPageSize,
+      totalCount
+    }
+    const response = {
+      invitations,
+      pagination
+    }
+    appSuccessHandler(200, "查詢成功", response, res)
+  }
+}
+
+export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating, getInvitationListAggregation }
+function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number): mongoose.Aggregate<IInvitations[]> {
+  return Invitation.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+    { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },
+    { $skip: (parsedPageNumber - 1) * parsedPageSize },
+    { $limit: parsedPageSize },
+    {
+      $lookup: {
+        from: "profiles",
+        // let暫存invitedUserId並轉呈ObjectId，因為invitedUserId是ObjectId
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "profileByInvitedUser"
+      }
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
+      }
+    },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "matchListSelfSettingByInvitedUser"
+      }
+    },
+    {
+      $lookup: {
+        from: "collections",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              collectedUserId: 1
+            }
+          }
+        ],
+        as: "collection"
+      }
+    },
+    {
+      $unwind: {
+        path: "$profileByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        isUnlock: {
+          $cond: {
+            if: {
+              $in: ["$invitedUserId", { $ifNull: ["$profileByUserId.unlockComment", []] }]
+            },
+            then: true,
+            else: false
+          }
+        },
+        isCollected: {
+          $cond: {
+            if: {
+              $in: ["$invitedUserId", { $ifNull: ["$collection.collectedUserId", []] }]
+            },
+            then: true,
+            else: false
+          }
+        },
+        profileByInvitedUser: { $ifNull: ["$profileByInvitedUser", { message: "找不到被邀請者" }] },
+        matchListSelfSettingByInvitedUser: { $ifNull: ["$matchListSelfSettingByInvitedUser", { message: "找不到被邀請者" }] }
+      }
+    },
+    {
+      $project: {
+        profileByUserId: 0,
+        collection: 0,
+        "profileByInvitedUser._id": 0,
+        "profileByInvitedUser.userId": 0,
+        "profileByInvitedUser.photoDetails._id": 0,
+        "profileByInvitedUser.introDetails._id": 0,
+        "profileByInvitedUser.nickNameDetails._id": 0,
+        "profileByInvitedUser.incomeDetails._id": 0,
+        "profileByInvitedUser.lineDetails._id": 0,
+        "profileByInvitedUser.jobDetails._id": 0,
+        "profileByInvitedUser.companyDetails._id": 0,
+        "profileByInvitedUser.unlockComment": 0,
+        "profileByInvitedUser.exposureSettings._id": 0,
+        "profileByInvitedUser.createdAt": 0,
+        "profileByInvitedUser.updatedAt": 0,
+        "matchListSelfSettingByInvitedUser._id": 0,
+        "matchListSelfSettingByInvitedUser.userId": 0,
+        "matchListSelfSettingByInvitedUser.createdAt": 0,
+        "matchListSelfSettingByInvitedUser.updatedAt": 0
+      }
+    }
+  ])
+}

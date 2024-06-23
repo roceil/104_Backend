@@ -95,8 +95,21 @@ const userSchema = new Schema<IUserSchema>(
       default: Date.now
     }
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 )
+
+userSchema.virtual("scoreByProfile", {
+  ref: "profile",
+  localField: "_id",
+  foreignField: "userId",
+  justOne: true
+
+})
 
 const User = model<IUserSchema>("user", userSchema)
 

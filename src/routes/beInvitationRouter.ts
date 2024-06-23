@@ -1,11 +1,12 @@
 import { type RequestHandler, Router } from "express"
 import asyncErrorHandler from "@/middlewares/asyncErrorHandler"
-import { getWhoInvitationList, getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation, finishBeInvitationDating } from "@/controllers/beInvitationController"
+import { getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation, finishBeInvitationDating, getWhoInvitationListWithAggregation } from "@/controllers/beInvitationController"
 import isAuth from "@/middlewares/isAuth"
-import { getWhoInvitationListSwagger, getBeInvitationByIdSwagger, rejectInvitationSwagger, cancelBeInvitationSwagger, acceptInvitationSwagger, deleteBeInvitationSwagger, finishBeInvitationDatingSwagger } from "@/middlewares/swaggerConfig/beInvitationSwagger"
+import { getBeInvitationByIdSwagger, rejectInvitationSwagger, cancelBeInvitationSwagger, acceptInvitationSwagger, deleteBeInvitationSwagger, finishBeInvitationDatingSwagger, getWhoInvitationListByAggregationSwagger } from "@/middlewares/swaggerConfig/beInvitationSwagger"
 const router = Router()
 
-router.get("/who-invite-me-list", getWhoInvitationListSwagger, isAuth, asyncErrorHandler(getWhoInvitationList) as RequestHandler)
+// router.get("/who-invite-me-list", getWhoInvitationListSwagger, isAuth, asyncErrorHandler(getWhoInvitationList) as RequestHandler)
+router.get("/who-invite-me-list", getWhoInvitationListByAggregationSwagger, isAuth, asyncErrorHandler(getWhoInvitationListWithAggregation) as RequestHandler)
 router.get("/who-invite-me/:id", isAuth, getBeInvitationByIdSwagger, asyncErrorHandler(getWhoInvitationById) as RequestHandler)
 router.put("/who-invite-me/:id/reject", rejectInvitationSwagger, isAuth, asyncErrorHandler(rejectInvitation) as RequestHandler)
 router.put("/who-invite-me/:id/accept", acceptInvitationSwagger, isAuth, asyncErrorHandler(acceptInvitation) as RequestHandler)

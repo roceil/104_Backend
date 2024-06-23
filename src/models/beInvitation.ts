@@ -13,7 +13,7 @@ interface IBeInvitation extends Document {
   }
   isFinishDating: boolean
   date: Date
-  status: "accepted" | "rejected" | "cancel" | "pending" | "finishDating"
+  status: "accept" | "reject" | "cancel" | "pending" | "finishDating"
   createdAt: Date
   updatedAt: Date
 }
@@ -61,7 +61,7 @@ const beInvitationSchema = new Schema<IBeInvitation>({
   },
   status: {
     type: String,
-    enum: ["accept", "rejected", "cancel", "pending", "finishDating"],
+    enum: ["accept", "reject", "cancel", "pending", "finishDating"],
     default: "pending"
   },
   createdAt: {
