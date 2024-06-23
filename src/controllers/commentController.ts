@@ -63,17 +63,24 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
 }
 const getCommentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
+  const { id } = req.params
   const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
   const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
   const [rawComments, userProfile, totalCount] = await Promise.all([
-    Comment.find({ commentedUserId: userId }).populate({
-      path: "commentedUserId",
-      select: "userStatus"
-    }).populate({
-      path: "commentUserProfile",
-      select: "nickNameDetails"
-    }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
+    Comment.find({ commentedUserId: id })
+      .populate({
+        path: "commentedUserId",
+        select: "userStatus"
+      })
+      .populate({
+        path: "commentUserProfile",
+        select: "nickNameDetails"
+      }).populate({
+        path: "commentUserUsername",
+        select: "personalInfo.username"
+      })
+      .sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
     Profile.findOne({ userId }).select("unlockComment"),
     Comment.countDocuments()
   ])

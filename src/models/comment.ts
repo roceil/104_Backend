@@ -55,6 +55,11 @@ commentSchema.virtual("commentUserProfile", {
   localField: "userId",
   foreignField: "userId"
 })
+commentSchema.virtual("commentUserUsername", {
+  ref: "user",
+  localField: "userId",
+  foreignField: "_id"
+})
 const Comment = model<IComment>("comment", commentSchema)
 
 export { Comment, type IComment }
