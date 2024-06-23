@@ -70,6 +70,9 @@ const getCommentList = async (req: Request, res: Response, next: NextFunction): 
     Comment.find().populate({
       path: "commentedUserId",
       select: "userStatus"
+    }).populate({
+      path: "commentUserProfile",
+      select: "nickNameDetails"
     }).sort(dateSort).skip((parsedPageNumber - 1) * parsedPageSize).limit(parsedPageSize),
     Profile.findOne({ userId }).select("unlockComment"),
     Comment.countDocuments()
