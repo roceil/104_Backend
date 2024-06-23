@@ -56,10 +56,6 @@ const httpServer = http.createServer(app)
 // 初始化 Socket.IO
 initializeSocket(httpServer)
 
-httpServer.listen(3002, () => {
-  console.log("socket listening on *:3002")
-})
-
 /* Router */
 app.use("/api/v1", healthyCheckRouter)
 app.use("/api/v1", loginRouter)
@@ -110,6 +106,10 @@ process.on("unhandledRejection", (err, promise) => {
   process.exit(1)
 })
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`)
+httpServer.listen(port, () => {
+  console.log("socket listening on *:3002")
 })
+
+// app.listen(port, () => {
+//   console.log(`[server]: Server is running at http://localhost:${port}`)
+// })

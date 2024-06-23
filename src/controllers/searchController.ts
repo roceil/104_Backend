@@ -6,6 +6,7 @@ import { MatchListSelfSetting, options } from "@/models/matchListSelfSetting"
 import { BlackList } from "@/models/blackList"
 import { User } from "@/models/user"
 import { Invitation } from "@/models/invitation"
+import { Profile } from "@/models/profile"
 
 const buildFlattenedOptions = () => {
   const flattenedOptions: Record<string, { type: string, key: number }> = {}
@@ -76,6 +77,11 @@ const keywordSearch = async (req: Request, res: Response, _next: NextFunction): 
     // 尋找符合的選項
     const matchedOptions = Object.keys(flattenedOptions).filter(option => regex.test(option))
 
+    // 如果沒有符合的選項，則傳回空結果
+    if (matchedOptions.length === 0) {
+      appSuccessHandler(200, "查詢成功", [], res); return
+    }
+
     // 建構查詢條件
     queryConditions = matchedOptions.map(option => {
       const field = `personalInfo.${flattenedOptions[option].type.replace("Options", "")}`
@@ -144,4 +150,93 @@ const keywordSearch = async (req: Request, res: Response, _next: NextFunction): 
 
   appSuccessHandler(200, "查詢成功", resultUsersData, res)
 }
-export { searchFeaturedUser, keywordSearch }
+
+const tagSearch = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { tags, searchType = "and" } = req.body as { tags: string[], searchType?: string }
+  const { pageSize = "6", pageNumber = "1" } = req.query as { pageSize?: string, pageNumber?: string }
+
+  // 字串轉為數字
+  const parsedPageSize = parseInt(pageSize, 10) || 6
+  const parsedPageNumber = parseInt(pageNumber, 10) || 1
+
+  const { userId } = req.user as { userId: string }
+
+  // 構建搜尋條件
+  let queryConditions = [{}]
+
+  if (tags && tags.length > 0) {
+    if (searchType === "or") {
+      // 模糊搜尋
+      queryConditions = tags.map(tag => ({
+        tags: { $regex: new RegExp(tag, "i") }
+      }))
+    } else {
+      // 精準搜尋
+      queryConditions = tags.map(tag => ({ tags: tag }))
+    }
+  }
+
+  // 使用聚合函數進行查詢
+  const searchResults = await Profile.aggregate([
+    {
+      $match: { $or: queryConditions }
+    },
+    {
+      $project: {
+        userId: 1,
+        tags: 1,
+        personalInfo: 1,
+        workInfo: 1,
+        createdAt: 1,
+        updatedAt: 1
+      }
+    }
+  ])
+    .skip((parsedPageNumber - 1) * parsedPageSize)
+    .limit(parsedPageSize)
+
+  // 過濾用戶自己
+  const resultUserIds = searchResults
+    .map(profile => profile.userId)
+    .filter(user => user !== userId)
+
+  const resultUsersData = await Promise.all(resultUserIds.map(async (id) => {
+    // 取得每個使用者的資料
+    const resultUserInfo = await User.findById(id)
+
+    // 取得每個使用者的封鎖狀態
+    const blackList = await BlackList.findOne({ userId })
+    const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
+    const isLocked = lockedUserIds.includes(id.toString())
+
+    // 取得每個用戶的邀約狀態
+    const invitations = await Invitation.find({
+      userId, // 邀请者
+      invitedUserId: id // 被邀请者
+    })
+    const status = invitations.length > 0 ? invitations[0].status : "not invited" // invitationStatus
+
+    // 取得每個使用者的個人條件和工作條件
+    const matchListSelfSetting = await MatchListSelfSetting.findOne({
+      userId: id
+    })
+
+    // 取得每個使用者的收藏狀態
+    const collection = await Collection.findOne({ userId, collectedUserId: id }, { isCollected: 1 })
+    const isCollected = Boolean(collection)
+
+    return {
+      userInfo: {
+        ...resultUserInfo?.toObject()
+      },
+      isCollected,
+      isLocked,
+      status,
+      matchListSelfSetting
+    }
+  }))
+
+  appSuccessHandler(200, "查询成功", resultUsersData, res)
+}
+
+export { searchFeaturedUser, keywordSearch, tagSearch }

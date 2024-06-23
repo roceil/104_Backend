@@ -13,8 +13,12 @@ const createChatRoom = async (req: Request, res: Response, next: NextFunction): 
   const receiver = await User.findById(receiverId)
 
   if (!userId || !receiver) {
-    appErrorHandler(404, "無此使用者", next)
+    appErrorHandler(400, "無此使用者", next)
     return
+  }
+
+  if (userId === receiverId) {
+    appErrorHandler(400, "您無法跟自己聊天", next)
   }
 
   // Check if chat room already exists
@@ -45,7 +49,7 @@ const getChatRoomHistory = async (req: Request, res: Response, next: NextFunctio
   const { roomId } = req.params
   const chatRoom = await ChatRoom.findById(roomId).populate("messages.senderId", "personalInfo.username")
   if (!chatRoom) {
-    appErrorHandler(404, "房間不存在", next)
+    appErrorHandler(400, "房間不存在", next)
     return
   }
 
