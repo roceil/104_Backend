@@ -81,7 +81,7 @@ const profileSchema = new Schema<IPersonalInfo>({
     type: {
       photo: {
         type: String,
-        default: ""
+        default: "https://firebasestorage.googleapis.com/v0/b/social-e030c.appspot.com/o/default_img%2FLove%20%26%20Dating%20(9).png?alt=media&token=630b4f66-2304-4084-aeed-f9ba177794d2"
       },
       isShow: {
         type: Boolean,
