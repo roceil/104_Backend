@@ -11,6 +11,7 @@ import { createNotification } from "./notificationsController"
 import { isInBlackList } from "@/utils/blackListHandler"
 import { type IInvitations } from "@/types/invitationInterface"
 import mongoose from "mongoose"
+import { sendNotification } from "@/services/notificationWS"
 interface ParsedInvitation {
   userId: string
   invitedUserId: string
@@ -85,6 +86,7 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     if (!beInvitation) {
       appErrorHandler(400, "邀請失敗", next)
     } else {
+      sendNotification(invitedUserId, { title: message.title, content: message.content })
       appSuccessHandler(201, "邀請成功", invitation, res)
     }
   }

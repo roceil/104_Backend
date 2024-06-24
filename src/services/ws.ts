@@ -33,8 +33,11 @@ const socketErrorHandler = (error: Error, socket: Socket) => {
   socket.emit("error", { message: error.message })
 }
 
+let io: Server | null = null
+
+const getIo = (): Server | null => io
 const initializeSocket = (server: HttpServer) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: "*"
     }
@@ -99,8 +102,16 @@ const initializeSocket = (server: HttpServer) => {
   //   }
   // })
 
+  if (!io) {
+    socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
+    return
+  }
   io.on("connection", (socket) => {
     console.log(`${socket.userInfo?.name}已經連線`)
+    if (!io) {
+      socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
+      return
+    }
     const numberOfClients = io.engine.clientsCount
     // 向client端通知有新的使用者加入
     socket.broadcast.emit(
@@ -110,6 +121,10 @@ const initializeSocket = (server: HttpServer) => {
 
     // 斷開連接
     socket.on("disconnect", () => {
+      if (!io) {
+        socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
+        return
+      }
       const numberOfClients = io.engine.clientsCount
       io.emit(
         "userConnectNotify",
@@ -179,6 +194,10 @@ const initializeSocket = (server: HttpServer) => {
         await ChatRoom.findByIdAndUpdate(roomId, {
           $push: { messages: { senderId: userId, message } }
         })
+        if (!io) {
+          socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
+          return
+        }
         io.to(roomId).emit("message", { message, sender: userId })
       } catch (error) {
         socketErrorHandler(error as Error, socket)
@@ -187,4 +206,4 @@ const initializeSocket = (server: HttpServer) => {
   })
 }
 
-export default initializeSocket
+export { initializeSocket, getIo, socketErrorHandler }

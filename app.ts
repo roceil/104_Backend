@@ -24,7 +24,7 @@ import addPointRouter from "@/routes/addPointRouter"
 import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
 import http from "http"
-import initializeSocket from "@/services/ws"
+import { initializeSocket } from "@/services/ws"
 import chatRoomRouter from "@/routes/chatRoomRouter"
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
