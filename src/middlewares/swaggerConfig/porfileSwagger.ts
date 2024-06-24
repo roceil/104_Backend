@@ -227,7 +227,6 @@ export function putProfileSwagger (_req: Request, _res: Response, next: NextFunc
                   userStatus: {
                     rating: 0,
                     isMatch: false,
-                    point: 0,
                     _id: "66670afb8e86cd62fa3161f9"
                   },
                   userId: "665c2f502ab2d6460452171c",
@@ -281,6 +280,7 @@ export function putProfileSwagger (_req: Request, _res: Response, next: NextFunc
                     isShow: true,
                     _id: "66670afb8e86cd62fa3161ee"
                   },
+                  point: 0,
                 createdAt: "2024-05-14T01:34:38.298Z",
                 updatedAt: "2024-05-14T01:34:38.298Z"
                 }
