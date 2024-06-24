@@ -60,7 +60,8 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
       username,
       email,
       password: hashPassword
-    }
+    },
+    points: 200
   })
 
   // JWT payload
@@ -76,6 +77,16 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
   // Note: 開發環境下，回傳使用者資料
   if (process.env.NODE_ENV === "dev") {
     resUserData = await User.findOne({ "personalInfo.email": email }).select("-personalInfo.password")
+
+    const userProfileData = {
+      userId: resUserData?._id,
+      nickNameDetails: {
+        nickName: resUserData?.personalInfo.username,
+        isShow: false
+      }
+    }
+
+    await Profile.create(userProfileData)
   }
 
   // 發送帳號啟用信件
