@@ -58,7 +58,7 @@ export const getMatchListOptions = async (_req: Request, res: Response, _next: N
 export const findUsersByMultipleConditions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { page, sort } = req.query
-  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
+  const selectedSort: string = sort === "" ? "-updatedAt" : sort as string
 
   const matchListData = await MatchList.findOne({ userId })
 
@@ -97,13 +97,13 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     }
 
     // 計算總筆數
-    const totalCount = await MatchListSelfSetting.countDocuments(queryCondition)
+    const totalCount = await MatchListSelfSetting.find({userId: { $ne: userId }}).countDocuments(queryCondition)
     const perPage = 6
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
     const resultUsers = await MatchListSelfSetting.find(
       queryCondition
-    ).sort(dateSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    ).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
     if (resultUsers.length === 0) {
       appSuccessHandler(200, "查無符合條件的使用者", [], res)
