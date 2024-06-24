@@ -1,6 +1,5 @@
 import { Schema, model, mongo } from "mongoose"
 import { type IUserId } from "../types/userInterface"
-
 interface IPhotoDetails {
   photo: string
   isShow: boolean
@@ -215,10 +214,6 @@ const profileSchema = new Schema<IPersonalInfo>({
       isMatch: {
         type: Boolean,
         default: false
-      },
-      point: {
-        type: Number,
-        default: 0
       },
       commentScore: {
         type: Number,
