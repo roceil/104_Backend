@@ -97,7 +97,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     }
 
     // 計算總筆數
-    const totalCount = await MatchListSelfSetting.find({userId: { $ne: userId }}).countDocuments(queryCondition)
+    const totalCount = await MatchListSelfSetting.find({ userId: { $ne: userId } }).countDocuments(queryCondition)
     const perPage = 6
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
