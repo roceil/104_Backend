@@ -41,19 +41,60 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
   const lockedUserId = blackList ? blackList.lockedUserId : []
 
   if (!keyWord && location === 0 && gender === 0 && tagsArray.length === 0 && notTagsArray.length === 0) {
-    resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId }, isActive: true }).populate({ path: "scoreByProfile", select: "userStatus" }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
     totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
-    resultUserIds = resultUserIds.map((i) => i._id)
-    // console.log("resultUserIds", JSON.stringify(resultUserIds)); // 分數無正確排序
 
-    // 測試用 （無替除自己）
-    // resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
-    // totalCount = await User.countDocuments()
-    // 測試用（分數排序）
-    // const temp = await User.find()
-    //   .populate({ path: "scoreByProfile", select: "userStatus" })
-    //   .sort({ "scoreByProfile.userStatus.commentScore": -1 });
-    // console.log("temp", JSON.stringify(temp));
+    resultUserIds = await User.aggregate([
+      {
+        $match: {
+          _id: { $ne: userId, $nin: lockedUserId },
+          isActive: true
+        }
+      },
+      {
+        $lookup: {
+          from: "profiles",
+          localField: "_id",
+          foreignField: "userId",
+          as: "scoreByProfile"
+        }
+      },
+      {
+        $unwind: "$scoreByProfile"
+      },
+      {
+        $sort: {
+          updatedAt: selectedSort === "-updatedAt" ? -1 : 1
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          "scoreByProfile.userStatus": 1,
+          updatedAt: 1
+        }
+      },
+      {
+        $skip: ((Number(page) ?? 1) - 1) * perPage
+      },
+      {
+        $limit: perPage
+      }
+    ])
+
+    if (selectedSort === "-score") {
+      resultUserIds = resultUserIds.sort((a, b) => {
+        return b.scoreByProfile.userStatus.commentScore - a.scoreByProfile.userStatus.commentScore
+      })
+    } else if (selectedSort === "score") {
+      resultUserIds = resultUserIds.sort((a, b) => {
+        return a.scoreByProfile.userStatus.commentScore - b.scoreByProfile.userStatus.commentScore
+      })
+    }
+
+    resultUserIds = resultUserIds.map((i) => i._id)
+    resultUserIds = resultUserIds.filter((i) => i.toString() !== userId)
+
+    // console.log(JSON.stringify(resultUserIds));
   } else {
     // 替除配對設定的排除條件
     // const matchListData = await MatchList.findOne({ userId })
@@ -84,7 +125,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       },
       {
         $project: {
-          userId: 1
+          userId: 1,
+          "profile.userStatus": 1
           // searchDataBase: 1,
           // "profile.tags": 1
         }
@@ -107,13 +149,25 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
         }
       })
     }
-    
-    const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+
+    let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+
+    if (selectedSort === "-score") {
+      resultUsers = resultUsers.sort((a, b) => {
+        return b.profile.userStatus.commentScore - a.profile.userStatus.commentScore
+      })
+    } else if (selectedSort === "score") {
+      resultUsers = resultUsers.sort((a, b) => {
+        return a.profile.userStatus.commentScore - b.profile.userStatus.commentScore
+      })
+    }
+
     resultUserIds = resultUsers.map((i) => i.userId._id)
-    
+
     totalCount = resultUserIds.length
 
-    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); // 直接比较字符串形式，代替排除自己失敗的方法
+    // 直接比较字符串形式，代替排除自己失敗的方法
+    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); 
     if (resultUserIds.length === 0) {
       appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
       return
