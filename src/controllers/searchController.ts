@@ -251,6 +251,7 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       isLocked,
       isUnlock,
       hasComment,
+      beCommentCount,
       beInvitationStatus,
       collectionTableId,
       invitationTableId,
