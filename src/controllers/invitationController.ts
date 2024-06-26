@@ -149,7 +149,6 @@ const getInvitationById = async (req: Request, res: Response, next: NextFunction
     appSuccessHandler(200, "查詢成功", invitation, res)
   }
 }
-
 const cancelInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
