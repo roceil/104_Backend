@@ -145,3 +145,22 @@ export function searchSwagger (_req: Request, _res: Response, next: NextFunction
   next()
 }
 
+export function getEliteListSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+   * #swagger.tags = ["Search-搜尋"]
+   * #swagger.description = '取得精選列表'
+   * #swagger.security = [{
+      "apiKeyAuth":[]
+    }]
+   * #swagger.responses[200] = {
+            description: "取得精選列表",
+            schema: {
+                status: true,
+                message: "取得精選列表成功",
+                data: [
+                ]
+            }
+        }
+   */
+  next()
+}
