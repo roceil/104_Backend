@@ -41,14 +41,15 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
   const lockedUserId = blackList ? blackList.lockedUserId : []
 
   if (!keyWord && location === 0 && gender === 0 && tagsArray.length === 0 && notTagsArray.length === 0) {
-    resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
-    // resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage) // 測試用
-
+    resultUserIds = await User.find({ _id: { $ne: userId, $nin: lockedUserId }, isActive: true }).populate({ path: "scoreByProfile", select: "userStatus" }).select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
     totalCount = await User.find({ _id: { $ne: userId, $nin: lockedUserId } }).countDocuments()
-    // totalCount = await User.countDocuments() // 測試用
-
     resultUserIds = resultUserIds.map((i) => i._id)
+    // console.log("resultUserIds", JSON.stringify(resultUserIds)); // 分數無正確排序
 
+    // 測試用 （無替除自己）
+    // resultUserIds = await User.find().select("_id").sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    // totalCount = await User.countDocuments()
+    // 測試用（分數排序）
     // const temp = await User.find()
     //   .populate({ path: "scoreByProfile", select: "userStatus" })
     //   .sort({ "scoreByProfile.userStatus.commentScore": -1 });
@@ -65,8 +66,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
           userId: { $ne: userId, $nin: lockedUserId },
           searchDataBase: { $regex: keyWord, $options: "i" },
           // searchDataBase: { $regex: keyWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), $options: "i" },
-          "personalInfo.gender": gender,
-          "personalInfo.location": location
+          ...(gender > 0 ? { "personalInfo.gender": gender } : {}),
+          ...location > 0 ? { "personalInfo.location": location } : {}
           // "personalInfo.smoking": { $nin: blacklistSetting.banSmoking },
         }
       },
@@ -92,7 +93,7 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     ] as any
 
     // 如果有標籤就加入搜尋條件，先找出符合條件，再找出替除條件，合併會讓第二個條件失效
-    if (tagsArray.length > 0 ) {
+    if (tagsArray.length > 0) {
       pipeline.splice(3, 0, {
         $match: {
           "profile.tags": { $in: tagsArray }
@@ -106,15 +107,13 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
         }
       })
     }
-
-    // 計算總筆數
-    totalCount = (await MatchListSelfSetting.aggregate(pipeline).count("userId")).length
-
-    const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
     
+    const resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
     resultUserIds = resultUsers.map((i) => i.userId._id)
-    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); // 直接比较字符串形式，代替排除自己失敗的方法
+    
+    totalCount = resultUserIds.length
 
+    resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId); // 直接比较字符串形式，代替排除自己失敗的方法
     if (resultUserIds.length === 0) {
       appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
       return

@@ -75,7 +75,7 @@ const userSchema = new Schema<IUserSchema>(
     },
     isActive: {
       type: Boolean,
-      default: false
+      default: true
     },
     blockedUsers: {
       type: [Schema.Types.ObjectId],

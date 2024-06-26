@@ -23,6 +23,7 @@ import unlockCommentRouter from "@/routes/unlockCommentRouter"
 import addPointRouter from "@/routes/addPointRouter"
 import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
+import orderRouter from "@/routes/ordersRouter"
 import http from "http"
 import { initializeSocket } from "@/services/ws"
 import chatRoomRouter from "@/routes/chatRoomRouter"
@@ -72,6 +73,7 @@ app.use("/api/v1", searchRouter)
 app.use("/api/v1", unlockCommentRouter)
 app.use("/api/v1", addPointRouter)
 app.use("/api/v1", chatRoomRouter)
+app.use("/api/v1", orderRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()
