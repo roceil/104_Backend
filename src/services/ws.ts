@@ -5,7 +5,6 @@ import { Server, type Socket } from "socket.io"
 import { type ExtendedError } from "socket.io/dist/namespace"
 import { ChatRoom } from "@/models/chatRoom"
 import { User } from "@/models/user"
-
 declare module "socket.io" {
   interface Socket {
     userInfo?: {
@@ -16,7 +15,10 @@ declare module "socket.io" {
     rooms: Set<string>
   }
 }
-
+interface IMessage {
+  title: string
+  content: string
+}
 // 確認使用者id是否存在
 async function getUserById (userId: string) {
   try {
@@ -27,14 +29,14 @@ async function getUserById (userId: string) {
     return null
   }
 }
-
 const socketErrorHandler = (error: Error, socket: Socket) => {
   console.error("Socket Error:", error)
   socket.emit("error", { message: error.message })
 }
 
-let io: Server | null = null
-
+let io: Server<HttpServer, Socket> | null = null
+let rooms: Set<string> = new Set<string>([""])
+const getRooms = (): Set<string> => rooms
 const getIo = (): Server | null => io
 const initializeSocket = (server: HttpServer) => {
   io = new Server(server, {
@@ -43,7 +45,6 @@ const initializeSocket = (server: HttpServer) => {
     }
 
   })
-
   io.use((socket: Socket, next: (err?: ExtendedError) => void) => {
     const userId = socket.handshake.headers.userid as string // 假設userId是作為查詢參數傳遞的
     if (!userId) {
@@ -106,8 +107,9 @@ const initializeSocket = (server: HttpServer) => {
     socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
     return
   }
-  io.on("connection", (socket) => {
+  io.on("connection", (socket: Socket) => {
     console.log(`${socket.userInfo?.name}已經連線`)
+    rooms = socket.rooms
     if (!io) {
       socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
       return
@@ -145,8 +147,8 @@ const initializeSocket = (server: HttpServer) => {
         // 將用戶加入房間
         void socket.join(roomId)
         socket.rooms.add(roomId) // 將房間ID加入到使用者的房間集合中
+        console.log("chatRoom", chatRoom)
         socket.emit("chatHistory", chatRoom.messages)
-        console.log(socket.rooms)
       } catch (error) {
         console.error("Failed to join room:", error)
         // 向客戶端發送一個更通用的錯誤訊息
@@ -198,7 +200,7 @@ const initializeSocket = (server: HttpServer) => {
           socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
           return
         }
-        io.to(roomId).emit("message", { message, sender: userId })
+        socket.to(roomId).emit("message", { message, sender: userId })
       } catch (error) {
         socketErrorHandler(error as Error, socket)
       }
@@ -206,4 +208,4 @@ const initializeSocket = (server: HttpServer) => {
   })
 }
 
-export { initializeSocket, getIo, socketErrorHandler }
+export { initializeSocket, getIo, getRooms, socketErrorHandler, type IMessage }

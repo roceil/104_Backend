@@ -86,7 +86,7 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     if (!beInvitation) {
       appErrorHandler(400, "邀請失敗", next)
     } else {
-      sendNotification(invitedUserId, { title: message.title, content: message.content })
+      sendNotification({ title: message.title, content: message.content })
       appSuccessHandler(201, "邀請成功", invitation, res)
     }
   }
