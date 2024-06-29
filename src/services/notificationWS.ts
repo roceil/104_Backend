@@ -1,7 +1,16 @@
-import { getIo, getRooms, socketErrorHandler, type IMessage } from "@/services/ws"
+import { getIo, getRooms, socketErrorHandler } from "@/services/ws"
+import { type INickNameDetails } from "@/models/profile"
+import { type Types } from "mongoose"
 import { type Socket } from "socket.io"
+// { title: message.title, content: message.content, nickNameDetails, userId }
+interface INotification {
+  title: string
+  content: string
+  nickNameDetails: INickNameDetails
+  userId?: Types.ObjectId
+}
 
-export const sendNotification = (message: IMessage) => {
+const sendNotification = (message: INotification) => {
   const io = getIo()
   if (!io) {
     socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
@@ -13,3 +22,4 @@ export const sendNotification = (message: IMessage) => {
     io.to(roomId).emit("notification", message)
   }
 }
+export { sendNotification, type INotification }

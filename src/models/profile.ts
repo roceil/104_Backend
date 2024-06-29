@@ -247,4 +247,4 @@ profileSchema.virtual("matchListSelfSettingByUserId", {
 
 const Profile = model<IPersonalInfo>("profile", profileSchema)
 
-export { Profile, type IPersonalInfo }
+export { Profile, type IPersonalInfo, type INickNameDetails }
