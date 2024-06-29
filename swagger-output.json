@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -7834,6 +7834,52 @@
                       }
                     }
                   }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/elite-list": {
+      "get": {
+        "tags": [
+          "Search-搜尋"
+        ],
+        "description": "取得精選列表",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得精選列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得精選列表成功"
+                },
+                "data": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
                 }
               },
               "xml": {
