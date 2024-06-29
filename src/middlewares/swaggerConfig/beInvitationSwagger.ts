@@ -220,19 +220,43 @@ export function getBeInvitationByIdSwagger (_req: Request, _res: Response, next:
               date: "2024-05-21T06:49:49.383Z",
               createdAt: "2024-05-21T06:49:49.383Z",
               updatedAt: "2024-05-21T06:49:49.383Z",
-              profileByUser: [
-                  {
-                      _id: "664c42ea58453572378249bf",
-                      userId: "664c427bb56b34d999f86c83",
+              profileByInvitedUser: {
                       nickNameDetails: {
                           nickName: "Kven",
-                          isShow: true,
-                          _id: "664c42ea58453572378249c0"
+                          isShow: true
                       },
-                      tags: []
+                      tags: ["test1", "test2"],
+                      userStatus: {
+                          commentScore: 0,
+                          commentCount: 0
+                      }
+                  },
+                  matchListSelfSettingByInvitedUser: {
+                      searchDataBase: [],
+                      personalInfo: {
+                          age: 0,
+                          gender: 0,
+                          isMarried: 0,
+                          height: 0,
+                          weight: 0,
+                          socialCircle: 0,
+                          activities: [
+                              0
+                          ],
+                          location: 0,
+                          education: 0,
+                          liveWithParents: 0,
+                          religion: 0,
+                          smoking: 0
+                      },
+                      workInfo: {
+                          occupation: 0,
+                          industry: [
+                              0,
+                          ],
+                          expectedSalary: 0
+                      }
                   }
-              ],
-              id: "664c440d58453572378249c9"
           }
         }
       }

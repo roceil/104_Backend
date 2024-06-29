@@ -146,14 +146,12 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
 }
 const getInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findById(id).populate({
-    path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
-  })
-  if (!invitation) {
+  const invitation = await getInvitationListByIdWithAggregation(id)
+
+  if (!invitation || invitation.length === 0) {
     appErrorHandler(404, "No invitation found", next)
   } else {
-    appSuccessHandler(200, "查詢成功", invitation, res)
+    appSuccessHandler(200, "查詢成功", invitation[0], res)
   }
 }
 const cancelInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -218,6 +216,77 @@ const getInvitationListAggregation = async (req: Request, res: Response, _next: 
 }
 
 export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating, getInvitationListAggregation }
+async function getInvitationListByIdWithAggregation (id: string) {
+  return await Invitation.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "profiles",
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "profileByInvitedUser"
+      }
+    },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "matchListSelfSettingByInvitedUser"
+      }
+    },
+    {
+      $unwind: {
+        path: "$profileByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $project: {
+        "profileByInvitedUser._id": 0,
+        "profileByInvitedUser.userId": 0,
+        "profileByInvitedUser.photoDetails._id": 0,
+        "profileByInvitedUser.introDetails._id": 0,
+        "profileByInvitedUser.nickNameDetails._id": 0,
+        "profileByInvitedUser.incomeDetails._id": 0,
+        "profileByInvitedUser.lineDetails._id": 0,
+        "profileByInvitedUser.jobDetails._id": 0,
+        "profileByInvitedUser.companyDetails._id": 0,
+        "profileByInvitedUser.unlockComment": 0,
+        "profileByInvitedUser.exposureSettings._id": 0,
+        "profileByInvitedUser.createdAt": 0,
+        "profileByInvitedUser.updatedAt": 0,
+        "matchListSelfSettingByInvitedUser._id": 0,
+        "matchListSelfSettingByInvitedUser.userId": 0,
+        "matchListSelfSettingByInvitedUser.createdAt": 0,
+        "matchListSelfSettingByInvitedUser.updatedAt": 0
+      }
+    }
+  ])
+}
+
 function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number): mongoose.Aggregate<IInvitations[]> {
   return Invitation.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId) } },

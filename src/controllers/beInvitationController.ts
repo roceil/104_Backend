@@ -82,17 +82,14 @@ const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunc
 }
 const getWhoInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const beInvitation = await BeInvitation.findById(id).populate({
-    path: "profileByUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
-  })
-  if (!beInvitation) {
+  const beInvitation = await getBeInvitationListByIdWithAggregation(id)
+
+  if (!beInvitation || beInvitation.length === 0) {
     appErrorHandler(404, "No invitation found", next)
   } else {
-    appSuccessHandler(200, "查詢成功", beInvitation, res)
+    appSuccessHandler(200, "查詢成功", beInvitation[0], res)
   }
 }
-
 const cancelBeInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
@@ -211,6 +208,57 @@ const getWhoInvitationListWithAggregation = async (req: Request, res: Response, 
   appSuccessHandler(200, "查詢成功", response, res)
 }
 export { getWhoInvitationList, getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation, finishBeInvitationDating, getWhoInvitationListWithAggregation }
+
+async function getBeInvitationListByIdWithAggregation (id: string) {
+  return await BeInvitation.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "userId",
+        foreignField: "userId",
+        as: "profileByUser"
+      }
+    },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        localField: "userId",
+        foreignField: "userId",
+        as: "matchListSelfSettingByUser"
+      }
+    },
+    {
+      $unwind: {
+        path: "$profileByUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $project: {
+        profileByInvitedUser: 0,
+        profileByInvitedUserId: 0,
+        "profileByUser._id": 0,
+        "profileByUser.userId": 0,
+        "profileByUser.unlockComment": 0,
+        "profileByUser.photoDetails._id": 0,
+        "profileByUser.introDetails._id": 0,
+        "profileByUser.nickNameDetails._id": 0,
+        "profileByUser.incomeDetails._id": 0,
+        "profileByUser.lineDetails._id": 0,
+        "profileByUser.jobDetails._id": 0,
+        "profileByUser.companyDetails._id": 0,
+        "profileByUser.exposureSettings._id": 0,
+        "profileByUser.createdAt": 0,
+        "profileByUser.updatedAt": 0,
+        "matchListSelfSettingByUser._id": 0,
+        "matchListSelfSettingByUser.userId": 0,
+        "matchListSelfSettingByUser.createdAt": 0,
+        "matchListSelfSettingByUser.updatedAt": 0
+      }
+    }
+  ])
+}
 
 function getBeInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number) {
   return BeInvitation.aggregate([
