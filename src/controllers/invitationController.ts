@@ -2,7 +2,7 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData } from "@/types/login"
 import { Invitation } from "@/models/invitation"
 import { BeInvitation } from "@/models/beInvitation"
-import { Profile } from "@/models/profile"
+import { Profile, type IPersonalInfo } from "@/models/profile"
 import { Collection } from "@/models/collection"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
@@ -11,6 +11,7 @@ import { createNotification } from "./notificationsController"
 import { isInBlackList } from "@/utils/blackListHandler"
 import { type IInvitations } from "@/types/invitationInterface"
 import mongoose from "mongoose"
+import { sendNotification } from "@/services/notificationWS"
 interface ParsedInvitation {
   userId: string
   invitedUserId: string
@@ -33,6 +34,10 @@ interface ParsedInvitation {
 // import { eraseProperty } from "@/utils/responseDataHandler"
 const postInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
+  if (!userId) {
+    appErrorHandler(400, "缺少使用者Id", next)
+    return
+  }
   const { invitedUserId, message } = req.body
   if (!invitedUserId) {
     appErrorHandler(400, "缺少邀請使用者Id", next)
@@ -73,7 +78,7 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
       return
     }
   }
-  const invitation = await Invitation.create({ userId, invitedUserId, message })
+  const [invitation, profileWithUser] = await Promise.all([Invitation.create({ userId, invitedUserId, message }), Profile.findOne({ userId }).select("nickNameDetails")])
   const isNotificationCreated = await createNotification(userId, invitedUserId, message, 1)
   if (!invitation || !isNotificationCreated) {
     appErrorHandler(400, "邀請失敗", next)
@@ -85,6 +90,10 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     if (!beInvitation) {
       appErrorHandler(400, "邀請失敗", next)
     } else {
+      const { nickNameDetails } = profileWithUser as IPersonalInfo
+      const { userId } = req.user as LoginResData
+      sendNotification({ title: message.title, content: message.content, nickNameDetails, userId })
+      console.log({ title: message.title, content: message.content, nickNameDetails, userId })
       appSuccessHandler(201, "邀請成功", invitation, res)
     }
   }
@@ -137,36 +146,40 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
 }
 const getInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findById(id).populate({
-    path: "profileByInvitedUser",
-    select: "photoDetails introDetails nickNameDetails incomeDetails lineDetails jobDetails companyDetails tags exposureSettings userStatus"
-  })
-  if (!invitation) {
+  const invitation = await getInvitationListByIdWithAggregation(id)
+
+  if (!invitation || invitation.length === 0) {
     appErrorHandler(404, "No invitation found", next)
   } else {
-    appSuccessHandler(200, "查詢成功", invitation, res)
+    appSuccessHandler(200, "查詢成功", invitation[0], res)
   }
 }
-
 const cancelInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
-  const invitation = await Invitation.findByIdAndUpdate(id, { status: "cancel" }, { new: true })
-
+  const [invitation, profileWithUser] = await Promise.all([Invitation.findByIdAndUpdate(id, { status: "cancel" }, { new: true }), Profile.findOne({ userId }).select("nickNameDetails")])
   const beInvitation = await BeInvitation.findOneAndUpdate({ userId, invitationId: id }, { status: "cancel" }, { new: true })
   if (!invitation || !beInvitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
+    const { nickNameDetails } = profileWithUser as IPersonalInfo
+    const { userId } = req.user as LoginResData
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
     appSuccessHandler(200, "取消邀請成功", invitation, res)
   }
 }
 const deleteInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await Invitation.findByIdAndDelete(id)
+  const { userId } = req.user as LoginResData
+  // const invitation = await Invitation.findByIdAndDelete(id)
+  const [invitation, profileWithUser] = await Promise.all([Invitation.findByIdAndDelete(id), Profile.findOne({ userId }).select("nickNameDetails")])
   const beInvitation = await BeInvitation.findOneAndUpdate({ invitationId: id }, { status: "cancel" }, { new: true })
   if (!invitation || !beInvitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
+    const { nickNameDetails } = profileWithUser as IPersonalInfo
+    const { userId } = req.user as LoginResData
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
     appSuccessHandler(200, "刪除成功", invitation, res)
   }
 }
@@ -203,6 +216,77 @@ const getInvitationListAggregation = async (req: Request, res: Response, _next: 
 }
 
 export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating, getInvitationListAggregation }
+async function getInvitationListByIdWithAggregation (id: string) {
+  return await Invitation.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "profiles",
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "profileByInvitedUser"
+      }
+    },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        let: { invitedUserId: { $toObjectId: "$invitedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$userId", "$$invitedUserId"]
+              }
+            }
+          }
+        ],
+        as: "matchListSelfSettingByInvitedUser"
+      }
+    },
+    {
+      $unwind: {
+        path: "$profileByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $project: {
+        "profileByInvitedUser._id": 0,
+        "profileByInvitedUser.userId": 0,
+        "profileByInvitedUser.photoDetails._id": 0,
+        "profileByInvitedUser.introDetails._id": 0,
+        "profileByInvitedUser.nickNameDetails._id": 0,
+        "profileByInvitedUser.incomeDetails._id": 0,
+        "profileByInvitedUser.lineDetails._id": 0,
+        "profileByInvitedUser.jobDetails._id": 0,
+        "profileByInvitedUser.companyDetails._id": 0,
+        "profileByInvitedUser.unlockComment": 0,
+        "profileByInvitedUser.exposureSettings._id": 0,
+        "profileByInvitedUser.createdAt": 0,
+        "profileByInvitedUser.updatedAt": 0,
+        "matchListSelfSettingByInvitedUser._id": 0,
+        "matchListSelfSettingByInvitedUser.userId": 0,
+        "matchListSelfSettingByInvitedUser.createdAt": 0,
+        "matchListSelfSettingByInvitedUser.updatedAt": 0
+      }
+    }
+  ])
+}
+
 function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number): mongoose.Aggregate<IInvitations[]> {
   return Invitation.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId) } },

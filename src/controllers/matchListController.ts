@@ -101,6 +101,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     const perPage = 6
 
     // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
+    // 可用陣列 sort 來排序 profile.userStatus.commentScore
     const resultUsers = await MatchListSelfSetting.find(
       queryCondition
     ).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
@@ -187,6 +188,7 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
           isLocked,
           isUnlock,
           hasComment,
+          beCommentCount,
           beInvitationStatus,
           collectionTableId,
           invitationTableId,
