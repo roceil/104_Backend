@@ -2,6 +2,12 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type LoginResData } from "@/types/login"
 import { Comment } from "@/models/comment"
 import { Profile } from "@/models/profile"
+import { User } from "@/models/user"
+import { BlackList } from "@/models/blackList"
+import { Invitation } from "@/models/invitation"
+import { Collection } from "@/models/collection"
+import { BeInvitation } from "@/models/beInvitation"
+import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
@@ -181,8 +187,98 @@ const getCommentILiftList = async (req: Request, res: Response, _next: NextFunct
     perPage: parsedPageSize,
     totalCount
   }
+
+  //*  組合卡片用戶的資料
+  const commentedUserIds = comment.map(comment => comment.commentedUserId)
+  const resultUsersData = await Promise.all(commentedUserIds.map(async (resultId) => {
+    // 取得每個用戶的資料
+    const resultUserInfo = await User.findById(resultId)
+
+    // 取得每個用戶的封鎖狀態
+    const blackList = await BlackList.findOne({ userId })
+    const lockedUserIds = blackList ? blackList.lockedUserId.map(id => id.toString()) : []
+    /* eslint-disable */
+    const isLocked = lockedUserIds.includes(resultId.toString() as unknown as string) ?? false
+
+    // 取得卡片用戶的邀約狀態
+    const invitations = await Invitation.find({
+      userId, // 邀請者
+      invitedUserId: resultId // 被邀請者
+    })
+    const invitationStatus = invitations.length > 0 ? invitations[0].status : "not invited"
+    const invitationTableId = invitations[0]?._id
+
+    // 取得登入者被邀約的狀態 (invitations / beInvitations 都是用invitedUserId存被邀請者)
+    const beInvitations = await BeInvitation.find({
+      userId: resultId,
+      invitedUserId: userId
+    })
+    const beInvitationStatus = beInvitations.length > 0 ? beInvitations[0].status : "not invited"
+    const beInvitationTableId = beInvitations[0]?._id
+
+    // 取得每個用戶的個人條件和工作條件
+    const matchListSelfSetting = await MatchListSelfSetting.findOne({
+      userId: resultId
+    })
+
+    // 取得每個用戶的收藏狀態
+    const collection = await Collection.findOne({ userId, collectedUserId: resultId }, { isCollected: 1 })
+    const isCollected = Boolean(collection)
+    const collectionTableId = collection?._id
+
+    // 取得每個用戶的評價狀態 和 被評價數量
+    const hasComment = await Comment.findOne({ userId, commentedUserId: resultId }).countDocuments() > 0
+    const beCommentCount = await Comment.find({ commentedUserId: resultId }).countDocuments() // userStatus.commentCount
+    const commentTableId = await Comment.findOne({ userId, commentedUserId: resultId }).select("id").lean().then(doc => doc?._id)
+
+    // 計算評分
+    const comments = await Comment.find({ commentedUserId: resultId })
+    const averageScore = comments.length > 0 ? (comments.reduce((acc, comment) => acc + comment.score, 0) / comments.length).toFixed(1) : 0
+    await Profile.findOneAndUpdate({ userId: resultId }, {
+      $set: {
+        "userStatus.commentScore": averageScore,
+        "userStatus.commentCount": beCommentCount
+      }
+    })
+
+    // 取得每個用戶的 解鎖狀態 和 評分
+    const profile = await Profile.findOne({ userId })
+    const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
+    // const unlockCommentIds = profile?.unlockComment ?? []
+
+    // 取得每個用戶的評分 和 標籤
+    const resultIdProfile = await Profile.findOne({ userId: resultId })
+    const userStatus = resultIdProfile?.userStatus ?? {}
+    const photoDetails = resultIdProfile?.photoDetails ?? {}
+    const tags = resultIdProfile?.tags ?? []
+
+    return {
+      userInfo: {
+        ...resultUserInfo?.toObject()
+      },
+      matchListSelfSetting,
+      profile: {
+        userStatus,
+        photoDetails,
+        tags
+      },
+      invitationStatus,
+      isCollected,
+      isLocked,
+      isUnlock,
+      hasComment,
+      beCommentCount,
+      beInvitationStatus,
+      collectionTableId,
+      invitationTableId,
+      beInvitationTableId,
+      commentTableId
+    }
+  }))
+  //*
+
   const response = {
-    comment, pagination
+    resultList: resultUsersData, pagination
   }
   appSuccessHandler(200, "查詢成功", response, res)
 }
