@@ -34,7 +34,6 @@ const getInviteNotificationsByUserId = async (req: Request, res: Response, next:
     appErrorHandler(404, "查無通知", next)
     return
   }
-
   appSuccessHandler(200, "查詢成功", notifications, res)
 }
 
