@@ -10,7 +10,7 @@ import type mongoose from "mongoose"
 
 declare module "socket.io" {
   interface Socket {
-    userInfo?: {
+    userInfo: {
       userId: string
       name: string
       gender?: string
@@ -27,6 +27,9 @@ interface IUser {
   }
   username?: string
 }
+
+// 用來追蹤所有在線用戶的 Socket ID
+const onlineUsers = new Map<string, string>()
 
 // 確認使用者id是否存在
 async function getUserById (userId: string) {
@@ -127,6 +130,7 @@ const initializeSocket = (server: HttpServer) => {
     return
   }
   io.on("connection", (socket: Socket) => {
+    onlineUsers.set(socket.userInfo?.userId, socket.id)
     console.log(`${socket.userInfo?.name}已經連線`)
     rooms = socket.rooms
     if (!io) {
@@ -201,6 +205,7 @@ const initializeSocket = (server: HttpServer) => {
       )
 
       socket.rooms.clear()
+      onlineUsers.delete(socket.userInfo?.userId)
     })
 
     // 加入房間
@@ -255,10 +260,10 @@ const initializeSocket = (server: HttpServer) => {
           return
         }
         // 驗證使用者是否在聊天室中
-        if (!socket.rooms.has(roomId)) {
-          socket.emit("error", "用戶未加入目標聊天室")
-          return
-        }
+        // if (!socket.rooms.has(roomId)) {
+        //   socket.emit("error", "用戶未加入目標聊天室")
+        //   return
+        // }
 
         await ChatRoom.findByIdAndUpdate(roomId, {
           $push: { messages: { senderId: userId, message } }
@@ -267,8 +272,17 @@ const initializeSocket = (server: HttpServer) => {
           socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
           return
         }
-        socket.to(roomId).emit("message", { message, sender: userId })
-        socket.emit("chatRoomList", { message, senderId: userId, createdAt: new Date(), isRead: false, roomId })
+        const receiversId = (chatRoom.members as IUser[])
+          .filter(member => member._id.toString() !== socket.userInfo.userId) // 確保過濾條件對照的是字符串
+
+        console.log(receiversId)
+        const receiverSocketId = onlineUsers.get(receiversId[0]._id.toString())
+        socket.to(roomId).emit("message", { message, senderId: userId, createdAt: Date.now, isRead: false, roomId })
+        if (receiverSocketId) {
+          socket.to(receiverSocketId).emit("chatRoomList", { message, senderId: userId, createdAt: new Date(), isRead: false, roomId })
+        } else {
+          socket.emit("error", "找不到接收者的ID")
+        }
       } catch (error) {
         socketErrorHandler(error as Error, socket)
       }
