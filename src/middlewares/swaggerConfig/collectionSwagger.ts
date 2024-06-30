@@ -44,7 +44,29 @@ export function getCollectionSwagger (_req: Request, _res: Response, next: NextF
                   email: "3ADF213@hotmail.com",
                   gender: null,
                   birthday: null,
-                }
+                },
+                  photoDetails: {
+                    photo: "",
+                    isShow: false
+                  },
+                  introDetails: {
+                    intro: "",
+                  isShow: false
+                 },
+                 nickNameDetails: {
+                   "nickName": "Jack",
+                   "isShow": true
+                 },
+                 lineDetails: {
+                   "lineId": "",
+                   "isShow": false
+                 },
+                 tags: [],
+                 userStatus: {
+                   rating: 0,
+                   commentScore: 0,
+                   commentCount: 0
+                 }
               },
               invitation: {
                 _id: "66752531sdf32aad453sdf",
