@@ -24,6 +24,7 @@ interface IChatRoom extends Document {
 const chatRoomSchema = new Schema<IChatRoom>({
   members: {
     type: [Schema.Types.ObjectId],
+    ref: "user",
     required: true,
     default: []
   },
@@ -40,4 +41,5 @@ chatRoomSchema.pre("save", function (next) {
   next()
 })
 
-export const ChatRoom = mongoose.model<IChatRoom>("ChatRoom", chatRoomSchema)
+const ChatRoom = mongoose.model<IChatRoom>("ChatRoom", chatRoomSchema)
+export { ChatRoom, type IMessage }
