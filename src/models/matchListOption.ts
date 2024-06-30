@@ -126,7 +126,8 @@ const initOptions = async () => {
       { value: 0, label: "請選擇" },
       { value: 1, label: "與父母同住" },
       { value: 2, label: "獨立居住" },
-      { value: 3, label: "其他" }
+      { value: 3, label: "父母雙亡" },
+      { value: 4, label: "其他" }
     ],
     religion: [
       { value: 0, label: "請選擇" },
