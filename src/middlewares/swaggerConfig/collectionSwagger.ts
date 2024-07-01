@@ -100,7 +100,7 @@ export function getCollectionSwagger (_req: Request, _res: Response, next: NextF
 
 export function addCollectionSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
-   * #swagger.tags = ["收藏"]
+   * #swagger.tags = ["collection-收藏"]
    * #swagger.description = "新增收藏"
    * #swagger.security = [{
       "apiKeyAuth":[]
@@ -133,7 +133,7 @@ export function addCollectionSwagger (_req: Request, _res: Response, next: NextF
 }
 export function deleteCollectionByIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
-   * #swagger.tags = ["收藏"]
+   * #swagger.tags = ["collection-收藏"]
    * #swagger.description = "刪除收藏"
    * #swagger.security = [{
       "apiKeyAuth":[]
@@ -166,7 +166,7 @@ export function deleteCollectionByIdSwagger (_req: Request, _res: Response, next
 
 export function getCollectionsByUserIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
 /**
- * #swagger.tags = ["收藏"]
+ * #swagger.tags = ["collection-收藏"]
  * #swagger.description = "取得user收藏"
  * #swagger.security = [{
     "apiKeyAuth": []
