@@ -3,26 +3,47 @@ import { type Server as HttpServer } from "http"
 import { Server, type Socket } from "socket.io"
 // import jwt from "jsonwebtoken"
 import { type ExtendedError } from "socket.io/dist/namespace"
-import { ChatRoom } from "@/models/chatRoom"
-import { User } from "@/models/user"
+import { ChatRoom, type IMessage } from "@/models/chatRoom"
+import { type IChatRecord, User } from "@/models/user"
+import { Profile } from "@/models/profile"
+import type mongoose from "mongoose"
+
 declare module "socket.io" {
   interface Socket {
-    userInfo?: {
+    userInfo: {
       userId: string
       name: string
       gender?: string
+      chatRecords: IChatRecord[]
     }
     rooms: Set<string>
   }
 }
-interface IMessage {
-  title: string
-  content: string
+
+interface IUser {
+  _id: mongoose.Types.ObjectId
+  personalInfo?: {
+    username?: string
+  }
+  username?: string
 }
+
+// 用來追蹤所有在線用戶的 Socket ID
+const onlineUsers = new Map<string, string>()
+
 // 確認使用者id是否存在
 async function getUserById (userId: string) {
   try {
-    const user = await User.findById(userId).select("personalInfo").exec()
+    const user = await User.findById(userId)
+      .select("personalInfo chatRecord")
+      .populate({
+        path: "chatRecord.roomId",
+        model: "ChatRoom",
+        populate: {
+          path: "messages",
+          model: "Message"
+        }
+      }).exec()
     return user
   } catch (err) {
     console.error("Error fetching user:", err)
@@ -58,7 +79,8 @@ const initializeSocket = (server: HttpServer) => {
             socket.userInfo = {
               userId: user._id.toString(),
               name: user.personalInfo.username,
-              gender: user.personalInfo.gender
+              gender: user.personalInfo.gender,
+              chatRecords: user.chatRecord
             }
             next()
           } else {
@@ -108,6 +130,7 @@ const initializeSocket = (server: HttpServer) => {
     return
   }
   io.on("connection", (socket: Socket) => {
+    onlineUsers.set(socket.userInfo?.userId, socket.id)
     console.log(`${socket.userInfo?.name}已經連線`)
     rooms = socket.rooms
     if (!io) {
@@ -121,19 +144,68 @@ const initializeSocket = (server: HttpServer) => {
       `有新的小夥伴加入啦!!!讓我們熱烈歡迎${socket.userInfo?.name} 現在線上有 ${numberOfClients} 人`
     )
 
+    if (socket.userInfo?.chatRecords) {
+      // 創建一個Promise數組來保存所有的非同步操作
+      const chatHistoriesPromises = socket.userInfo?.chatRecords.map(async (record: IChatRecord) => { // 明確指定類型
+        const roomId = record.roomId._id
+        const chatRoom = await ChatRoom.findById(roomId)
+          .populate({
+            path: "members",
+            model: "user",
+            select: "personalInfo username"
+          })
+        if (!chatRoom) {
+          return null // 如果chatRoom為null，返回null
+        }
+
+        const unreadCount = chatRoom.messages.reduce((acc: number, message: IMessage) => !message.isRead ? acc + 1 : acc, 0) // 明確指定累加器類型
+
+        const members = await Promise.all(
+          (chatRoom.members as IUser[])
+            .filter(member => member._id.toString() !== socket.userInfo?.userId)
+            .map(async member => {
+              const profile = await Profile.findOne({ userId: member._id, "photoDetails.isShow": true }).select("photoDetails.photo")
+
+              return {
+                username: member.personalInfo?.username ?? "", // 使用 ?? 运算符设置默认值
+                photo: profile?.photoDetails.photo ?? "", // 使用 ?? 运算符设置默认值
+                id: member._id.toString()
+              }
+            })
+        )
+        return {
+          roomId,
+          messages: chatRoom.messages,
+          unreadCount,
+          members
+        }
+      })
+
+      // 使用Promise.all等待所有Promise解決
+      Promise.all(chatHistoriesPromises).then((chatHistories) => {
+        // 一次性發送所有聊天歷史的基本資料
+        socket.emit("chatHistory", chatHistories.filter(history => history !== null))
+      }).catch((error) => {
+        // 處理可能的錯誤
+        console.error("Failed to fetch chat histories:", error)
+        socket.emit("error", { message: "Failed to fetch chat histories" })
+      })
+    }
+
     // 斷開連接
     socket.on("disconnect", () => {
       if (!io) {
         socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
         return
       }
-      const numberOfClients = io.engine.clientsCount
+
       io.emit(
         "userConnectNotify",
         `有人偷偷落跑啦~~現在線上有 ${numberOfClients} 人`
       )
 
       socket.rooms.clear()
+      onlineUsers.delete(socket.userInfo?.userId)
     })
 
     // 加入房間
@@ -148,7 +220,7 @@ const initializeSocket = (server: HttpServer) => {
         void socket.join(roomId)
         socket.rooms.add(roomId) // 將房間ID加入到使用者的房間集合中
         console.log("chatRoom", chatRoom)
-        socket.emit("chatHistory", chatRoom.messages)
+        // socket.emit("chatHistory", chatRoom.messages)
       } catch (error) {
         console.error("Failed to join room:", error)
         // 向客戶端發送一個更通用的錯誤訊息
@@ -188,10 +260,10 @@ const initializeSocket = (server: HttpServer) => {
           return
         }
         // 驗證使用者是否在聊天室中
-        if (!socket.rooms.has(roomId)) {
-          socket.emit("error", "用戶未加入目標聊天室")
-          return
-        }
+        // if (!socket.rooms.has(roomId)) {
+        //   socket.emit("error", "用戶未加入目標聊天室")
+        //   return
+        // }
 
         await ChatRoom.findByIdAndUpdate(roomId, {
           $push: { messages: { senderId: userId, message } }
@@ -200,7 +272,17 @@ const initializeSocket = (server: HttpServer) => {
           socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
           return
         }
-        socket.to(roomId).emit("message", { message, sender: userId })
+        const receiversId = (chatRoom.members as IUser[])
+          .filter(member => member._id.toString() !== socket.userInfo.userId) // 確保過濾條件對照的是字符串
+
+        console.log(receiversId)
+        const receiverSocketId = onlineUsers.get(receiversId[0]._id.toString())
+        socket.to(roomId).emit("message", { message, senderId: userId, createdAt: Date.now, isRead: false, roomId })
+        if (receiverSocketId) {
+          socket.to(receiverSocketId).emit("chatRoomList", { message, senderId: userId, createdAt: new Date(), isRead: false, roomId })
+        } else {
+          socket.emit("error", "找不到接收者的ID")
+        }
       } catch (error) {
         socketErrorHandler(error as Error, socket)
       }

@@ -108,9 +108,8 @@ userSchema.virtual("scoreByProfile", {
   localField: "_id",
   foreignField: "userId",
   justOne: true
-
 })
 
 const User = model<IUserSchema>("user", userSchema)
 
-export { User, type IUserSchema, type IPersonalInfo }
+export { User, type IUserSchema, type IPersonalInfo, type IChatRecord }

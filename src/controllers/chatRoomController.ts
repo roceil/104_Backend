@@ -56,4 +56,22 @@ const getChatRoomHistory = async (req: Request, res: Response, next: NextFunctio
   appSuccessHandler(200, "取得聊天記錄成功", chatRoom.messages, res)
 }
 
-export { createChatRoom, getChatRoomHistory }
+const markAllMessagesAsRead = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { roomId } = req.params
+  const chatRoom = await ChatRoom.findById(roomId)
+
+  if (!chatRoom) {
+    appErrorHandler(400, "房間不存在", next)
+    return
+  }
+
+  chatRoom.messages.forEach((message) => {
+    message.isRead = true
+  })
+
+  await chatRoom.save()
+
+  appSuccessHandler(200, "所有消息已標記為已讀", chatRoom, res)
+}
+
+export { createChatRoom, getChatRoomHistory, markAllMessagesAsRead }
