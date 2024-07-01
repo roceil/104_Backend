@@ -3441,6 +3441,96 @@
                           "updatedAt": {
                             "type": "string",
                             "example": "2024-06-30T08:35:48.960Z"
+                          },
+                          "matchListSettings": {
+                            "type": "object",
+                            "properties": {
+                              "searchDataBase": {
+                                "type": "array",
+                                "example": [],
+                                "items": {}
+                              },
+                              "personalInfo": {
+                                "type": "object",
+                                "properties": {
+                                  "age": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "gender": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "isMarried": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "weight": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "socialCircle": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "activities": {
+                                    "type": "array",
+                                    "example": [
+                                      0
+                                    ],
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "location": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "education": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "liveWithParents": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "religion": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "smoking": {
+                                    "type": "number",
+                                    "example": 0
+                                  }
+                                }
+                              },
+                              "workInfo": {
+                                "type": "object",
+                                "properties": {
+                                  "occupation": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "industry": {
+                                    "type": "array",
+                                    "example": [
+                                      0
+                                    ],
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "expectedSalar": {
+                                    "type": "number",
+                                    "example": 0
+                                  }
+                                }
+                              }
+                            }
                           }
                         }
                       }

@@ -73,6 +73,20 @@ async function getBlackProfileWithAggregation (parsedPageSize: number, parsedPag
           { $skip: (parsedPageNumber - 1) * parsedPageSize },
           { $limit: parsedPageSize },
           {
+            $lookup: {
+              from: "matchlistselfsettings",
+              localField: "userId",
+              foreignField: "userId",
+              as: "matchListSettings"
+            }
+          },
+          {
+            $unwind: {
+              path: "$matchListSettings",
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
             $project: {
               "photoDetails._id": 0,
               "introDetails._id": 0,
@@ -80,7 +94,11 @@ async function getBlackProfileWithAggregation (parsedPageSize: number, parsedPag
               "lineDetails._id": 0,
               unlockComment: 0,
               exposureSettings: 0,
-              "userStatus._id": 0
+              "userStatus._id": 0,
+              "matchListSettings._id": 0,
+              "matchListSettings.userId": 0,
+              "matchListSettings.updatedAt": 0,
+              "matchListSettings.createdAt": 0
             }
           }
         ],
@@ -94,9 +112,6 @@ async function getBlackProfileWithAggregation (parsedPageSize: number, parsedPag
         ]
       }
     },
-    { $skip: (parsedPageNumber - 1) * parsedPageSize },
-    // 限制返回的文档数量
-    { $limit: parsedPageSize },
     {
       $unwind: {
         path: "$pagination",
