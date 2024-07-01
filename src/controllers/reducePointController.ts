@@ -23,11 +23,21 @@ const reducePoint = async (req: Request, res: Response, next: NextFunction): Pro
     appErrorHandler(400, "點數格式錯誤", next)
     return
   }
-  const userPoint = await User.findByIdAndUpdate(userId, { $inc: { points: -Math.abs(points) } }, { new: true }).select("points -_id")
-  if (!userPoint) {
+
+  const userPointInfo = await User.findById(userId).select("points -_id")
+
+  if (userPointInfo && userPointInfo.points < 50) {
+    appErrorHandler(400, "點數不足", next)
+    return
+  }
+
+  const updatedUserPoint = await User.findByIdAndUpdate(userId, { $inc: { points: -Math.abs(points) } }, { new: true }).select("points -_id")
+
+  if (!updatedUserPoint) {
     appErrorHandler(404, "無法取得扣除後的點數，請稍後在試", next)
     return
   }
-  appSuccessHandler(200, "扣除點數成功", userPoint, res)
+
+  appSuccessHandler(200, "扣除點數成功", updatedUserPoint, res)
 }
 export { reducePoint }
