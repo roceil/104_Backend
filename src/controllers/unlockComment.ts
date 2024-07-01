@@ -8,6 +8,13 @@ import appSuccessHandler from "@/utils/appSuccessHandler"
 const unlockComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
+
+  const isCorrectUserId = await User.findById(id)
+  if (!isCorrectUserId) {
+    appErrorHandler(404, "解鎖用戶ID不存在", next)
+    return
+  }
+
   const unlockComment = await Profile.findOne({ userId }).select("unlockComment")
   const isUnlock = unlockComment?.unlockComment.includes(id)
   if (isUnlock) {

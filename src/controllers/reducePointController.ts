@@ -26,7 +26,7 @@ const reducePoint = async (req: Request, res: Response, next: NextFunction): Pro
 
   const userPointInfo = await User.findById(userId).select("points -_id")
 
-  if (userPointInfo && userPointInfo.points < 50) {
+  if (userPointInfo && userPointInfo.points < points) {
     appErrorHandler(400, "點數不足", next)
     return
   }
