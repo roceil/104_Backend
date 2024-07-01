@@ -39,25 +39,50 @@ export function getBlackListSwagger (_req: Request, _res: Response, next: NextFu
    * #swagger.security = [{
       "apiKeyAuth":[]
     }]
+
    * #swagger.responses[200] = {
       description: "黑名單列表",
       schema: {
          status: true,
          message: "查詢成功",
-         data: [
+         data: {
+          blackListProfile: [
             {
-          _id: "66542da5edb728aae4b1f220",
-          userId: "66542d94edb728aae4b1f218",
-          nickNameDetails: {
-          nickName: "JACK",
-          isShow: false,
-          _id: "66542f38edb728aae4b1f234"
-            },
-          tags: [],
-          createdAt: "2024-05-27T06:52:21.549Z",
-          updatedAt: "2024-05-27T06:59:04.972Z"
-    }
-  ]
+              _id: "667f67ecc8242fa00840b778",
+              userId: "667f67ecc8242fa00840b76e",
+              photoDetails: {
+                photo: "https://firebasestorage.googleapis.com/v0/b/social-e030c.appspot.com/o/default_img%2FLove%20%26%20Dating%20(9).png?alt=media&token=630b4f66-2304-4084-aeed-f9ba177794d2",
+                isShow: false
+              },
+              introDetails: {
+                intro: "",
+                isShow: false
+              },
+              nickNameDetails: {
+                nickName: "依娃叁",
+                isShow: false
+              },
+              lineDetails: {
+                lineId: "",
+                isShow: false
+              },
+              tags: [],
+              userStatus: {
+                rating: 0,
+                isMatch: false,
+                commentScore: 0,
+                commentCount: 0
+              },
+              createdAt: "2024-06-29T01:48:28.359Z",
+              updatedAt: "2024-06-30T08:35:48.960Z"
+            }
+          ],
+          pagination: {
+            totalCount: 3,
+            page: 1,
+            perPage: 6
+          }
+         }
         }
       }
     */
