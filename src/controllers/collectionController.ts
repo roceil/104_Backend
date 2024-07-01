@@ -196,6 +196,14 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     },
     {
       $lookup: {
+        from: "profiles",
+        localField: "collectedUserId",
+        foreignField: "userId",
+        as: "personalDataInfo"
+      }
+    },
+    {
+      $lookup: {
         from: "invitations",
         // let暫存collectedUserId並轉呈sting，因為collectedUserId是string
         let: { collectedUserId: { $toString: "$collectedUserId" } },
@@ -215,31 +223,22 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
       }
     },
     {
-      $project: {
-        "collectedUsers.personalInfo.password": 0,
-        "collectedUsers._id": 0,
-        "collectedUsers.personalInfo._id": 0,
-        "collectedUsers.isSubscribe": 0,
-        "collectedUsers.points": 0,
-        "collectedUsers.resetPasswordToken": 0,
-        "collectedUsers.isActive": 0,
-        "collectedUsers.blockedUsers": 0,
-        "collectedUsers.notifications": 0,
-        "collectedUsers.createdAt": 0,
-        "collectedUsers.updatedAt": 0,
-        "invitations.userId": 0,
-        "invitations.invitedUserId": 0,
-        "invitations.message": 0,
-        "invitations.date": 0,
-        "invitations.createdAt": 0,
-        "invitations.updatedAt": 0
+      $unwind: {
+        path: "$personalDataInfo",
+        preserveNullAndEmptyArrays: true
       }
     },
-    // 展開collectedUsers
     {
       $unwind: {
         path: "$collectedUsers",
         preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        collectedUsers: {
+          $mergeObjects: ["$collectedUsers", "$personalDataInfo"]
+        }
       }
     },
     // 展開invitation
@@ -253,6 +252,37 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     {
       $addFields: {
         invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+      }
+    },
+    {
+      $project: {
+        "collectedUsers.personalInfo.password": 0,
+        "collectedUsers._id": 0,
+        "collectedUsers.personalInfo._id": 0,
+        "collectedUsers.isSubscribe": 0,
+        "collectedUsers.points": 0,
+        "collectedUsers.resetPasswordToken": 0,
+        "collectedUsers.isActive": 0,
+        "collectedUsers.blockedUsers": 0,
+        "collectedUsers.notifications": 0,
+        "collectedUsers.createdAt": 0,
+        "collectedUsers.updatedAt": 0,
+        "collectedUsers.userId": 0,
+        "collectedUsers.photoDetails._id": 0,
+        "collectedUsers.introDetails._id": 0,
+        "collectedUsers.nickNameDetails._id": 0,
+        "collectedUsers.lineDetails._id": 0,
+        "collectedUsers.unlockComment": 0,
+        "collectedUsers.exposureSettings": 0,
+        "collectedUsers.userStatus._id": 0,
+        "collectedUsers.userStatus.isMatch": 0,
+        "invitations.userId": 0,
+        "invitations.invitedUserId": 0,
+        "invitations.message": 0,
+        "invitations.date": 0,
+        "invitations.createdAt": 0,
+        "invitations.updatedAt": 0,
+        personalDataInfo: 0
       }
     }
   ])
