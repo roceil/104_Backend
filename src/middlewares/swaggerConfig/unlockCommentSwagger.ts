@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express"
 export function unlockCommentSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
-   * #swagger.tags = ["解鎖評價"]
+   * #swagger.tags = ["unLockComment-解鎖評價"]
    * #swagger.description = "解鎖評價"
    * #swagger.security = [{
       "apiKeyAuth":[]
