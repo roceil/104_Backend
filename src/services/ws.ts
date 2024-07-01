@@ -129,10 +129,13 @@ const initializeSocket = (server: HttpServer) => {
     socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
     return
   }
-  io.on("connection", (socket: Socket) => {
+  io.on("connection", async (socket: Socket) => {
     onlineUsers.set(socket.userInfo?.userId, socket.id)
     console.log(`${socket.userInfo?.name}已經連線`)
     rooms = socket.rooms
+    // 進入房間
+    const userIdForRoom = socket.userInfo?.userId
+    await socket.join(userIdForRoom)
     if (!io) {
       socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
       return

@@ -69,21 +69,35 @@ export function getCollectionSwagger (_req: Request, _res: Response, next: NextF
                  }
               },
               invitation: {
-                _id: "66752531sdf32aad453sdf",
-                userId: "665fe01431e8f0630d407037",
-                invitedUserId: "66571be82f1545bc8d671be4",
-                message: {
-                  title: "hello",
-                  content: "hello",
-                  createdAt: "2024-06-19T09:38:39.918Z",
-                  updatedAt: "2024-06-19T09:38:39.918Z"
-                },
                 isFinishDating: false,
                 status: "pending",
-                date: "2024-06-19T09:38:39.918Z",
-                createdAt: "2024-06-19T09:38:39.918Z",
-                updatedAt: "2024-06-19T09:38:39.918Z"
-              }
+              },
+              matchListSelfSettingByUser: {
+               searchDataBase: [],
+               personalInfo: {
+                 age: 0,
+                 gender: 0,
+                 isMarried: 0,
+                  height: 0,
+                 weight: 0,
+                 socialCircle: 0,
+                 activities: [
+                   0
+                 ],
+                 location: 0,
+                 education: 0,
+                 liveWithParents: 0,
+                 religion: 0,
+                 smoking: 0
+               },
+               workInfo: {
+                 occupation: 0,
+                 industry: [
+                   0
+                 ],
+                 expectedSalary: 0
+                }
+             }
             }
           ],
           pagination: {
@@ -165,77 +179,113 @@ export function deleteCollectionByIdSwagger (_req: Request, _res: Response, next
 }
 
 export function getCollectionsByUserIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
-/**
- * #swagger.tags = ["collection-收藏"]
- * #swagger.description = "取得user收藏"
- * #swagger.security = [{
-    "apiKeyAuth": []
-  }]
- * #swagger.parameters['page'] = {
-  in: 'query',
-  description: '頁數 不可為0',
-  required: false,
-  schema: { type: 'number' }
-  }
- * #swagger.parameters['pageSize'] = {
-  in: 'query',
-  description: '每頁幾筆',
-  required: false,
-  schema: { type: 'number' }
-  }
- * #swagger.parameters['sort'] = {
-  in: 'query',
-  description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
-  required: false,
-  schema: { type: 'string' }
-  }
- * #swagger.responses[200] = {
-  description: '查詢成功',
-  schema: {
-    status: true,
-    message: "查詢成功",
-    data: {
-      collections: [
-        {
-          _id: "6672a71fcf7d8ade64acdf58",
-          userId: "665fe01431e8f0630d407037",
-          collectedUserId: "66571be82f1545bc8d671be4",
-          createdAt: "2024-06-19T09:38:39.918Z",
-          updatedAt: "2024-06-19T09:38:39.918Z",
-          collectedUsers: {
-            personalInfo: {
-              username: "Node2024",
-              email: "sdfasdf@hotmail.com",
-              gender: null,
-              birthday: null,
-            }
-          },
-          invitation: {
-            _id: "66752531sdf32aad453sdf",
-            userId: "665fe01431e8f0630d407037",
-            invitedUserId: "66571be82f1545bc8d671be4",
-            message: {
-              title: "hello",
-              content: "hello",
+  /**
+   * #swagger.tags = ["collection-收藏"]
+   * #swagger.description = "取得收藏"
+   * #swagger.security = [{
+      "apiKeyAuth":[]
+    }]
+   * #swagger.parameters['page'] = {
+      in: 'query',
+      description: '頁數 不可為0',
+      required: false,
+      schema: { type: 'number' }
+    }
+   * #swagger.parameters['pageSize'] = {
+      in: 'query',
+      description: '每頁幾筆',
+      required: false,
+      schema: { type: 'number' }
+    }
+   * #swagger.parameters['sort'] = {
+      in: 'query',
+      description: '依時間排序，desc: 由新到舊，asc: 由舊到新',
+      required: false,
+      schema: { type: 'string' }
+    }
+   * #swagger.responses[200] = {
+      description: '查詢成功',
+      schema: {
+        status: true,
+        message: "查詢成功",
+        data: {
+          collections: [
+            {
+              _id: "6672a71fcf7d8ade64acdf58",
+              userId: "665fe01431e8f0630d407037",
+              collectedUserId: "66571be82f1545bc8d671be4",
               createdAt: "2024-06-19T09:38:39.918Z",
-              updatedAt: "2024-06-19T09:38:39.918Z"
-            },
-            isFinishDating: false,
-            status: "pending",
-            date: "2024-06-19T09:38:39.918Z",
-            createdAt: "2024-06-19T09:38:39.918Z",
-            updatedAt: "2024-06-19T09:38:39.918Z"
+              updatedAt: "2024-06-19T09:38:39.918Z",
+              collectedUsers: {
+                personalInfo: {
+                  username: "Node2024",
+                  email: "3ADF213@hotmail.com",
+                  gender: null,
+                  birthday: null,
+                },
+                  photoDetails: {
+                    photo: "",
+                    isShow: false
+                  },
+                  introDetails: {
+                    intro: "",
+                  isShow: false
+                 },
+                 nickNameDetails: {
+                   "nickName": "Jack",
+                   "isShow": true
+                 },
+                 lineDetails: {
+                   "lineId": "",
+                   "isShow": false
+                 },
+                 tags: [],
+                 userStatus: {
+                   rating: 0,
+                   commentScore: 0,
+                   commentCount: 0
+                 }
+              },
+              invitation: {
+                isFinishDating: false,
+                status: "pending",
+              },
+              matchListSelfSettingByUser: {
+               searchDataBase: [],
+               personalInfo: {
+                 age: 0,
+                 gender: 0,
+                 isMarried: 0,
+                  height: 0,
+                 weight: 0,
+                 socialCircle: 0,
+                 activities: [
+                   0
+                 ],
+                 location: 0,
+                 education: 0,
+                 liveWithParents: 0,
+                 religion: 0,
+                 smoking: 0
+               },
+               workInfo: {
+                 occupation: 0,
+                 industry: [
+                   0
+                 ],
+                 expectedSalary: 0
+                }
+             }
+            }
+          ],
+          pagination: {
+            page: 1,
+            perPage: 6,
+            totalCount: 1
           }
         }
-      ],
-      pagination: {
-        page: 1,
-        perPage: 6,
-        totalCount: 1
       }
     }
-  }
-}
- */
+    */
   next()
 }
