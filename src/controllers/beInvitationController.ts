@@ -260,8 +260,8 @@ async function getBeInvitationListByIdWithAggregation (id: string) {
   ])
 }
 
-function getBeInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number) {
-  return BeInvitation.aggregate([
+async function getBeInvitationListWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number) {
+  return await BeInvitation.aggregate([
     // invitedUserId是string
     { $match: { invitedUserId: userId } },
     { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },

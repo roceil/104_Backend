@@ -21,6 +21,7 @@ import blackListRouter from "@/routes/blackListRouter"
 import matchListRouter from "@/routes/matchListRouter"
 import unlockCommentRouter from "@/routes/unlockCommentRouter"
 import addPointRouter from "@/routes/addPointRouter"
+import reducePointRouter from "@/routes/reducePointRouter"
 import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
 import orderRouter from "@/routes/ordersRouter"
@@ -71,6 +72,7 @@ app.use("/api/v1", collectionRouter)
 app.use("/api/v1", searchRouter)
 app.use("/api/v1", unlockCommentRouter)
 app.use("/api/v1", addPointRouter)
+app.use("/api/v1", reducePointRouter)
 app.use("/api/v1", chatRoomRouter)
 app.use("/api/v1", orderRouter)
 

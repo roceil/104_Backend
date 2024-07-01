@@ -3341,47 +3341,125 @@
                   "example": "查詢成功"
                 },
                 "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "_id": {
-                        "type": "string",
-                        "example": "66542da5edb728aae4b1f220"
-                      },
-                      "userId": {
-                        "type": "string",
-                        "example": "66542d94edb728aae4b1f218"
-                      },
-                      "nickNameDetails": {
+                  "type": "object",
+                  "properties": {
+                    "blackListProfile": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
-                          "nickName": {
-                            "type": "string",
-                            "example": "JACK"
-                          },
-                          "isShow": {
-                            "type": "boolean",
-                            "example": false
-                          },
                           "_id": {
                             "type": "string",
-                            "example": "66542f38edb728aae4b1f234"
+                            "example": "667f67ecc8242fa00840b778"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "667f67ecc8242fa00840b76e"
+                          },
+                          "photoDetails": {
+                            "type": "object",
+                            "properties": {
+                              "photo": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/social-e030c.appspot.com/o/default_img%2FLove%20%26%20Dating%20(9).png?alt=media&token=630b4f66-2304-4084-aeed-f9ba177794d2"
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": false
+                              }
+                            }
+                          },
+                          "introDetails": {
+                            "type": "object",
+                            "properties": {
+                              "intro": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": false
+                              }
+                            }
+                          },
+                          "nickNameDetails": {
+                            "type": "object",
+                            "properties": {
+                              "nickName": {
+                                "type": "string",
+                                "example": "依娃叁"
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": false
+                              }
+                            }
+                          },
+                          "lineDetails": {
+                            "type": "object",
+                            "properties": {
+                              "lineId": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "isShow": {
+                                "type": "boolean",
+                                "example": false
+                              }
+                            }
+                          },
+                          "tags": {
+                            "type": "array",
+                            "example": [],
+                            "items": {}
+                          },
+                          "userStatus": {
+                            "type": "object",
+                            "properties": {
+                              "rating": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "isMatch": {
+                                "type": "boolean",
+                                "example": false
+                              },
+                              "commentScore": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "commentCount": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-06-29T01:48:28.359Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-06-30T08:35:48.960Z"
                           }
                         }
-                      },
-                      "tags": {
-                        "type": "array",
-                        "example": [],
-                        "items": {}
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "example": "2024-05-27T06:52:21.549Z"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "example": "2024-05-27T06:59:04.972Z"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "totalCount": {
+                          "type": "number",
+                          "example": 3
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 6
+                        }
                       }
                     }
                   }
@@ -7093,7 +7171,7 @@
     "/api/v1/user/collections": {
       "get": {
         "tags": [
-          "收藏"
+          "collection-收藏"
         ],
         "description": "取得user收藏",
         "parameters": [
@@ -7289,7 +7367,7 @@
     "/api/v1/collections": {
       "post": {
         "tags": [
-          "收藏"
+          "collection-收藏"
         ],
         "description": "新增收藏",
         "parameters": [
@@ -7381,7 +7459,7 @@
     "/api/v1/collections/{id}": {
       "delete": {
         "tags": [
-          "收藏"
+          "collection-收藏"
         ],
         "description": "刪除收藏",
         "parameters": [
@@ -7895,10 +7973,376 @@
         ]
       }
     },
+    "/api/v1/maybe-you-like": {
+      "get": {
+        "tags": [
+          "Search-搜尋"
+        ],
+        "description": "隨機搜尋關鍵字",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "目前頁數"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "排序：desc/asc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "可能你也喜歡列表",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "resultList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userInfo": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "string",
+                                "example": "665d6e7cd43964256b106f68"
+                              },
+                              "personalInfo": {
+                                "type": "object",
+                                "properties": {
+                                  "username": {
+                                    "type": "string",
+                                    "example": "Eason"
+                                  },
+                                  "email": {
+                                    "type": "string",
+                                    "example": "56asdf@hotmail.com"
+                                  },
+                                  "gender": {},
+                                  "birthday": {},
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "665d6e7cd43964256b106f69"
+                                  }
+                                }
+                              },
+                              "isSubscribe": {
+                                "type": "boolean",
+                                "example": false
+                              },
+                              "points": {
+                                "type": "number",
+                                "example": 175
+                              },
+                              "resetPasswordToken": {
+                                "type": "string",
+                                "example": ""
+                              },
+                              "isActive": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "blockedUsers": {
+                                "type": "array",
+                                "example": [],
+                                "items": {}
+                              },
+                              "notifications": {
+                                "type": "array",
+                                "example": [],
+                                "items": {}
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2024-06-03T07:19:24.161Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2024-06-21T02:38:30.999Z"
+                              },
+                              "chatRecord": {
+                                "type": "array",
+                                "example": [],
+                                "items": {}
+                              }
+                            }
+                          },
+                          "matchListSelfSetting": {
+                            "type": "object",
+                            "properties": {
+                              "personalInfo": {
+                                "type": "object",
+                                "properties": {
+                                  "age": {
+                                    "type": "number",
+                                    "example": 1
+                                  },
+                                  "gender": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "isMarried": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "weight": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "socialCircle": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "activities": {
+                                    "type": "array",
+                                    "example": [
+                                      1,
+                                      2,
+                                      3
+                                    ],
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "location": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "education": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "liveWithParents": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "religion": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "smoking": {
+                                    "type": "number",
+                                    "example": 1
+                                  }
+                                }
+                              },
+                              "workInfo": {
+                                "type": "object",
+                                "properties": {
+                                  "occupation": {
+                                    "type": "number",
+                                    "example": 1
+                                  },
+                                  "industry": {
+                                    "type": "array",
+                                    "example": [
+                                      1,
+                                      2,
+                                      3
+                                    ],
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "expectedSalary": {
+                                    "type": "number",
+                                    "example": 7
+                                  }
+                                }
+                              },
+                              "_id": {
+                                "type": "string",
+                                "example": "6666bea3df6fee39f7ccaa79"
+                              },
+                              "userId": {
+                                "type": "string",
+                                "example": "665d6e7cd43964256b106f68"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2024-06-10T08:51:47.578Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2024-06-20T01:50:58.817Z"
+                              },
+                              "searchDataBase": {
+                                "type": "array",
+                                "example": [
+                                  "20-22 歲",
+                                  "健行",
+                                  "園藝",
+                                  "慈善",
+                                  "不抽菸",
+                                  "軍人",
+                                  "餐旅",
+                                  "50k以上"
+                                ],
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "profile": {
+                            "type": "object",
+                            "properties": {
+                              "userStatus": {
+                                "type": "object",
+                                "properties": {
+                                  "rating": {},
+                                  "isMatch": {
+                                    "type": "boolean",
+                                    "example": false
+                                  },
+                                  "point": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "666a88e4b65d5d116d8053f7"
+                                  },
+                                  "commentScore": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "commentCount": {
+                                    "type": "number",
+                                    "example": 0
+                                  },
+                                  "id": {
+                                    "type": "string",
+                                    "example": "666a88e4b65d5d116d8053f7"
+                                  }
+                                }
+                              },
+                              "photoDetails": {
+                                "type": "object",
+                                "properties": {
+                                  "photo": {
+                                    "type": "string",
+                                    "example": "https://i.imgur.com/XgbZdeA.jpeg"
+                                  },
+                                  "isShow": {
+                                    "type": "boolean",
+                                    "example": true
+                                  },
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "667129208753a1adebfd3dea"
+                                  },
+                                  "id": {
+                                    "type": "string",
+                                    "example": "667129208753a1adebfd3dea"
+                                  }
+                                }
+                              },
+                              "tags": {
+                                "type": "array",
+                                "example": [
+                                  "test1",
+                                  "test2",
+                                  "test1",
+                                  "test1",
+                                  "test1"
+                                ],
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "invitationStatus": {
+                            "type": "string",
+                            "example": "not invited"
+                          },
+                          "isCollected": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isLocked": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "hasComment": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "beInvitationStatus": {
+                            "type": "string",
+                            "example": "not invited"
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 6
+                        },
+                        "totalCount": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/unlock-comment/{id}": {
       "put": {
         "tags": [
-          "解鎖評價"
+          "unLockComment-解鎖評價"
         ],
         "description": "解鎖評價",
         "parameters": [
@@ -7950,7 +8394,7 @@
     "/api/v1/add-point/{point}": {
       "put": {
         "tags": [
-          "測試用增加點數"
+          "addPoint-測試用增加點數"
         ],
         "description": "增加點數",
         "parameters": [
@@ -8004,6 +8448,63 @@
         ]
       }
     },
+    "/api/v1/reduce-point/{point}": {
+      "put": {
+        "tags": [
+          "reducePoint-扣除點數"
+        ],
+        "description": "扣除點數",
+        "parameters": [
+          {
+            "name": "point",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "點數"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "扣除點數成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "扣除點數成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "point": {
+                      "type": "number",
+                      "example": 50
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/chat": {
       "post": {
         "description": "",
@@ -8023,6 +8524,29 @@
     },
     "/api/v1/chatHistory/{roomId}": {
       "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/chatrooms/{roomId}/markAllRead": {
+      "post": {
         "description": "",
         "parameters": [
           {
