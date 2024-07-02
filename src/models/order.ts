@@ -23,20 +23,59 @@ export interface IOrder extends Document {
   PayerEmail?: string
 }
 
-const OrderSchema: Schema = new Schema({
-  MerchantID: { type: String, required: true },
-  RespondType: { type: String, required: true },
-  TimeStamp: { type: Number, required: true },
-  Version: { type: String, required: true },
-  MerchantOrderNo: { type: Number, required: true, unique: true },
-  amt: { type: Number, required: true },
-  itemDesc: { type: String, required: true },
-  userId: { type: String, required: true },
-  email: { type: String, required: true },
-  aesEncrypt: { type: String },
-  shaEncrypt: { type: String },
-  PaymentMethod: { type: String, default: null }
-})
+const OrderSchema = new Schema<IOrder>(
+  {
+    MerchantID: {
+      type: String,
+      required: true
+    },
+    RespondType: {
+      type: String,
+      required: true
+    },
+    TimeStamp: {
+      type: Number,
+      required: true
+    },
+    Version: {
+      type: String,
+      required: true
+    },
+    MerchantOrderNo: {
+      type: Number,
+      required: true,
+      unique: true
+    },
+    amt: {
+      type: Number,
+      required: true
+    },
+    itemDesc: {
+      type: String,
+      required: true
+    },
+    userId: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    },
+    aesEncrypt: {
+      type: String
+    },
+    shaEncrypt: {
+      type: String
+    },
+    PaymentMethod: {
+      type: String,
+      default: null
+    }
+  }, {
+    timestamps: true,
+    versionKey: false
+  })
 
 const Order = mongoose.model<IOrder>("Order", OrderSchema)
 
