@@ -13,6 +13,14 @@ export interface IOrder extends Document {
   aesEncrypt?: string
   shaEncrypt?: string
   PaymentMethod?: string
+  ProdDesc?: string
+  periodAmt?: number
+  periodType?: string
+  periodPoint?: string
+  PeriodStartType?: string
+  periodTimes?: number
+  notifyURL?: string
+  PayerEmail?: string
 }
 
 const OrderSchema: Schema = new Schema({
