@@ -23,6 +23,7 @@ interface IUserSchema {
   blockedUsers: Types.ObjectId[]
   notifications: Types.ObjectId[]
   chatRecord: IChatRecord[]
+  isFirstTimeLogin: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -86,6 +87,10 @@ const userSchema = new Schema<IUserSchema>(
       default: []
     },
     chatRecord: { type: [chatRecordSchema], default: [] },
+    isFirstTimeLogin: {
+      type: Boolean,
+      default: true
+    },
     createdAt: {
       type: Date,
       default: Date.now

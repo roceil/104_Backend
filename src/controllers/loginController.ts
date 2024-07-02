@@ -147,7 +147,8 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     email: user.personalInfo.email,
     name: user.personalInfo.username,
     gender: user.personalInfo.gender,
-    birthday: user.personalInfo.birthday
+    birthday: user.personalInfo.birthday,
+    isFirstTimeLogin: user.isFirstTimeLogin
   }
 
   // 產生 token
@@ -328,6 +329,9 @@ const verifyToken = async (req: Request, res: Response): Promise<void> => {
   appSuccessHandler(200, "驗證成功", userData, res)
 }
 
+/**
+ * 變更首次登入狀態
+ */
 const loginController = {
   signUp,
   login,

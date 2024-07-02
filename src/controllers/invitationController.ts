@@ -92,8 +92,8 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     } else {
       const { nickNameDetails } = profileWithUser as IPersonalInfo
       const { userId } = req.user as LoginResData
-      sendNotification({ title: message.title, content: message.content, nickNameDetails, userId })
-      console.log({ title: message.title, content: message.content, nickNameDetails, userId })
+      const { invitedUserId } = beInvitation
+      sendNotification({ title: message.title, content: message.content, nickNameDetails, userId }, invitedUserId)
       appSuccessHandler(201, "邀請成功", invitation, res)
     }
   }
@@ -164,14 +164,14 @@ const cancelInvitation = async (req: Request, res: Response, next: NextFunction)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId } = req.user as LoginResData
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
+    const { invitedUserId } = beInvitation
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "取消邀請成功", invitation, res)
   }
 }
 const deleteInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
-  // const invitation = await Invitation.findByIdAndDelete(id)
   const [invitation, profileWithUser] = await Promise.all([Invitation.findByIdAndDelete(id), Profile.findOne({ userId }).select("nickNameDetails")])
   const beInvitation = await BeInvitation.findOneAndUpdate({ invitationId: id }, { status: "cancel" }, { new: true })
   if (!invitation || !beInvitation) {
@@ -179,7 +179,8 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId } = req.user as LoginResData
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
+    const { invitedUserId } = beInvitation
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "刪除成功", invitation, res)
   }
 }
