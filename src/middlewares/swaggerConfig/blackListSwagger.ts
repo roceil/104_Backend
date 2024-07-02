@@ -74,7 +74,33 @@ export function getBlackListSwagger (_req: Request, _res: Response, next: NextFu
                 commentCount: 0
               },
               createdAt: "2024-06-29T01:48:28.359Z",
-              updatedAt: "2024-06-30T08:35:48.960Z"
+              updatedAt: "2024-06-30T08:35:48.960Z",
+              matchListSettings: {
+                searchDataBase: [],
+                personalInfo: {
+                  age: 0,
+                  gender: 0,
+                  isMarried: 0,
+                  height: 0,
+                  weight: 0,
+                  socialCircle: 0,
+                  activities: [
+                    0
+                  ],
+                  location: 0,
+                  education: 0,
+                  liveWithParents: 0,
+                  religion: 0,
+                  smoking: 0
+                },
+                workInfo: {
+                  occupation: 0,
+                  industry: [
+                    0
+                  ],
+                  expectedSalar: 0
+                }
+              }
             }
           ],
           pagination: {
