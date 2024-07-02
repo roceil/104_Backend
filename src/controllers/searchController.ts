@@ -73,13 +73,13 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
           "scoreByProfile.userStatus": 1,
           updatedAt: 1
         }
-      },
-      {
-        $skip: ((Number(page) ?? 1) - 1) * perPage
-      },
-      {
-        $limit: perPage
       }
+      // {
+      //   $skip: ((Number(page) ?? 1) - 1) * perPage
+      // },
+      // {
+      //   $limit: perPage
+      // }
     ])
 
     if (selectedSort === "-score") {
@@ -94,6 +94,9 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     resultUserIds = resultUserIds.map((i) => i._id)
     resultUserIds = resultUserIds.filter((i) => i.toString() !== userId)
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
+
+    totalCount = resultUserIds.length
 
     // console.log(JSON.stringify(resultUserIds));
   } else {
@@ -151,7 +154,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       })
     }
 
-    let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort)
+    // .skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
     if (selectedSort === "-score") {
       resultUsers = resultUsers.sort((a, b) => {
@@ -165,10 +169,12 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     resultUserIds = resultUsers.map((i) => i.userId._id)
 
-    totalCount = resultUserIds.length
-
     // 直接比较字符串形式，代替排除自己失敗的方法
     resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
+
+    totalCount = resultUserIds.length
+
     if (resultUserIds.length === 0) {
       appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
       return
@@ -332,16 +338,17 @@ export const getEliteList = async (req: Request, res: Response, _next: NextFunct
         updatedAt: 1
       }
     },
-    {
-      $skip: ((Number(1) ?? 1) - 1) * 6
-    },
-    {
-      $limit: 6
-    }
+    // {
+    //   $skip: ((Number(1) ?? 1) - 1) * 6
+    // },
+    // {
+    //   $limit: 6
+    // }
   ])
 
   if (userId !== "") {
     resultUserIds = resultUserIds.filter((i) => i._id.toString() !== userId)
+    resultUserIds = resultUserIds.slice(0, 6)
   }
 
   const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
@@ -482,7 +489,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
   ] as any
 
 
-  let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+  let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort)
+  // .skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
   if (resultUsers.length === 0) {
     appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
@@ -503,6 +511,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
 
   // 直接比较字符串形式，代替排除自己失敗的方法
   resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
+
+  resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
   totalCount = resultUserIds.length
 
