@@ -10,7 +10,7 @@ import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { isInBlackList } from "@/utils/blackListHandler"
 // import { createNotification } from "./notificationsController"
 import { sendNotification } from "@/services/notificationWS"
-import mongoose from "mongoose"
+import mongoose, { type Types } from "mongoose"
 interface ParsedBeInvitation {
   userId: string
   invitedUserId: string
@@ -103,8 +103,8 @@ const cancelBeInvitation = async (req: Request, res: Response, next: NextFunctio
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
-    const { userId } = req.user as LoginResData
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
+    const { userId: startInviteUserId } = invitation
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "取消邀請成功", beInvitation, res)
   }
 }
@@ -125,8 +125,8 @@ const rejectInvitation = async (req: Request, res: Response, next: NextFunction)
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
-    const { userId } = req.user as LoginResData
-    sendNotification({ title: "拒絕邀約", content: `${nickNameDetails.nickName}已拒絕邀約`, nickNameDetails, userId })
+    const { userId: startInviteUserId } = invitation
+    sendNotification({ title: "拒絕邀約", content: `${nickNameDetails.nickName}已拒絕邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "拒絕邀請成功", invitation, res)
   }
 }
@@ -151,8 +151,8 @@ const acceptInvitation = async (req: Request, res: Response, next: NextFunction)
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
-    const { userId } = req.user as LoginResData
-    sendNotification({ title: "接受邀約", content: `${nickNameDetails.nickName}已接受邀約`, nickNameDetails, userId })
+    const { userId: startInviteUserId } = invitation
+    sendNotification({ title: "接受邀約", content: `${nickNameDetails.nickName}已接受邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "接受邀請成功", invitation, res)
   }
 }
@@ -169,8 +169,8 @@ const deleteBeInvitation = async (req: Request, res: Response, next: NextFunctio
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
-    const { userId } = req.user as LoginResData
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId })
+    const { userId: startInviteUserId } = invitation
+    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "刪除成功", beInvitation, res)
   }
 }

@@ -19,6 +19,7 @@ export interface LoginResData {
   birthday?: string
   token?: string
   avatar?: string
+  isFirstTimeLogin?: boolean
 }
 
 /**

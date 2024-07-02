@@ -223,6 +223,14 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
       }
     },
     {
+      $lookup: {
+        from: "matchlistselfsettings",
+        localField: "userId",
+        foreignField: "userId",
+        as: "matchListSelfSettingByUser"
+      }
+    },
+    {
       $unwind: {
         path: "$personalDataInfo",
         preserveNullAndEmptyArrays: true
@@ -231,6 +239,12 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     {
       $unwind: {
         path: "$collectedUsers",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByUser",
         preserveNullAndEmptyArrays: true
       }
     },
@@ -282,7 +296,11 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
         "invitations.date": 0,
         "invitations.createdAt": 0,
         "invitations.updatedAt": 0,
-        personalDataInfo: 0
+        personalDataInfo: 0,
+        "matchListSelfSettingByUser._id": 0,
+        "matchListSelfSettingByUser.userId": 0,
+        "matchListSelfSettingByUser.createdAt": 0,
+        "matchListSelfSettingByUser.updatedAt": 0
       }
     }
   ])
