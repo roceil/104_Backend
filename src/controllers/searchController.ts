@@ -94,9 +94,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     resultUserIds = resultUserIds.map((i) => i._id)
     resultUserIds = resultUserIds.filter((i) => i.toString() !== userId)
-    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
-
     totalCount = resultUserIds.length
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
     // console.log(JSON.stringify(resultUserIds));
   } else {
@@ -171,9 +170,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     // 直接比较字符串形式，代替排除自己失敗的方法
     resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
-    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
-
     totalCount = resultUserIds.length
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
     if (resultUserIds.length === 0) {
       appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
@@ -511,10 +509,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
 
   // 直接比较字符串形式，代替排除自己失敗的方法
   resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
-
-  resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
-
   totalCount = resultUserIds.length
+  resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
   // 組合卡片用戶的資料
   const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
