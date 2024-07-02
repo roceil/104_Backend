@@ -453,7 +453,11 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
   const searchDataBase = await MatchListSelfSetting.findOne({
     userId: userId
   }).select("searchDataBase")
-  const randomElement = (searchDataBase?.searchDataBase as unknown as string[])[Math.floor(Math.random() * (searchDataBase?.searchDataBase as unknown as string[])?.length)]
+
+  let randomElement = ''
+  if (searchDataBase?.searchDataBase && (searchDataBase?.searchDataBase as unknown as string[]).length > 0) {
+    randomElement = (searchDataBase?.searchDataBase as unknown as string[])[Math.floor(Math.random() * (searchDataBase?.searchDataBase as unknown as string[])?.length)]
+  }
 
   // 進行搜尋
   const pipeline = [
@@ -461,7 +465,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
       $match: {
         userId: { $ne: userId, $nin: lockedUserId },
         searchDataBase: {
-          $regex: randomElement, $options: "i" },
+          $regex: randomElement, $options: "i"
+        },
       }
     },
     {
