@@ -114,7 +114,7 @@ const readAllNotificationsByUserId = async (req: Request, res: Response, next: N
  */
 const createNotification = async (
   userId: Types. ObjectId | undefined,
-  receiveUserId: Types.ObjectId | undefined,
+  receiveUserId: Types.ObjectId | undefined | string,
   message: { title: string, content: string },
   notifyType: 1 | 2): Promise<boolean> => {
   // 取得通知內容
@@ -150,5 +150,19 @@ const createNotification = async (
 
   return true
 }
+const deleteNotificationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
 
-export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification, readNotificationById, readAllNotificationsByUserId }
+  if (!id) {
+    appErrorHandler(400, "請提供通知id", next)
+    return
+  }
+
+  const notification = await Notification.findByIdAndDelete(id)
+  if (!notification) {
+    appErrorHandler(404, "查無通知", next)
+  }
+  appSuccessHandler(200, "刪除成功", notification, res)
+}
+
+export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification, readNotificationById, readAllNotificationsByUserId, deleteNotificationById }

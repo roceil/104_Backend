@@ -289,3 +289,94 @@ export function getCollectionsByUserIdSwagger (_req: Request, _res: Response, ne
     */
   next()
 }
+
+export function getCollectionDetailByIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+   * #swagger.tags = ["collection-收藏"]
+   * #swagger.description = "取得收藏"
+   * #swagger.security = [{
+      "apiKeyAuth":[]
+    }]
+   * #swagger.parameters['id'] = {
+      in: 'path',
+      description: '收藏Id',
+      required: true,
+      type: 'string'
+    }
+   * #swagger.responses[200] = {
+      description: '查詢成功',
+      schema: {
+        status: true,
+        message: "查詢成功",
+        data: {
+              _id: "6672a71fcf7d8ade64acdf58",
+              userId: "665fe01431e8f0630d407037",
+              collectedUserId: "66571be82f1545bc8d671be4",
+              createdAt: "2024-06-19T09:38:39.918Z",
+              updatedAt: "2024-06-19T09:38:39.918Z",
+              collectedUsers: {
+                personalInfo: {
+                  username: "Node2024",
+                  email: "3ADF213@hotmail.com",
+                  gender: null,
+                  birthday: null,
+                },
+                  photoDetails: {
+                    photo: "",
+                    isShow: false
+                  },
+                  introDetails: {
+                    intro: "",
+                  isShow: false
+                 },
+                 nickNameDetails: {
+                   "nickName": "Jack",
+                   "isShow": true
+                 },
+                 lineDetails: {
+                   "lineId": "",
+                   "isShow": false
+                 },
+                 tags: [],
+                 userStatus: {
+                   rating: 0,
+                   commentScore: 0,
+                   commentCount: 0
+                 }
+              },
+              invitation: {
+                isFinishDating: false,
+                status: "pending",
+              },
+              matchListSelfSettingByUser: {
+               searchDataBase: [],
+               personalInfo: {
+                 age: 0,
+                 gender: 0,
+                 isMarried: 0,
+                  height: 0,
+                 weight: 0,
+                 socialCircle: 0,
+                 activities: [
+                   0
+                 ],
+                 location: 0,
+                 education: 0,
+                 liveWithParents: 0,
+                 religion: 0,
+                 smoking: 0
+               },
+               workInfo: {
+                 occupation: 0,
+                 industry: [
+                   0
+                 ],
+                 expectedSalary: 0
+             }
+            }
+        }
+      }
+    }
+      */
+  next()
+}
