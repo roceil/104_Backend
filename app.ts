@@ -26,6 +26,7 @@ import collectionRouter from "@/routes/collectionRouter"
 import searchRouter from "@/routes/searchRouter"
 import orderRouter from "@/routes/ordersRouter"
 import devUseRouter from "@/routes/devUseRouter"
+import happinessExampleRouter from "@/routes/happinessExampleRouter"
 import http from "http"
 import { initializeSocket } from "@/services/ws"
 import chatRoomRouter from "@/routes/chatRoomRouter"
@@ -77,6 +78,7 @@ app.use("/api/v1", reducePointRouter)
 app.use("/api/v1", chatRoomRouter)
 app.use("/api/v1", orderRouter)
 app.use("/api/v1", devUseRouter)
+app.use("/api/v1", happinessExampleRouter)
 
 /* Google OAuth */
 googleService.setupGoogleStrategy()

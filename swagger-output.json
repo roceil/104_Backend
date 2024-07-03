@@ -8828,6 +8828,23 @@
         }
       }
     },
+    "/api/v1/notify-subscription-order": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/return": {
       "post": {
         "description": "",
@@ -8843,6 +8860,732 @@
             "description": ""
           }
         }
+      }
+    },
+    "/api/v1/delete-self-setting": {
+      "put": {
+        "tags": [
+          "test-測試用"
+        ],
+        "description": "刪除無帳號的本身條件資料庫資料",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/happiness-example": {
+      "get": {
+        "tags": [
+          "happiness-example-幸福案例"
+        ],
+        "description": "取得所有幸福案例",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得所有幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得所有幸福案例"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "6450b1c14bfccc4b484b2d23"
+                      },
+                      "userId": {
+                        "type": "string",
+                        "example": "6450b1c14bfccc4b484b2d23"
+                      },
+                      "myName": {
+                        "type": "string",
+                        "example": "John"
+                      },
+                      "partnerName": {
+                        "type": "string",
+                        "example": "Jane"
+                      },
+                      "coverImage": {
+                        "type": "string",
+                        "example": "https://example.com/image.jpg"
+                      },
+                      "imgList": {
+                        "type": "array",
+                        "example": [
+                          "https://example.com/image1.jpg",
+                          "https://example.com/image2.jpg"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Our Happy Story"
+                      },
+                      "content": {
+                        "type": "string",
+                        "example": "This is our happy story..."
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2024-05-22T02:14:28.873Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "example": "2024-05-22T02:14:28.873Z"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "無法取得幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "無法取得幸福案例，請稍後再試"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "happiness-example-幸福案例"
+        ],
+        "description": "新增幸福案例",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "幸福案例資料",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "object"
+                },
+                "required": {
+                  "type": "array",
+                  "example": [
+                    "myName",
+                    "partnerName",
+                    "coverImage",
+                    "title",
+                    "content"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "myName": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "partnerName": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "coverImage": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "imgList": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "array"
+                        },
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "title": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功新增幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功新增幸福案例"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "6450b1c14bfccc4b484b2d23"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "example": "6450b1c14bfccc4b484b2d23"
+                    },
+                    "myName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "partnerName": {
+                      "type": "string",
+                      "example": "Jane"
+                    },
+                    "coverImage": {
+                      "type": "string",
+                      "example": "https://example.com/image.jpg"
+                    },
+                    "imgList": {
+                      "type": "array",
+                      "example": [
+                        "https://example.com/image1.jpg",
+                        "https://example.com/image2.jpg"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Our Happy Story"
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "This is our happy story..."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "example": "2024-05-22T02:14:28.873Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "無法新增幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "無法新增幸福案例，請稍後再試"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/happiness-example/{id}": {
+      "get": {
+        "tags": [
+          "happiness-example-幸福案例"
+        ],
+        "description": "取得單一幸福案例",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "幸福案例ID"
+          },
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得幸福案例"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "mainExample": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6450b1c14bfccc4b484b2d23"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "6450b1c14bfccc4b484b2d23"
+                        },
+                        "myName": {
+                          "type": "string",
+                          "example": "John"
+                        },
+                        "partnerName": {
+                          "type": "string",
+                          "example": "Jane"
+                        },
+                        "coverImage": {
+                          "type": "string",
+                          "example": "https://example.com/image.jpg"
+                        },
+                        "imgList": {
+                          "type": "array",
+                          "example": [
+                            "https://example.com/image1.jpg",
+                            "https://example.com/image2.jpg"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "Our Happy Story"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "This is our happy story..."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-05-22T02:14:28.873Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-05-22T02:14:28.873Z"
+                        }
+                      }
+                    },
+                    "relatedExample": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6450b1c14bfccc4b484b2d24"
+                          },
+                          "userId": {
+                            "type": "string",
+                            "example": "6450b1c14bfccc4b484b2d24"
+                          },
+                          "myName": {
+                            "type": "string",
+                            "example": "Alice"
+                          },
+                          "partnerName": {
+                            "type": "string",
+                            "example": "Bob"
+                          },
+                          "coverImage": {
+                            "type": "string",
+                            "example": "https://example.com/image2.jpg"
+                          },
+                          "imgList": {
+                            "type": "array",
+                            "example": [
+                              "https://example.com/image3.jpg",
+                              "https://example.com/image4.jpg"
+                            ],
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "Another Happy Story"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "This is another happy story..."
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2024-05-22T02:14:28.873Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2024-05-22T02:14:28.873Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "無法取得幸福案例",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "無法取得幸福案例，請稍後再試"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/happiness-cover-image": {
+      "post": {
+        "tags": [
+          "happiness-example-幸福案例"
+        ],
+        "description": "上傳幸福案例封面圖片",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "封面圖片文件",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上傳成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "coverImage": {
+                      "type": "string",
+                      "example": "https://example.com/uploaded-image.jpg"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "請上傳圖片",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "請上傳圖片"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "上傳失敗",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳失敗，請稍後再試"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/happiness-multiple-image": {
+      "post": {
+        "tags": [
+          "happiness-example-幸福案例"
+        ],
+        "description": "上傳幸福案例多張圖片",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "description": "多張圖片文件",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上傳成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "images": {
+                      "type": "array",
+                      "example": [
+                        "https://example.com/uploaded-image1.jpg",
+                        "https://example.com/uploaded-image2.jpg"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "請上傳圖片",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "請上傳圖片"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "上傳失敗",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "上傳失敗，請稍後再試"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     }
   }

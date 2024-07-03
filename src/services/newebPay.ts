@@ -18,7 +18,6 @@ const RespondType = "JSON"
 
 export const createOrder = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const data = req.body
-  console.log("data", data)
 
   // 使用 Unix Timestamp 作為訂單編號（金流也需要加入時間戳記）
   const TimeStamp = Math.round(new Date().getTime() / 1000)
@@ -63,7 +62,8 @@ export const createSubscriptionOrder = async (req: Request, res: Response, _next
     MerchantID: MERCHANT_ID,
     RespondType,
     TimeStamp,
-    Version: VERSION,
+    PaymentMethod: "SUBSCRIPTION",
+    Version: "1.5",
     MerchantOrderNo: TimeStamp
   }
 
@@ -87,8 +87,7 @@ export const createSubscriptionOrder = async (req: Request, res: Response, _next
 }
 
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
-export const returnOrder = async (req: Request, res: Response, _next: NextFunction) => {
-  console.log("req.body return data", req.body)
+export const returnOrder = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   appSuccessHandler(200, "測試", null, res)
 }
 
@@ -128,14 +127,17 @@ export const notifyOrder = async (req: Request, res: Response, next: NextFunctio
   appSuccessHandler(200, "交易成功", updateData, res)
 }
 
-// 確認交易：Notify
+// 確認交易：Notify（訂閱）
 export const notifySubscriptionOrder = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const response = req.body
 
   // 解密交易內容
   const data = createSesDecrypt(response.Period)
 
-  console.log("req.body notify data", data)
+  if (data.Status !== "SUCCESS") {
+    console.error("付款失敗", data)
+    appErrorHandler(400, "付款失敗", next); return
+  }
 
   // 取得交易內容，並查詢本地端資料庫是否有相符的訂單
   const order = await Order.findOne({ MerchantOrderNo: data?.Result?.MerchantOrderNo })
@@ -145,25 +147,14 @@ export const notifySubscriptionOrder = async (req: Request, res: Response, next:
     appErrorHandler(404, "找不到訂單", next); return
   }
 
-  // 使用 HASH 再次 SHA 加密字串，確保比對一致（確保不正確的請求觸發交易成功）
-  const thisShaEncrypt = createShaEncrypt(response.TradeInfo)
-  if (thisShaEncrypt !== response.TradeSha) {
-    console.error("付款失敗：TradeSha 不一致")
-    appErrorHandler(400, "付款失敗：TradeSha 不一致", next); return
-  }
-
-  // 從 itemDesc 中提取實際要增加的點數
-  const pointsToAddMatch = order.itemDesc.match(/(\d+)點/)
-  const pointsToAdd = pointsToAddMatch ? parseInt(pointsToAddMatch[1], 10) : 0
-
   // 進行交易成功後的處理
-  const updateData = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { _id: order.userId },
-    { $inc: { points: pointsToAdd } }, // 使用 $inc 操作符累加點數
+    { $set: { isSubscribe: true } },
     { new: true }
   )
 
-  appSuccessHandler(200, "交易成功", updateData, res)
+  appSuccessHandler(200, "交易成功", null, res)
 }
 
 // 字串組合
@@ -173,7 +164,7 @@ function genDataChain (order: IOrder) {
 
 // 字串組合（訂閱）
 function genSubscriptionDataChain (order: IOrder) {
-  return `RespondType=JSON&TimeStamp=${order.TimeStamp}&Version=1.5&LangType=zh-Tw&MerOrderNo=${order.MerchantOrderNo}&ProdDesc=${order.ProdDesc}&PeriodAmt=${order.periodAmt}&PeriodType=${order.periodType}&PeriodPoint=${order.periodPoint}&PeriodStartType=${order.PeriodStartType}&PeriodTimes=${order.periodTimes}&PayerEmail=${encodeURIComponent(order.email)}&PaymentInfo=Y&OrderInfo=N&EmailModify=1&NotifyURL=${order.notifyURL}`
+  return `RespondType=JSON&TimeStamp=${order.TimeStamp}&Version=1.5&LangType=zh-Tw&MerOrderNo=${order.MerchantOrderNo}&ProdDesc=${order.ProdDesc}&PeriodAmt=${order.periodAmt}&PeriodType=${order.periodType}&PeriodPoint=${order.periodPoint}&PeriodStartType=${order.PeriodStartType}&PeriodTimes=${order.periodTimes}&PayerEmail=${encodeURIComponent(order.email)}&PaymentInfo=Y&OrderInfo=N&EmailModify=1&NotifyURL=${order.notifyURL}&ReturnURL=https://104social-front-end.vercel.app/order/success`
 }
 
 // 進行 aes 加密
@@ -203,7 +194,6 @@ function createSesDecrypt (TradeInfo: string) {
   decrypt.setAutoPadding(false)
   const text = decrypt.update(TradeInfo, "hex", "utf8")
   const plainText = text + decrypt.final("utf8")
-
   const cleanText = plainText.split("").filter(char => char.charCodeAt(0) > 31).join("")
   return JSON.parse(cleanText)
 }
