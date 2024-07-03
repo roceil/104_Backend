@@ -162,11 +162,19 @@ const cancelInvitation = async (req: Request, res: Response, next: NextFunction)
   if (!invitation || !beInvitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
+    const { invitedUserId } = beInvitation
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId } = req.user as LoginResData
-    const { invitedUserId } = beInvitation
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId }, invitedUserId)
+    const message = {
+      title: "取消邀約",
+      content: `${nickNameDetails.nickName}已取消邀約`
+    }
+    sendNotification({ ...message, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "取消邀請成功", invitation, res)
+    const notification = await createNotification(userId, invitedUserId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 const deleteInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -180,8 +188,16 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId } = req.user as LoginResData
     const { invitedUserId } = beInvitation
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails, userId }, invitedUserId)
+    const message = {
+      title: "取消邀約",
+      content: `${nickNameDetails.nickName}已取消邀約`
+    }
+    sendNotification({ ...message, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "刪除成功", invitation, res)
+    const notification = await createNotification(userId, invitedUserId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 const finishInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

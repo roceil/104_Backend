@@ -8,7 +8,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
 import { isInBlackList } from "@/utils/blackListHandler"
-// import { createNotification } from "./notificationsController"
+import { createNotification } from "./notificationsController"
 import { sendNotification } from "@/services/notificationWS"
 import mongoose, { type Types } from "mongoose"
 interface ParsedBeInvitation {
@@ -104,17 +104,22 @@ const cancelBeInvitation = async (req: Request, res: Response, next: NextFunctio
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId: startInviteUserId } = invitation
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
+    const message = {
+      title: "取消邀約",
+      content: `${nickNameDetails.nickName}已取消邀約`
+    }
+    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "取消邀請成功", beInvitation, res)
+    const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 
 const rejectInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
   const { userId } = req.user as LoginResData
-  // const beInvitation = await BeInvitation.findByIdAndUpdate(id, { status: "reject" }, { new: true })
-  // const beInvitationId = await BeInvitation.findById(id).select("invitationId")
-  // const profileWithUser = await Profile.findOne({ userId }).select("nickNameDetails")
   const [beInvitation, beInvitationId, profileWithUser] = await Promise.all([BeInvitation.findByIdAndUpdate(id, { status: "reject" }, { new: true }), BeInvitation.findById(id).select("invitationId"), Profile.findOne({ userId }).select("nickNameDetails")])
   if (!beInvitationId || !beInvitationId.invitationId) {
     appErrorHandler(404, "No invitation found", next)
@@ -126,8 +131,16 @@ const rejectInvitation = async (req: Request, res: Response, next: NextFunction)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId: startInviteUserId } = invitation
-    sendNotification({ title: "拒絕邀約", content: `${nickNameDetails.nickName}已拒絕邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
+    const message = {
+      title: "拒絕邀約",
+      content: `${nickNameDetails.nickName}已拒絕邀約`
+    }
+    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "拒絕邀請成功", invitation, res)
+    const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 
@@ -144,16 +157,23 @@ const acceptInvitation = async (req: Request, res: Response, next: NextFunction)
   }
   const beInvitationId = await BeInvitation.findById(id).select("invitationId")
   const { invitationId } = beInvitationId as { invitationId: string }
-  // const invitation = await Invitation.findByIdAndUpdate(invitationId, { status: "accept" }, { new: true })
-  // const profileWithUser = await Profile.findOne({ userId }).select("nickNameDetails")
   const [invitation, profileWithUser] = await Promise.all([Invitation.findByIdAndUpdate(invitationId, { status: "accept" }, { new: true }), Profile.findOne({ userId }).select("nickNameDetails")])
   if (!invitation || !beInvitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId: startInviteUserId } = invitation
-    sendNotification({ title: "接受邀約", content: `${nickNameDetails.nickName}已接受邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
+    const message = {
+      title: "接受邀約",
+      content: `${nickNameDetails.nickName}已接受邀約`
+    }
+
+    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "接受邀請成功", invitation, res)
+    const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 const deleteBeInvitation = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -161,17 +181,22 @@ const deleteBeInvitation = async (req: Request, res: Response, next: NextFunctio
   const { userId } = req.user as LoginResData
   const beInvitationId = await BeInvitation.findById(id).select("invitationId")
   const { invitationId } = beInvitationId as { invitationId: string }
-  // const invitation = await Invitation.findByIdAndUpdate(invitationId, { status: "cancel" }, { new: true })
-  // const beInvitation = await BeInvitation.findByIdAndDelete(id)
-  // const profileWithUser = await Profile.findOne({ userId }).select("nickNameDetails")
   const [invitation, beInvitation, profileWithUser] = await Promise.all([Invitation.findByIdAndUpdate(invitationId, { status: "cancel" }, { new: true }), BeInvitation.findByIdAndDelete(id), Profile.findOne({ userId }).select("nickNameDetails")])
   if (!beInvitation || !invitation) {
     appErrorHandler(404, "No invitation found", next)
   } else {
     const { nickNameDetails } = profileWithUser as IPersonalInfo
     const { userId: startInviteUserId } = invitation
-    sendNotification({ title: "取消邀約", content: `${nickNameDetails.nickName}已取消邀約`, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
+    const message = {
+      title: "取消邀約",
+      content: `${nickNameDetails.nickName}已取消邀約`
+    }
+    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "刪除成功", beInvitation, res)
+    const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
+    if (!notification) {
+      appErrorHandler(400, "取消邀請通知失敗", next)
+    }
   }
 }
 const finishBeInvitationDating = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

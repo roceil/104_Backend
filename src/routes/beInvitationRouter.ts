@@ -7,7 +7,7 @@ const router = Router()
 
 // router.get("/who-invite-me-list", getWhoInvitationListSwagger, isAuth, asyncErrorHandler(getWhoInvitationList) as RequestHandler)
 router.get("/who-invite-me-list", getWhoInvitationListByAggregationSwagger, isAuth, asyncErrorHandler(getWhoInvitationListWithAggregation) as RequestHandler)
-router.get("/who-invite-me/:id", isAuth, getBeInvitationByIdSwagger, asyncErrorHandler(getWhoInvitationById) as RequestHandler)
+router.get("/who-invite-me/:id", getBeInvitationByIdSwagger, isAuth, asyncErrorHandler(getWhoInvitationById) as RequestHandler)
 router.put("/who-invite-me/:id/reject", rejectInvitationSwagger, isAuth, asyncErrorHandler(rejectInvitation) as RequestHandler)
 router.put("/who-invite-me/:id/accept", acceptInvitationSwagger, isAuth, asyncErrorHandler(acceptInvitation) as RequestHandler)
 router.put("/who-invite-me/:id/cancel", cancelBeInvitationSwagger, isAuth, asyncErrorHandler(cancelBeInvitation) as RequestHandler)
