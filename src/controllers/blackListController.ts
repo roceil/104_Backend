@@ -5,6 +5,7 @@ import { Profile } from "@/models/profile"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
+import mongoose from "mongoose"
 const postBlackList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
   const { lockedUserId } = req.body
@@ -47,6 +48,15 @@ const getBlackList = async (req: Request, res: Response, _next: NextFunction): P
     appSuccessHandler(200, "查詢成功", blackProfileList, res)
   }
 }
+const getBlackListDetail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  const blackListProfile = await getBlackProfileById(id)
+  if (!blackListProfile) {
+    appErrorHandler(404, "用戶不存在", next)
+  } else {
+    appSuccessHandler(200, "查詢成功", blackListProfile, res)
+  }
+}
 
 const deleteBlackListById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
@@ -62,7 +72,7 @@ const deleteBlackListById = async (req: Request, res: Response, next: NextFuncti
     appSuccessHandler(200, "刪除成功", blackList, res)
   }
 }
-export { postBlackList, getBlackList, deleteBlackListById }
+export { postBlackList, getBlackList, deleteBlackListById, getBlackListDetail }
 
 async function getBlackProfileWithAggregation (parsedPageSize: number, parsedPageNumber: number, blackList: IBlackList[]) {
   const results = await Profile.aggregate([
@@ -120,4 +130,40 @@ async function getBlackProfileWithAggregation (parsedPageSize: number, parsedPag
     }
   ])
   return results[0]
+}
+
+async function getBlackProfileById (id: string) {
+  const blackListProfile = await Profile.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        localField: "userId",
+        foreignField: "userId",
+        as: "matchListSettings"
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSettings",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $project: {
+        "photoDetails._id": 0,
+        "introDetails._id": 0,
+        "nickNameDetails._id": 0,
+        "lineDetails._id": 0,
+        unlockComment: 0,
+        exposureSettings: 0,
+        "userStatus._id": 0,
+        "matchListSettings._id": 0,
+        "matchListSettings.userId": 0,
+        "matchListSettings.updatedAt": 0,
+        "matchListSettings.createdAt": 0
+      }
+    }
+  ])
+  return blackListProfile[0]
 }
