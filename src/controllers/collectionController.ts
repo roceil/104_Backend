@@ -178,8 +178,21 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _n
   }
   appSuccessHandler(200, "查詢成功", response, res)
 }
+const getCollectionWithUserDetail = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+  const { id } = req.params
+  if (!id) {
+    appErrorHandler(400, "需要收藏列表id", _next)
+    return
+  }
+  const collection = await getCollectionDetailProfileWithAggregation(id)
+  if (!collection) {
+    appErrorHandler(404, "查無收藏", _next)
+    return
+  }
+  appSuccessHandler(200, "查詢成功", collection[0], res)
+}
 
-export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation }
+export { getCollections, getCollectionsByUserId, addCollection, deleteCollectionById, getCollectionsByUserIdAggregation, getCollectionWithUserDetail }
 async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.ObjectId | undefined, sort: string | undefined, parsedPageNumber: number, parsedPageSize: number) {
   return await Collection.aggregate([
     { $match: { userId: new mongoose.Types.ObjectId(userId) } },
@@ -263,6 +276,125 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
       }
     },
     // 如果invitation不存在則設定invitation為notInvite
+    {
+      $addFields: {
+        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+      }
+    },
+    {
+      $project: {
+        "collectedUsers.personalInfo.password": 0,
+        "collectedUsers._id": 0,
+        "collectedUsers.personalInfo._id": 0,
+        "collectedUsers.isSubscribe": 0,
+        "collectedUsers.points": 0,
+        "collectedUsers.resetPasswordToken": 0,
+        "collectedUsers.isActive": 0,
+        "collectedUsers.blockedUsers": 0,
+        "collectedUsers.notifications": 0,
+        "collectedUsers.createdAt": 0,
+        "collectedUsers.updatedAt": 0,
+        "collectedUsers.userId": 0,
+        "collectedUsers.photoDetails._id": 0,
+        "collectedUsers.introDetails._id": 0,
+        "collectedUsers.nickNameDetails._id": 0,
+        "collectedUsers.lineDetails._id": 0,
+        "collectedUsers.unlockComment": 0,
+        "collectedUsers.exposureSettings": 0,
+        "collectedUsers.userStatus._id": 0,
+        "collectedUsers.userStatus.isMatch": 0,
+        "invitations.userId": 0,
+        "invitations.invitedUserId": 0,
+        "invitations.message": 0,
+        "invitations.date": 0,
+        "invitations.createdAt": 0,
+        "invitations.updatedAt": 0,
+        personalDataInfo: 0,
+        "matchListSelfSettingByUser._id": 0,
+        "matchListSelfSettingByUser.userId": 0,
+        "matchListSelfSettingByUser.createdAt": 0,
+        "matchListSelfSettingByUser.updatedAt": 0
+      }
+    }
+  ])
+}
+async function getCollectionDetailProfileWithAggregation (id: string) {
+  return await Collection.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "collectedUserId",
+        foreignField: "_id",
+        as: "collectedUsers"
+      }
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "collectedUserId",
+        foreignField: "userId",
+        as: "personalDataInfo"
+      }
+    },
+    {
+      $lookup: {
+        from: "invitations",
+        let: { collectedUserId: { $toString: "$collectedUserId" } },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$userId", "$$collectedUserId"] },
+                  { $eq: ["$invitedUserId", "$$collectedUserId"] }
+                ]
+              }
+            }
+          }
+        ],
+        as: "invitation"
+      }
+    },
+    {
+      $lookup: {
+        from: "matchlistselfsettings",
+        localField: "userId",
+        foreignField: "userId",
+        as: "matchListSelfSettingByUser"
+      }
+    },
+    {
+      $unwind: {
+        path: "$personalDataInfo",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$collectedUsers",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        collectedUsers: {
+          $mergeObjects: ["$collectedUsers", "$personalDataInfo"]
+        }
+      }
+    },
+    {
+      $unwind: {
+        path: "$invitation",
+        preserveNullAndEmptyArrays: true
+      }
+    },
     {
       $addFields: {
         invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
