@@ -10,6 +10,8 @@ import googleService from "@/services/google"
 import generateJWT from "@/utils/generateJWT"
 import { Profile } from "@/models/profile"
 import { User } from "@/models/user"
+import { MatchList } from "@/models/matchList"
+import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import { isUserProfileExist } from "@/utils/checkProfileExist"
 
 /**
@@ -87,6 +89,17 @@ const signUp = async (req: Request, res: Response, next: NextFunction): Promise<
     }
 
     await Profile.create(userProfileData)
+  }
+
+  // 新增初始詳細條件 和 配對設定
+  const userId = await User.findOne({ "personalInfo.email": email }).select("_id")
+  const matchListData = await MatchList.findOne({ userId })
+  const matchListSelfSettingData = await MatchListSelfSetting.findOne({ userId })
+  if (!matchListData) {
+    await MatchList.create({ userId })
+  }
+  if (!matchListSelfSettingData) {
+    await MatchListSelfSetting.create({ userId })
   }
 
   // 發送帳號啟用信件

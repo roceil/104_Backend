@@ -73,13 +73,13 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
           "scoreByProfile.userStatus": 1,
           updatedAt: 1
         }
-      },
-      {
-        $skip: ((Number(page) ?? 1) - 1) * perPage
-      },
-      {
-        $limit: perPage
       }
+      // {
+      //   $skip: ((Number(page) ?? 1) - 1) * perPage
+      // },
+      // {
+      //   $limit: perPage
+      // }
     ])
 
     if (selectedSort === "-score") {
@@ -94,6 +94,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     resultUserIds = resultUserIds.map((i) => i._id)
     resultUserIds = resultUserIds.filter((i) => i.toString() !== userId)
+    totalCount = resultUserIds.length
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
     // console.log(JSON.stringify(resultUserIds));
   } else {
@@ -151,7 +153,8 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
       })
     }
 
-    let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+    let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort)
+    // .skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
     if (selectedSort === "-score") {
       resultUsers = resultUsers.sort((a, b) => {
@@ -165,10 +168,11 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
 
     resultUserIds = resultUsers.map((i) => i.userId._id)
 
-    totalCount = resultUserIds.length
-
     // 直接比较字符串形式，代替排除自己失敗的方法
     resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
+    totalCount = resultUserIds.length
+    resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
+
     if (resultUserIds.length === 0) {
       appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
       return
@@ -231,22 +235,15 @@ export const keywordSearch = async (req: Request, res: Response, _next: NextFunc
     const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
     // const unlockCommentIds = profile?.unlockComment ?? []
 
-    // 取得每個用戶的評分 和 標籤
-    const resultIdProfile = await Profile.findOne({ userId: resultId })
-    const userStatus = resultIdProfile?.userStatus ?? {}
-    const photoDetails = resultIdProfile?.photoDetails ?? {}
-    const tags = resultIdProfile?.tags ?? []
+    // 取得每個用戶的評分 和 標籤 和 照片 和 暱稱 和 LineId 和 自我介紹
+    const resultIdProfile = await Profile.findOne({ userId: resultId }).select("userStatus photoDetails nickNameDetails lineDetails introDetails tags").lean()
 
     return {
       userInfo: {
         ...resultUserInfo?.toObject()
       },
       matchListSelfSetting,
-      profile: {
-        userStatus,
-        photoDetails,
-        tags
-      },
+      profile: resultIdProfile,
       invitationStatus,
       isCollected,
       isLocked,
@@ -339,16 +336,17 @@ export const getEliteList = async (req: Request, res: Response, _next: NextFunct
         updatedAt: 1
       }
     },
-    {
-      $skip: ((Number(1) ?? 1) - 1) * 6
-    },
-    {
-      $limit: 6
-    }
+    // {
+    //   $skip: ((Number(1) ?? 1) - 1) * 6
+    // },
+    // {
+    //   $limit: 6
+    // }
   ])
 
   if (userId !== "") {
     resultUserIds = resultUserIds.filter((i) => i._id.toString() !== userId)
+    resultUserIds = resultUserIds.slice(0, 6)
   }
 
   const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
@@ -401,22 +399,15 @@ export const getEliteList = async (req: Request, res: Response, _next: NextFunct
     // 取得每個用戶的 解鎖狀態 和 評分
     const isUnlock = false
 
-    // 取得每個用戶的評分 和 標籤
-    const resultIdProfile = await Profile.findOne({ userId: resultId })
-    const userStatus = resultIdProfile?.userStatus ?? {}
-    const photoDetails = resultIdProfile?.photoDetails ?? {}
-    const tags = resultIdProfile?.tags ?? []
+    // 取得每個用戶的評分 和 標籤 和 照片 和 暱稱 和 LineId 和 自我介紹
+    const resultIdProfile = await Profile.findOne({ userId: resultId }).select("userStatus photoDetails nickNameDetails lineDetails introDetails tags").lean()
 
     return {
       userInfo: {
         ...resultUserInfo?.toObject()
       },
       matchListSelfSetting,
-      profile: {
-        userStatus,
-        photoDetails,
-        tags
-      },
+      profile: resultIdProfile,
       invitationStatus,
       isCollected,
       isLocked,
@@ -462,7 +453,11 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
   const searchDataBase = await MatchListSelfSetting.findOne({
     userId: userId
   }).select("searchDataBase")
-  const randomElement = (searchDataBase?.searchDataBase as unknown as string[])[Math.floor(Math.random() * (searchDataBase?.searchDataBase as unknown as string[])?.length)]
+
+  let randomElement = ''
+  if (searchDataBase?.searchDataBase && (searchDataBase?.searchDataBase as unknown as string[]).length > 0) {
+    randomElement = (searchDataBase?.searchDataBase as unknown as string[])[Math.floor(Math.random() * (searchDataBase?.searchDataBase as unknown as string[])?.length)]
+  }
 
   // 進行搜尋
   const pipeline = [
@@ -470,7 +465,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
       $match: {
         userId: { $ne: userId, $nin: lockedUserId },
         searchDataBase: {
-          $regex: randomElement, $options: "i" },
+          $regex: randomElement, $options: "i"
+        },
       }
     },
     {
@@ -496,7 +492,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
   ] as any
 
 
-  let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
+  let resultUsers = await MatchListSelfSetting.aggregate(pipeline).sort(selectedSort)
+  // .skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
   if (resultUsers.length === 0) {
     appSuccessHandler(200, "搜尋列表成功", { resultList: [], pagination: { page: 1, perPage, totalCount: 0 } }, res)
@@ -517,8 +514,8 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
 
   // 直接比较字符串形式，代替排除自己失敗的方法
   resultUserIds = await resultUserIds.filter((i) => i.toString() !== userId);
-
   totalCount = resultUserIds.length
+  resultUserIds = resultUserIds.slice(((Number(page) ?? 1) - 1) * perPage, ((Number(page) ?? 1) - 1) * perPage + perPage)
 
   // 組合卡片用戶的資料
   const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
@@ -576,22 +573,15 @@ export const maybeYouLikeSearch = async (req: Request, res: Response, _next: Nex
     const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
     // const unlockCommentIds = profile?.unlockComment ?? []
 
-    // 取得每個用戶的評分 和 標籤
-    const resultIdProfile = await Profile.findOne({ userId: resultId })
-    const userStatus = resultIdProfile?.userStatus ?? {}
-    const photoDetails = resultIdProfile?.photoDetails ?? {}
-    const tags = resultIdProfile?.tags ?? []
+    // 取得每個用戶的評分 和 標籤 和 照片 和 暱稱 和 LineId 和 自我介紹
+    const resultIdProfile = await Profile.findOne({ userId: resultId }).select("userStatus photoDetails nickNameDetails lineDetails introDetails tags").lean()
 
     return {
       userInfo: {
         ...resultUserInfo?.toObject()
       },
       matchListSelfSetting,
-      profile: {
-        userStatus,
-        photoDetails,
-        tags
-      },
+      profile: resultIdProfile,
       invitationStatus,
       isCollected,
       isLocked,

@@ -246,22 +246,15 @@ const getCommentILiftList = async (req: Request, res: Response, _next: NextFunct
     const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
     // const unlockCommentIds = profile?.unlockComment ?? []
 
-    // 取得每個用戶的評分 和 標籤
-    const resultIdProfile = await Profile.findOne({ userId: resultId })
-    const userStatus = resultIdProfile?.userStatus ?? {}
-    const photoDetails = resultIdProfile?.photoDetails ?? {}
-    const tags = resultIdProfile?.tags ?? []
+    // 取得每個用戶的評分 和 標籤 和 照片 和 暱稱 和 LineId 和 自我介紹
+    const resultIdProfile = await Profile.findOne({ userId: resultId }).select("userStatus photoDetails nickNameDetails lineDetails introDetails tags").lean()
 
     return {
       userInfo: {
         ...resultUserInfo?.toObject()
       },
       matchListSelfSetting,
-      profile: {
-        userStatus,
-        photoDetails,
-        tags
-      },
+      profile: resultIdProfile,
       invitationStatus,
       isCollected,
       isLocked,
