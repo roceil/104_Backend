@@ -97,12 +97,13 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
     }
 
     // 計算總筆數
-    const totalCount = await MatchListSelfSetting.find({ userId: { $ne: userId } }).countDocuments(queryCondition)
+    let totalCount = 0
     const perPage = 6
+    let resultUsers = []
+    totalCount = await MatchListSelfSetting.find(queryCondition).countDocuments()
 
-    // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定
-    // 可用陣列 sort 來排序 profile.userStatus.commentScore
-    const resultUsers = await MatchListSelfSetting.find(
+    // 從每個人自身條件MatchListSelfSetting找出符合 該用戶的配對設定(有成功排除了自己)
+    resultUsers = await MatchListSelfSetting.find(
       queryCondition
     ).sort(selectedSort).skip(((Number(page) ?? 1) - 1) * perPage).limit(perPage)
 
@@ -167,22 +168,15 @@ export const findUsersByMultipleConditions = async (req: Request, res: Response,
         const isUnlock = profile?.unlockComment.includes(resultId as unknown as string) ?? false
         // const unlockCommentIds = profile?.unlockComment ?? []
 
-        // 取得每個用戶的評分 和 標籤
-        const resultIdProfile = await Profile.findOne({ userId: resultId })
-        const userStatus = resultIdProfile?.userStatus ?? {}
-        const photoDetails = resultIdProfile?.photoDetails ?? {}
-        const tags = resultIdProfile?.tags ?? []
+        // 取得每個用戶的評分 和 標籤 和 照片 和 暱稱 和 LineId 和 自我介紹
+        const resultIdProfile = await Profile.findOne({ userId: resultId }).select("userStatus photoDetails nickNameDetails lineDetails introDetails tags").lean()
 
         return {
           userInfo: {
             ...resultUserInfo?.toObject()
           },
           matchListSelfSetting,
-          profile: {
-            userStatus,
-            photoDetails,
-            tags
-          },
+          profile: resultIdProfile,
           invitationStatus,
           isCollected,
           isLocked,
