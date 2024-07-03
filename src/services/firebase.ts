@@ -8,7 +8,7 @@ import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 
 // 配置 Firebase
-const config = {
+export const config = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECT_ID,
   private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
@@ -32,7 +32,7 @@ if (!admin.apps.length) {
 /**
  * 壓縮圖片
  */
-const compressImage = async (buffer: Buffer): Promise<Buffer> => {
+export const compressImage = async (buffer: Buffer): Promise<Buffer> => {
   try {
     return await sharp(buffer)
       .png({ quality: 75 }) // 轉換為 png 格式
