@@ -8844,6 +8844,31 @@
           }
         }
       }
+    },
+    "/api/v1/delete-self-setting": {
+      "put": {
+        "tags": [
+          "test-測試用"
+        ],
+        "description": "刪除無帳號的本身條件資料庫資料",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
     }
   }
 }
