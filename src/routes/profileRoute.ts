@@ -3,7 +3,7 @@ import { getUserById, getUserByAuth, postUser, putUser } from "@/controllers/pro
 import { uploadImage, getImageList } from "@/services/firebase"
 import asyncErrorHandler from "@/middlewares/asyncErrorHandler"
 import isAuth from "@/middlewares/isAuth"
-import uploadSingleFile from "@/middlewares/uploadImage"
+import { uploadSingleFile } from "@/middlewares/uploadImage"
 import { getProfileSwagger, getProfileByIdSwagger, postProfileSwagger, putProfileSwagger } from "@/middlewares/swaggerConfig/porfileSwagger"
 
 const router = Router()

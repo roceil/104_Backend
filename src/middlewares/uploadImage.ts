@@ -15,7 +15,7 @@ const upload = multer({
   }
 })
 
-const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
+export const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
   const uploadHandler = upload.single("image")
 
   uploadHandler(req, res, (err: unknown) => {
@@ -35,4 +35,22 @@ const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
   })
 }
 
-export default uploadSingleFile
+export const uploadMultipleFiles = (req: Request, res: Response, next: NextFunction) => {
+  const uploadHandler = upload.array("images", 10)
+
+  uploadHandler(req, res, (err: unknown) => {
+    if (err instanceof Error) {
+      console.error(err)
+      appErrorHandler(422, err.message, next)
+      return
+    }
+
+    if (err instanceof multer.MulterError) {
+      console.error(err)
+      appErrorHandler(500, err.message, next)
+      return
+    }
+
+    next()
+  })
+}
