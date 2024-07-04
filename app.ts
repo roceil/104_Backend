@@ -114,7 +114,8 @@ process.on("unhandledRejection", (err, promise) => {
 })
 
 httpServer.listen(port, () => {
-  console.log("socket listening on *:3002")
+  console.log(`[server]：Socket listening at http://localhost:${port}`)
+  console.log(`[server]：Server is running at http://localhost:${port}`)
 })
 
 // app.listen(port, () => {
