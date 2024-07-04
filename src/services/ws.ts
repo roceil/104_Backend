@@ -222,7 +222,7 @@ const initializeSocket = (server: HttpServer) => {
         // 將用戶加入房間
         void socket.join(roomId)
         socket.rooms.add(roomId) // 將房間ID加入到使用者的房間集合中
-        console.log("chatRoom", chatRoom)
+        // console.log("chatRoom", chatRoom)
         // socket.emit("chatHistory", chatRoom.messages)
       } catch (error) {
         console.error("Failed to join room:", error)
