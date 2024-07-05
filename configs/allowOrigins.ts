@@ -12,7 +12,8 @@ const allowOrigin = [
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:8001",
-  "https://ttttt.zeabur.app"
+  "https://ttttt.zeabur.app",
+  "https://test-nginx.zeabur.app"
 ]
 
 // 如果 port 存在且是數字，則將相應的本地端口添加到 allowOrigin 中
