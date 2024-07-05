@@ -17,7 +17,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
 # nginx 配置
-COPY service_nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# COPY service_nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # 暴露應用端口
 EXPOSE 3001
