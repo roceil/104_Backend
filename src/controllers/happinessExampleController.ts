@@ -84,9 +84,9 @@ export const getExampleById = async (req: Request, res: Response, next: NextFunc
     return
   }
 
-  // 隨機取得其他幸福案例
+  // 隨機取得其他幸福案例且過濾掉目前的案例
   const otherExamples = await HappinessExample.aggregate([
-    { $match: { _id: { $ne: id } } },
+    { $match: { _id: { $ne: example._id } } },
     { $sample: { size: 3 } }
   ])
 
