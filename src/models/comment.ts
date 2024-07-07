@@ -3,9 +3,13 @@ import { type IUserId } from "../types/userInterface"
 interface ICommentUserId {
   commentedUserId: Types.ObjectId
 }
+interface IInvitationOrBeInvitationId {
+  invitationIdOrBeInvitationId: Types.ObjectId
+}
 interface IComment {
   userId: IUserId
   commentedUserId: ICommentUserId
+  invitationIdOrBeInvitationId: IInvitationOrBeInvitationId
   content: string
   score: number
   isUnlock: boolean
@@ -23,6 +27,10 @@ const commentSchema = new Schema<IComment>({
     type: mongo.ObjectId,
     required: [true, "需要被評價者id"],
     ref: "user"
+  },
+  invitationIdOrBeInvitationId: {
+    type: mongo.ObjectId,
+    required: [true, "需要邀請或被邀請id"]
   },
   content: {
     type: String,
