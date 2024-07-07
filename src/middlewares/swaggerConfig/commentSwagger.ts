@@ -12,6 +12,7 @@ export function postCommentSwagger (_req: Request, _res: Response, next: NextFun
        required: true,
        schema: {
          $commentedUserId:"66487581f6f2c93ddd16ff00",
+         $id:"5s1df35a6ds1f23af1s32",
          $content:"test666666",
          $score:4
        }

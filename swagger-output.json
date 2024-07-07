@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "104-dev.zeabur.app",
+  "host": "localhost:8086",
   "basePath": "/",
   "schemes": [
     "http",
@@ -1604,6 +1604,10 @@
                   "type": "string",
                   "example": "66487581f6f2c93ddd16ff00"
                 },
+                "id": {
+                  "type": "string",
+                  "example": "5s1df35a6ds1f23af1s32"
+                },
                 "content": {
                   "type": "string",
                   "example": "test666666"
@@ -1615,6 +1619,7 @@
               },
               "required": [
                 "commentedUserId",
+                "id",
                 "content",
                 "score"
               ]

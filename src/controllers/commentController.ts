@@ -11,11 +11,10 @@ import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { checkPageSizeAndPageNumber } from "@/utils/checkControllerParams"
-// todo: comment的規則是完成約會後才能評價，記得以後要補上約會完成的判斷
 
 const postComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { userId } = req.user as LoginResData
-  const { commentedUserId, content, score } = req.body
+  const { commentedUserId, content, score, id } = req.body
 
   if (!content) {
     appErrorHandler(400, "缺少評價", next)
@@ -37,7 +36,19 @@ const postComment = async (req: Request, res: Response, next: NextFunction): Pro
   if (numberScore < 1 || numberScore > 5) {
     appErrorHandler(400, "評分範圍為1-5", next)
   }
-  const comment = await Comment.create({ userId, commentedUserId, content, score: numberScore })
+  if (!id) {
+    appErrorHandler(400, "缺少邀約或被邀約Id", next)
+  }
+  const [invitation, beInvitation] = await Promise.all([Invitation.findByIdAndUpdate(id, { isComment: true }, { new: true }), BeInvitation.findByIdAndUpdate(id, { isComment: true }, { new: true })])
+  if (!invitation && !beInvitation) {
+    appErrorHandler(404, "邀約或被邀約不存在", next)
+    return
+  }
+  if (!invitation?.isFinishDating && !beInvitation?.isFinishDating) {
+    appErrorHandler(400, "約會尚未完成", next)
+    return
+  }
+  const comment = await Comment.create({ userId, commentedUserId, invitationIdOrBeInvitationId: id, content, score: numberScore })
   const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
     {
       $set: {
@@ -325,7 +336,7 @@ const putComment = async (req: Request, res: Response, next: NextFunction): Prom
 
 const deleteComment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const { commentedUserId } = req.body
+  const { commentedUserId, listId } = req.body
   const commentScore = await Comment.findById(id).select("score")
   if (!commentScore) {
     appErrorHandler(404, "找不到評分", next)
@@ -336,6 +347,7 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
     appErrorHandler(404, "找不到評分", next)
     return
   }
+
   const commentUserProfile = await Profile.findOneAndUpdate({ userId: commentedUserId }, [
     {
       $set: {
@@ -379,6 +391,13 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
   if (!comment) {
     appErrorHandler(400, "刪除失敗,找不到評價Id", next)
   } else {
+    const { invitationIdOrBeInvitationId } = comment
+    console.log("invitationIdOrBeInvitationId", invitationIdOrBeInvitationId)
+    const [invitation, beInvitation] = await Promise.all([Invitation.findByIdAndUpdate(invitationIdOrBeInvitationId, { isComment: false }, { new: true }), BeInvitation.findByIdAndUpdate(invitationIdOrBeInvitationId, { isComment: false }, { new: true })])
+  if (!invitation && !beInvitation) {
+    appErrorHandler(404, "邀約或被邀約不存在", next)
+    return
+  }
     appSuccessHandler(200, "評價刪除成功", comment, res)
   }
 }
