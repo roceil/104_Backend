@@ -161,7 +161,8 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     name: user.personalInfo.username,
     gender: user.personalInfo.gender,
     birthday: user.personalInfo.birthday,
-    isFirstTimeLogin: user.isFirstTimeLogin
+    isFirstTimeLogin: user.isFirstTimeLogin,
+    isSubscribe: user.isSubscribe
   }
 
   // 產生 token

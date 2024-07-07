@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -4393,6 +4393,10 @@
                       "type": "boolean",
                       "example": false
                     },
+                    "isComment": {
+                      "type": "boolean",
+                      "example": false
+                    },
                     "date": {
                       "type": "string",
                       "example": "2024-05-21T06:49:49.383Z"
@@ -5237,6 +5241,10 @@
                       "example": "664c427bb56b34d999f86c83"
                     },
                     "isFinishDating": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "isComment": {
                       "type": "boolean",
                       "example": false
                     },
