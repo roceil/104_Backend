@@ -315,7 +315,7 @@ async function getBeInvitationListWithAggregation (userId: mongoose.Types.Object
             }
           }
         ],
-        as: "profileByInvitedUserId"
+        as: "profileByUserId"
       }
     },
     {
@@ -359,22 +359,16 @@ async function getBeInvitationListWithAggregation (userId: mongoose.Types.Object
     {
       $addFields: {
         isUnlock: {
-          $cond: {
-            if: {
-              $in: ["$userId", { $ifNull: ["$profileByInvitedUserId.unlockComment", []] }]
-            },
-            then: true,
-            else: false
-          }
+          $in: [{ $toString: "$userId" }, { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
         },
         isCollected: {
-          $cond: {
-            if: {
-              $in: ["$userId", { $ifNull: ["$collection.collectedUserId", []] }]
-            },
-            then: true,
-            else: false
-          }
+          $in: [{ $toString: "$userId" }, {
+            $map: {
+              input: "$collection",
+              as: "col",
+              in: { $toString: "$$col.collectedUserId" }
+            }
+          }]
         },
         profileByUser: { $ifNull: ["$profileByUser", { message: "找不到邀請者" }] },
         matchListSelfSettingByUser: { $ifNull: ["$matchListSelfSettingByUser", { message: "找不到邀請者" }] }
@@ -382,9 +376,9 @@ async function getBeInvitationListWithAggregation (userId: mongoose.Types.Object
     },
     {
       $project: {
-        collection: 0,
-        profileByInvitedUser: 0,
-        profileByInvitedUserId: 0,
+        // collection: 0,
+        // profileByInvitedUser: 0,
+        // profileByInvitedUserId: 0,
         "profileByUser._id": 0,
         "profileByUser.userId": 0,
         "profileByUser.unlockComment": 0,
@@ -396,6 +390,7 @@ async function getBeInvitationListWithAggregation (userId: mongoose.Types.Object
         "profileByUser.jobDetails._id": 0,
         "profileByUser.companyDetails._id": 0,
         "profileByUser.exposureSettings._id": 0,
+        "profileByUser.userStatus._id": 0,
         "profileByUser.createdAt": 0,
         "profileByUser.updatedAt": 0,
         "matchListSelfSettingByUser._id": 0,

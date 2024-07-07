@@ -328,21 +328,9 @@ function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | und
       }
     },
     {
-      $lookup: {
-        from: "profiles",
-        pipeline: [
-          {
-            $match: {
-              userId: new mongoose.Types.ObjectId(userId)
-            }
-          },
-          {
-            $project: {
-              unlockComment: 1
-            }
-          }
-        ],
-        as: "profileByUserId"
+      $unwind: {
+        path: "$profileByInvitedUser",
+        preserveNullAndEmptyArrays: true
       }
     },
     {
@@ -359,6 +347,30 @@ function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | und
           }
         ],
         as: "matchListSelfSettingByInvitedUser"
+      }
+    },
+    {
+      $unwind: {
+        path: "$matchListSelfSettingByInvitedUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
       }
     },
     {
@@ -380,36 +392,18 @@ function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | und
       }
     },
     {
-      $unwind: {
-        path: "$profileByInvitedUser",
-        preserveNullAndEmptyArrays: true
-      }
-    },
-    {
-      $unwind: {
-        path: "$matchListSelfSettingByInvitedUser",
-        preserveNullAndEmptyArrays: true
-      }
-    },
-    {
       $addFields: {
         isUnlock: {
-          $cond: {
-            if: {
-              $in: ["$invitedUserId", { $ifNull: ["$profileByUserId.unlockComment", []] }]
-            },
-            then: true,
-            else: false
-          }
+          $in: ["$invitedUserId", { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
         },
         isCollected: {
-          $cond: {
-            if: {
-              $in: ["$invitedUserId", { $ifNull: ["$collection.collectedUserId", []] }]
-            },
-            then: true,
-            else: false
-          }
+          $in: ["$invitedUserId", {
+            $map: {
+              input: "$collection",
+              as: "col",
+              in: { $toString: "$$col.collectedUserId" }
+            }
+          }]
         },
         profileByInvitedUser: { $ifNull: ["$profileByInvitedUser", { message: "找不到被邀請者" }] },
         matchListSelfSettingByInvitedUser: { $ifNull: ["$matchListSelfSettingByInvitedUser", { message: "找不到被邀請者" }] }
@@ -417,8 +411,8 @@ function getInvitationListWithAggregation (userId: mongoose.Types.ObjectId | und
     },
     {
       $project: {
-        profileByUserId: 0,
         collection: 0,
+        profileByUserId: 0,
         "profileByInvitedUser._id": 0,
         "profileByInvitedUser.userId": 0,
         "profileByInvitedUser.photoDetails._id": 0,
