@@ -20,6 +20,7 @@ export interface LoginResData {
   token?: string
   avatar?: string
   isFirstTimeLogin?: boolean
+  isSubscribe?: boolean
 }
 
 /**
