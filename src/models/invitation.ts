@@ -12,6 +12,7 @@ interface IInvitation extends Document {
   }
   date: Date
   isFinishDating: boolean
+  isComment: boolean
   isUnlock?: boolean
   profileByInvitedUser?: IPersonalInfo
   status: "accept" | "reject" | "cancel" | "pending" | "finishDating"
@@ -48,6 +49,10 @@ const invitationSchema = new Schema<IInvitation>({
     }
   },
   isFinishDating: {
+    type: Boolean,
+    default: false
+  },
+  isComment: {
     type: Boolean,
     default: false
   },
