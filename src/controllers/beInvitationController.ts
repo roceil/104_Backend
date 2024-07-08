@@ -11,6 +11,7 @@ import { isInBlackList } from "@/utils/blackListHandler"
 import { createNotification } from "./notificationsController"
 import { sendNotification } from "@/services/notificationWS"
 import mongoose, { type Types } from "mongoose"
+import { type INotification } from "@/models/notification"
 interface ParsedBeInvitation {
   userId: string
   invitedUserId: string
@@ -108,11 +109,13 @@ const cancelBeInvitation = async (req: Request, res: Response, next: NextFunctio
       title: "取消邀約",
       content: `${nickNameDetails.nickName}已取消邀約`
     }
-    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "取消邀請成功", beInvitation, res)
     const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId, _id)
     }
   }
 }
@@ -135,11 +138,13 @@ const rejectInvitation = async (req: Request, res: Response, next: NextFunction)
       title: "拒絕邀約",
       content: `${nickNameDetails.nickName}已拒絕邀約`
     }
-    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "拒絕邀請成功", invitation, res)
     const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId, _id)
     }
   }
 }
@@ -168,11 +173,13 @@ const acceptInvitation = async (req: Request, res: Response, next: NextFunction)
       content: `${nickNameDetails.nickName}已接受邀約`
     }
 
-    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "接受邀請成功", invitation, res)
     const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId, _id)
     }
   }
 }
@@ -191,11 +198,13 @@ const deleteBeInvitation = async (req: Request, res: Response, next: NextFunctio
       title: "取消邀約",
       content: `${nickNameDetails.nickName}已取消邀約`
     }
-    sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId)
     appSuccessHandler(200, "刪除成功", beInvitation, res)
     const notification = await createNotification(userId, startInviteUserId as unknown as Types.ObjectId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails }, startInviteUserId as unknown as Types.ObjectId, _id)
     }
   }
 }
@@ -211,13 +220,12 @@ const finishBeInvitationDating = async (req: Request, res: Response, next: NextF
 
 const getWhoInvitationListWithAggregation = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { pageSize, page, sort } = req.query as { pageSize?: string, page?: string, sort?: string }
-  const dateSort = sort === "desc" ? "-updatedAt" : "updatedAt"
   // 檢查是否有傳入pageSize和pageNumber，若無則設定預設值
   const { parsedPageNumber, parsedPageSize } = checkPageSizeAndPageNumber(pageSize, page)
 
   const { userId } = req.user as LoginResData
 
-  const [totalCount, beInvitations] = await Promise.all([BeInvitation.countDocuments({ invitedUserId: userId }), getBeInvitationListWithAggregation(userId, dateSort, parsedPageNumber, parsedPageSize)])
+  const [totalCount, beInvitations] = await Promise.all([BeInvitation.countDocuments({ invitedUserId: userId }), getBeInvitationListWithAggregation(userId, sort, parsedPageNumber, parsedPageSize)])
   if (!beInvitations || beInvitations.length === 0) {
     appSuccessHandler(200, "沒有邀請", { BeInvitations: [] }, res)
   }
