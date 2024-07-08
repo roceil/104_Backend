@@ -5,7 +5,7 @@
     "description": "the backend",
     "version": "1.0.0"
   },
-  "host": "localhost:8086",
+  "host": "104-dev.zeabur.app",
   "basePath": "/",
   "schemes": [
     "http",
@@ -8215,6 +8215,10 @@
                                 }
                               }
                             }
+                          },
+                          "isUnlock": {
+                            "type": "boolean",
+                            "example": false
                           }
                         }
                       }
@@ -8505,6 +8509,10 @@
                           }
                         }
                       }
+                    },
+                    "isUnlock": {
+                      "type": "boolean",
+                      "example": false
                     }
                   }
                 }
