@@ -180,11 +180,12 @@ const getCollectionsByUserIdAggregation = async (req: Request, res: Response, _n
 }
 const getCollectionWithUserDetail = async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
   const { id } = req.params
+  const { userId } = req.user as LoginResData
   if (!id) {
     appErrorHandler(400, "需要收藏列表id", _next)
     return
   }
-  const collection = await getCollectionDetailProfileWithAggregation(id)
+  const collection = await getCollectionDetailProfileWithAggregation(id, userId)
   if (!collection) {
     appErrorHandler(404, "查無收藏", _next)
     return
@@ -199,6 +200,24 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     { $sort: { updatedAt: sort === "desc" ? -1 : 1 } },
     { $skip: (parsedPageNumber - 1) * parsedPageSize },
     { $limit: parsedPageSize },
+    {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
+      }
+    },
     {
       $lookup: {
         from: "users",
@@ -278,7 +297,10 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     // 如果invitation不存在則設定invitation為notInvite
     {
       $addFields: {
-        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] },
+        isUnlock: {
+          $in: [{ $toString: "$collectedUserId" }, { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
+        }
       }
     },
     {
@@ -299,10 +321,16 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
         "collectedUsers.introDetails._id": 0,
         "collectedUsers.nickNameDetails._id": 0,
         "collectedUsers.lineDetails._id": 0,
+        "collectedUsers.jobDetails._id": 0,
+        "collectedUsers.chatRecord": 0,
+        "collectedUsers.companyDetails._id": 0,
+        "collectedUsers.incomeDetails._id": 0,
+        "collectedUsers.phoneDetails._id": 0,
         "collectedUsers.unlockComment": 0,
         "collectedUsers.exposureSettings": 0,
         "collectedUsers.userStatus._id": 0,
         "collectedUsers.userStatus.isMatch": 0,
+        "invitations._id": 0,
         "invitations.userId": 0,
         "invitations.invitedUserId": 0,
         "invitations.message": 0,
@@ -310,6 +338,7 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
         "invitations.createdAt": 0,
         "invitations.updatedAt": 0,
         personalDataInfo: 0,
+        userId: 0,
         "matchListSelfSettingByUser._id": 0,
         "matchListSelfSettingByUser.userId": 0,
         "matchListSelfSettingByUser.createdAt": 0,
@@ -318,9 +347,27 @@ async function getCollectionByUserIdWithAggregation (userId: mongoose.Types.Obje
     }
   ])
 }
-async function getCollectionDetailProfileWithAggregation (id: string) {
+async function getCollectionDetailProfileWithAggregation (id: string, userId: mongoose.Types.ObjectId | undefined) {
   return await Collection.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
+      }
+    },
     {
       $lookup: {
         from: "users",
@@ -397,7 +444,10 @@ async function getCollectionDetailProfileWithAggregation (id: string) {
     },
     {
       $addFields: {
-        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] }
+        invitation: { $ifNull: ["$invitation", { status: "notInvite" }] },
+        isUnlock: {
+          $in: [{ $toString: "$collectedUserId" }, { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
+        }
       }
     },
     {
@@ -418,10 +468,16 @@ async function getCollectionDetailProfileWithAggregation (id: string) {
         "collectedUsers.introDetails._id": 0,
         "collectedUsers.nickNameDetails._id": 0,
         "collectedUsers.lineDetails._id": 0,
+        "collectedUsers.jobDetails._id": 0,
+        "collectedUsers.chatRecord": 0,
+        "collectedUsers.companyDetails._id": 0,
+        "collectedUsers.incomeDetails._id": 0,
+        "collectedUsers.phoneDetails._id": 0,
         "collectedUsers.unlockComment": 0,
         "collectedUsers.exposureSettings": 0,
         "collectedUsers.userStatus._id": 0,
         "collectedUsers.userStatus.isMatch": 0,
+        "invitations._id": 0,
         "invitations.userId": 0,
         "invitations.invitedUserId": 0,
         "invitations.message": 0,
