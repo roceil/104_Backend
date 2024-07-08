@@ -12,6 +12,7 @@ import { isInBlackList } from "@/utils/blackListHandler"
 import { type IInvitations } from "@/types/invitationInterface"
 import mongoose from "mongoose"
 import { sendNotification } from "@/services/notificationWS"
+import { type INotification } from "@/models/notification"
 interface ParsedInvitation {
   userId: string
   invitedUserId: string
@@ -69,18 +70,28 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
     if (isExistInvitation.status === "pending" || isExistInvitation.status === "accept") {
       appErrorHandler(400, "已邀請過", next)
     } else { // 若邀請狀態為cancel reject，則可再次邀請
-      const [invitationAgain, beInvitation] = await Promise.all([Invitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true }), BeInvitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true })])
+      const [invitationAgain, beInvitation, profileWithUser] = await Promise.all([Invitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true }), BeInvitation.findOneAndUpdate({ userId, invitedUserId }, { message, status: "pending" }, { new: true }), Profile.findOne({ userId }).select("nickNameDetails")
+      ])
       if (!invitationAgain || !beInvitation) {
         appErrorHandler(400, "再次邀請失敗", next)
         return
       }
-      appSuccessHandler(200, "再次邀請成功", invitationAgain, res)
-      return
+      const notificationCreated = await createNotification(userId, invitedUserId, message, 1)
+      if (!notificationCreated) {
+        appErrorHandler(400, "再次邀請通知失敗", next)
+        return
+      } else {
+        const { _id } = notificationCreated as unknown as INotification
+        const { nickNameDetails } = profileWithUser as IPersonalInfo
+        const { userId } = req.user as LoginResData
+        sendNotification({ title: message.title, content: message.content, nickNameDetails, userId }, invitedUserId, _id)
+        appSuccessHandler(200, "再次邀請成功", invitationAgain, res)
+      }
     }
   }
   const [invitation, profileWithUser] = await Promise.all([Invitation.create({ userId, invitedUserId, message }), Profile.findOne({ userId }).select("nickNameDetails")])
-  const isNotificationCreated = await createNotification(userId, invitedUserId, message, 1)
-  if (!invitation || !isNotificationCreated) {
+  const notificationCreated = await createNotification(userId, invitedUserId, message, 1)
+  if (!invitation || !notificationCreated) {
     appErrorHandler(400, "邀請失敗", next)
   } else {
     if (!invitation.id) {
@@ -93,7 +104,8 @@ const postInvitation = async (req: Request, res: Response, next: NextFunction): 
       const { nickNameDetails } = profileWithUser as IPersonalInfo
       const { userId } = req.user as LoginResData
       const { invitedUserId } = beInvitation
-      sendNotification({ title: message.title, content: message.content, nickNameDetails, userId }, invitedUserId)
+      const { _id } = notificationCreated as unknown as INotification
+      sendNotification({ title: message.title, content: message.content, nickNameDetails, userId }, invitedUserId, _id)
       appSuccessHandler(201, "邀請成功", invitation, res)
     }
   }
@@ -169,11 +181,13 @@ const cancelInvitation = async (req: Request, res: Response, next: NextFunction)
       title: "取消邀約",
       content: `${nickNameDetails.nickName}已取消邀約`
     }
-    sendNotification({ ...message, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "取消邀請成功", invitation, res)
     const notification = await createNotification(userId, invitedUserId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails, userId }, invitedUserId, _id)
     }
   }
 }
@@ -192,11 +206,13 @@ const deleteInvitation = async (req: Request, res: Response, next: NextFunction)
       title: "取消邀約",
       content: `${nickNameDetails.nickName}已取消邀約`
     }
-    sendNotification({ ...message, nickNameDetails, userId }, invitedUserId)
     appSuccessHandler(200, "刪除成功", invitation, res)
     const notification = await createNotification(userId, invitedUserId, message, 1)
     if (!notification) {
       appErrorHandler(400, "取消邀請通知失敗", next)
+    } else {
+      const { _id } = notification as unknown as INotification
+      sendNotification({ ...message, nickNameDetails, userId }, invitedUserId, _id)
     }
   }
 }
