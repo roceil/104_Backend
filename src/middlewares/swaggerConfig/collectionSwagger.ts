@@ -275,7 +275,8 @@ export function getCollectionsByUserIdSwagger (_req: Request, _res: Response, ne
                  ],
                  expectedSalary: 0
                 }
-             }
+             },
+              isUnlock: false
             }
           ],
           pagination: {
@@ -373,7 +374,8 @@ export function getCollectionDetailByIdSwagger (_req: Request, _res: Response, n
                  ],
                  expectedSalary: 0
              }
-            }
+            },
+            isUnlock: false
         }
       }
     }
