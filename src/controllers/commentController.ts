@@ -392,7 +392,6 @@ const deleteComment = async (req: Request, res: Response, next: NextFunction): P
     appErrorHandler(400, "刪除失敗,找不到評價Id", next)
   } else {
     const { invitationIdOrBeInvitationId } = comment
-    console.log("invitationIdOrBeInvitationId", invitationIdOrBeInvitationId)
     const [invitation, beInvitation] = await Promise.all([Invitation.findByIdAndUpdate(invitationIdOrBeInvitationId, { isComment: false }, { new: true }), BeInvitation.findByIdAndUpdate(invitationIdOrBeInvitationId, { isComment: false }, { new: true })])
   if (!invitation && !beInvitation) {
     appErrorHandler(404, "邀約或被邀約不存在", next)
