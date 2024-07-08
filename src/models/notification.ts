@@ -2,6 +2,7 @@ import { Schema, model, mongo } from "mongoose"
 import { type IUserId } from "../types/userInterface"
 
 interface INotification {
+  _id: mongo.ObjectId
   userId: IUserId
   receiveUserId: IUserId
   type: number // 1: 邀約通知 | 2: 系統通知
