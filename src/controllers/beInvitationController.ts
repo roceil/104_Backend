@@ -83,7 +83,8 @@ const getWhoInvitationList = async (req: Request, res: Response, _next: NextFunc
 }
 const getWhoInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const beInvitation = await getBeInvitationListByIdWithAggregation(id)
+  const { userId } = req.user as LoginResData
+  const beInvitation = await getBeInvitationListByIdWithAggregation(userId, id)
 
   if (!beInvitation || beInvitation.length === 0) {
     appErrorHandler(404, "No invitation found", next)
@@ -242,7 +243,7 @@ const getWhoInvitationListWithAggregation = async (req: Request, res: Response, 
 }
 export { getWhoInvitationList, getWhoInvitationById, cancelBeInvitation, rejectInvitation, acceptInvitation, deleteBeInvitation, finishBeInvitationDating, getWhoInvitationListWithAggregation }
 
-async function getBeInvitationListByIdWithAggregation (id: string) {
+async function getBeInvitationListByIdWithAggregation (userId: mongoose.Types.ObjectId | undefined, id: string) {
   return await BeInvitation.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(id) } },
     {
@@ -262,15 +263,47 @@ async function getBeInvitationListByIdWithAggregation (id: string) {
       }
     },
     {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
+      }
+    },
+    {
       $unwind: {
         path: "$profileByUser",
         preserveNullAndEmptyArrays: true
       }
     },
     {
+      $unwind: {
+        path: "$matchListSelfSettingByUser",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        isUnlock: {
+          $in: [{ $toString: "$userId" }, { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
+        }
+      }
+    },
+    {
       $project: {
         profileByInvitedUser: 0,
         profileByInvitedUserId: 0,
+        profileByUserId: 0,
         "profileByUser._id": 0,
         "profileByUser.userId": 0,
         "profileByUser.unlockComment": 0,
