@@ -259,10 +259,11 @@ export function getBeInvitationByIdSwagger (_req: Request, _res: Response, next:
                           ],
                           expectedSalary: 0
                       }
-                  }
-          }
-        }
-      }
+                  },
+                  isUnlock: true
+                }
+              }
+            }
      */
   next()
 }
