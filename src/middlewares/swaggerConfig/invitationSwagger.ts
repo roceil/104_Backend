@@ -263,9 +263,10 @@ export function getInvitationByIdSwagger (_req: Request, _res: Response, next: N
                           expectedSalary: 0
                       }
                   },
-        }
-      }
-    }
+                  isUnlock: true
+                }
+              }
+            }
    */
   next()
 }
