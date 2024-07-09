@@ -158,7 +158,8 @@ const getInvitationList = async (req: Request, res: Response, _next: NextFunctio
 }
 const getInvitationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { id } = req.params
-  const invitation = await getInvitationListByIdWithAggregation(id)
+  const { userId } = req.user as LoginResData
+  const invitation = await getInvitationListByIdWithAggregation(userId, id)
 
   if (!invitation || invitation.length === 0) {
     appErrorHandler(404, "No invitation found", next)
@@ -249,7 +250,7 @@ const getInvitationListAggregation = async (req: Request, res: Response, _next: 
 }
 
 export { postInvitation, getInvitationList, getInvitationById, cancelInvitation, deleteInvitation, finishInvitationDating, getInvitationListAggregation }
-async function getInvitationListByIdWithAggregation (id: string) {
+async function getInvitationListByIdWithAggregation (userId: mongoose.Types.ObjectId | undefined, id: string) {
   return await Invitation.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(id) } },
     {
@@ -285,6 +286,24 @@ async function getInvitationListByIdWithAggregation (id: string) {
       }
     },
     {
+      $lookup: {
+        from: "profiles",
+        pipeline: [
+          {
+            $match: {
+              userId: new mongoose.Types.ObjectId(userId)
+            }
+          },
+          {
+            $project: {
+              unlockComment: 1
+            }
+          }
+        ],
+        as: "profileByUserId"
+      }
+    },
+    {
       $unwind: {
         path: "$profileByInvitedUser",
         preserveNullAndEmptyArrays: true
@@ -297,7 +316,15 @@ async function getInvitationListByIdWithAggregation (id: string) {
       }
     },
     {
+      $addFields: {
+        isUnlock: {
+          $in: ["$invitedUserId", { $ifNull: [{ $arrayElemAt: ["$profileByUserId.unlockComment", 0] }, []] }]
+        }
+      }
+    },
+    {
       $project: {
+        profileByUserId: 0,
         "profileByInvitedUser._id": 0,
         "profileByInvitedUser.userId": 0,
         "profileByInvitedUser.photoDetails._id": 0,
