@@ -24,7 +24,7 @@ export const verifyToken = (token: string, next: NextFunction) => {
 }
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies.token as string || req.params.token
+  const token = req.headers.authorization ?? req.params.token
 
   if (!token) {
     appErrorHandler(401, "未登入", next)
