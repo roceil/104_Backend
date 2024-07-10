@@ -27,6 +27,7 @@ import searchRouter from "@/routes/searchRouter"
 import orderRouter from "@/routes/ordersRouter"
 import devUseRouter from "@/routes/devUseRouter"
 import happinessExampleRouter from "@/routes/happinessExampleRouter"
+import godBlessMe from "@/utils/godBlessMe"
 import http from "http"
 import { initializeSocket } from "@/services/ws"
 import chatRoomRouter from "@/routes/chatRoomRouter"
@@ -113,9 +114,7 @@ process.on("unhandledRejection", (err, promise) => {
   process.exit(1)
 })
 
-httpServer.listen(port, () => {
-  console.log("socket listening on *:3002")
-})
+httpServer.listen(port, godBlessMe(port))
 
 // app.listen(port, () => {
 //   console.log(`[server]: Server is running at http://localhost:${port}`)
