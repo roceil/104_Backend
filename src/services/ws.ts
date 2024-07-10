@@ -50,6 +50,62 @@ async function getUserById (userId: string) {
     return null
   }
 }
+
+// 封裝取得聊天記錄的方法
+const fetchChatHistories = async (socket: Socket) => {
+  if (!socket.userInfo?.chatRecords) {
+    return []
+  }
+
+  const chatHistoriesPromises = socket.userInfo.chatRecords.map(async (record: IChatRecord) => {
+    const roomId = record.roomId._id
+    const chatRoom = await ChatRoom.findById(roomId)
+      .populate({
+        path: "members",
+        model: "user",
+        select: "personalInfo username"
+      })
+
+    if (!chatRoom) {
+      return null
+    }
+
+    const unreadCount = chatRoom.messages.reduce(
+      (acc: number, message: IMessage) => (!message.isRead ? acc + 1 : acc),
+      0
+    )
+
+    const members = await Promise.all(
+      (chatRoom.members as IUser[])
+        .filter(member => member._id.toString() !== socket.userInfo?.userId)
+        .map(async member => {
+          const profile = await Profile.findOne({ userId: member._id, "photoDetails.isShow": true }).select("photoDetails.photo")
+
+          return {
+            username: member.personalInfo?.username ?? "",
+            photo: profile?.photoDetails.photo ?? "",
+            id: member._id.toString()
+          }
+        })
+    )
+
+    return {
+      roomId,
+      messages: chatRoom.messages,
+      unreadCount,
+      members
+    }
+  })
+
+  try {
+    const chatHistories = await Promise.all(chatHistoriesPromises)
+    return chatHistories.filter(history => history !== null)
+  } catch (error) {
+    console.error("Failed to fetch chat histories:", error)
+    throw new Error("Failed to fetch chat histories")
+  }
+}
+
 const socketErrorHandler = (error: Error, socket: Socket) => {
   console.error("Socket Error:", error)
   socket.emit("error", { message: error.message })
@@ -147,52 +203,11 @@ const initializeSocket = (server: HttpServer) => {
       `有新的小夥伴加入啦!!!讓我們熱烈歡迎${socket.userInfo?.name} 現在線上有 ${numberOfClients} 人`
     )
 
-    if (socket.userInfo?.chatRecords) {
-      // 創建一個Promise數組來保存所有的非同步操作
-      const chatHistoriesPromises = socket.userInfo?.chatRecords.map(async (record: IChatRecord) => { // 明確指定類型
-        const roomId = record.roomId._id
-        const chatRoom = await ChatRoom.findById(roomId)
-          .populate({
-            path: "members",
-            model: "user",
-            select: "personalInfo username"
-          })
-        if (!chatRoom) {
-          return null // 如果chatRoom為null，返回null
-        }
-
-        const unreadCount = chatRoom.messages.reduce((acc: number, message: IMessage) => !message.isRead ? acc + 1 : acc, 0) // 明確指定累加器類型
-
-        const members = await Promise.all(
-          (chatRoom.members as IUser[])
-            .filter(member => member._id.toString() !== socket.userInfo?.userId)
-            .map(async member => {
-              const profile = await Profile.findOne({ userId: member._id, "photoDetails.isShow": true }).select("photoDetails.photo")
-
-              return {
-                username: member.personalInfo?.username ?? "", // 使用 ?? 运算符设置默认值
-                photo: profile?.photoDetails.photo ?? "", // 使用 ?? 运算符设置默认值
-                id: member._id.toString()
-              }
-            })
-        )
-        return {
-          roomId,
-          messages: chatRoom.messages,
-          unreadCount,
-          members
-        }
-      })
-
-      // 使用Promise.all等待所有Promise解決
-      Promise.all(chatHistoriesPromises).then((chatHistories) => {
-        // 一次性發送所有聊天歷史的基本資料
-        socket.emit("chatHistory", chatHistories.filter(history => history !== null))
-      }).catch((error) => {
-        // 處理可能的錯誤
-        console.error("Failed to fetch chat histories:", error)
-        socket.emit("error", { message: "Failed to fetch chat histories" })
-      })
+    try {
+      const chatHistories = await fetchChatHistories(socket)
+      socket.emit("chatHistory", chatHistories)
+    } catch (error) {
+      socket.emit("error", { message: "取得歷史訊息失敗" })
     }
 
     // 斷開連接
@@ -222,7 +237,7 @@ const initializeSocket = (server: HttpServer) => {
         // 將用戶加入房間
         void socket.join(roomId)
         socket.rooms.add(roomId) // 將房間ID加入到使用者的房間集合中
-        console.log("chatRoom", chatRoom)
+        // console.log("chatRoom", chatRoom)
         // socket.emit("chatHistory", chatRoom.messages)
       } catch (error) {
         console.error("Failed to join room:", error)
@@ -290,7 +305,17 @@ const initializeSocket = (server: HttpServer) => {
         socketErrorHandler(error as Error, socket)
       }
     })
+
+    // 使用者輸入中
+    socket.on("typing", ({ roomId, userId }) => {
+      socket.to(roomId).emit("typing", { userId })
+    })
+
+    // 使用者停止輸入
+    socket.on("stopTyping", ({ roomId, userId }) => {
+      socket.to(roomId).emit("stopTyping", { userId })
+    })
   })
 }
 
-export { initializeSocket, getIo, getRooms, socketErrorHandler, type IMessage }
+export { initializeSocket, getIo, getRooms, socketErrorHandler, onlineUsers, fetchChatHistories, type IMessage }

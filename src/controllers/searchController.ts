@@ -346,8 +346,8 @@ export const getEliteList = async (req: Request, res: Response, _next: NextFunct
 
   if (userId !== "") {
     resultUserIds = resultUserIds.filter((i) => i._id.toString() !== userId)
-    resultUserIds = resultUserIds.slice(0, 6)
   }
+  resultUserIds = resultUserIds.slice(0, 6)
 
   const resultUsersData = await Promise.all(resultUserIds.map(async (resultId) => {
     // 取得每個用戶的資料

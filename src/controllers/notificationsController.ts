@@ -4,7 +4,7 @@ import { Notification } from "@/models/notification"
 import appErrorHandler from "@/utils/appErrorHandler"
 import appSuccessHandler from "@/utils/appSuccessHandler"
 import { type Types } from "mongoose"
-
+import { type INotification } from "@/models/notification"
 /**
  * 取得所有通知
  */
@@ -114,9 +114,9 @@ const readAllNotificationsByUserId = async (req: Request, res: Response, next: N
  */
 const createNotification = async (
   userId: Types. ObjectId | undefined,
-  receiveUserId: Types.ObjectId | undefined,
+  receiveUserId: Types.ObjectId | undefined | string,
   message: { title: string, content: string },
-  notifyType: 1 | 2): Promise<boolean> => {
+  notifyType: 1 | 2): Promise<INotification> => {
   // 取得通知內容
   if (!receiveUserId) {
     throw new Error("接收通知的使用者id不得為空")
@@ -142,13 +142,26 @@ const createNotification = async (
     date: new Date()
   })
 
-  await notification.save()
-
+  const responseNotification = await notification.save()
   if (!notification) {
     throw new Error("通知建立失敗")
   }
 
-  return true
+  return responseNotification
+}
+const deleteNotificationById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+
+  if (!id) {
+    appErrorHandler(400, "請提供通知id", next)
+    return
+  }
+
+  const notification = await Notification.findByIdAndDelete(id)
+  if (!notification) {
+    appErrorHandler(404, "查無通知", next)
+  }
+  appSuccessHandler(200, "刪除成功", notification, res)
 }
 
-export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification, readNotificationById, readAllNotificationsByUserId }
+export { getNotifications, getInviteNotificationsByUserId, getNotificationsByUserId, createNotification, readNotificationById, readAllNotificationsByUserId, deleteNotificationById }

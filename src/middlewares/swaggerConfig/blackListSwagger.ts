@@ -115,6 +115,85 @@ export function getBlackListSwagger (_req: Request, _res: Response, next: NextFu
   next()
 }
 
+export function getBlackListDetailSwagger (_req: Request, _res: Response, next: NextFunction): void {
+  /**
+   * #swagger.tags = ["blackList-黑名單"]
+   * #swagger.description = "取得黑名單詳細資料"
+   * #swagger.security = [{
+      "apiKeyAuth":[]
+    }]
+   * #swagger.parameters["id"] = {
+      in: "path",
+      required: true,
+      type: "string",
+      description: "黑名單列表的_id",
+    }
+   * #swagger.responses[200] = {
+      description: "黑名單詳細資料",
+      schema: {
+        status: true,
+        message: "查詢成功",
+        data:
+         {
+              _id: "667f67ecc8242fa00840b778",
+              userId: "667f67ecc8242fa00840b76e",
+              photoDetails: {
+                photo: "https://firebasestorage.googleapis.com/v0/b/social-e030c.appspot.com/o/default_img%2FLove%20%26%20Dating%20(9).png?alt=media&token=630b4f66-2304-4084-aeed-f9ba177794d2",
+                isShow: false
+              },
+              introDetails: {
+                intro: "",
+                isShow: false
+              },
+              nickNameDetails: {
+                nickName: "依娃叁",
+                isShow: false
+              },
+              lineDetails: {
+                lineId: "",
+                isShow: false
+              },
+              tags: [],
+              userStatus: {
+                rating: 0,
+                isMatch: false,
+                commentScore: 0,
+                commentCount: 0
+              },
+              createdAt: "2024-06-29T01:48:28.359Z",
+              updatedAt: "2024-06-30T08:35:48.960Z",
+              matchListSettings: {
+                searchDataBase: [],
+                personalInfo: {
+                  age: 0,
+                  gender: 0,
+                  isMarried: 0,
+                  height: 0,
+                  weight: 0,
+                  socialCircle: 0,
+                  activities: [
+                    0
+                  ],
+                  location: 0,
+                  education: 0,
+                  liveWithParents: 0,
+                  religion: 0,
+                  smoking: 0
+                },
+                workInfo: {
+                  occupation: 0,
+                  industry: [
+                    0
+                  ],
+                  expectedSalar: 0
+                }
+              }
+            }
+    }
+  }
+    */
+  next()
+}
 export function deleteBlackListByIdSwagger (_req: Request, _res: Response, next: NextFunction): void {
   /**
    * #swagger.tags = ["blackList-黑名單"]

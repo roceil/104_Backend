@@ -12,7 +12,7 @@ import { Profile } from "@/models/profile"
 import { User } from "@/models/user"
 import { MatchList } from "@/models/matchList"
 import { MatchListSelfSetting } from "@/models/matchListSelfSetting"
-import { isUserProfileExist } from "@/utils/checkProfileExist"
+// import { isUserProfileExist } from "@/utils/checkProfileExist"
 
 /**
  * 使用者註冊
@@ -161,25 +161,23 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     name: user.personalInfo.username,
     gender: user.personalInfo.gender,
     birthday: user.personalInfo.birthday,
-    isFirstTimeLogin: user.isFirstTimeLogin
+    isFirstTimeLogin: user.isFirstTimeLogin,
+    isSubscribe: user.isSubscribe
   }
 
   // 產生 token
   const token = generateJWT(jwtPayload)
 
   // token 寫入 cookie
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true
-  })
+  // res.cookie("token", token, {
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true
+  // })
 
-  // Note: 開發環境下，將 token 寫入 response
-  if (process.env.NODE_ENV === "dev") {
-    jwtPayload = {
-      ...jwtPayload,
-      token
-    }
+  jwtPayload = {
+    ...jwtPayload,
+    token
   }
 
   appSuccessHandler(200, "登入成功", jwtPayload, res)
@@ -280,6 +278,7 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
   // const now = new Date()
 
   const userData = req.user as LoginResData
+
   // 取得用戶資料
   const user = await User.findOne({ "personalInfo.email": userData.email })
 
@@ -303,13 +302,15 @@ const activateAccount = async (req: Request, res: Response, next: NextFunction):
 
   // 啟用帳號
   await User.findByIdAndUpdate(user._id, { isActive: true })
+
   // 建立user profile
-  if (!user._id) {
-    appErrorHandler(400, "缺少使用者id", next); return
-  }
-  if (await isUserProfileExist(user._id)) {
-    appErrorHandler(400, "用戶Id已存在", next); return
-  }
+  // if (!user._id) {
+  //   appErrorHandler(400, "缺少使用者id", next); return
+  // }
+  // if (await isUserProfileExist(user._id)) {
+  //   appErrorHandler(400, "用戶Id已存在", next); return
+  // }
+
   const userProfileData = {
     userId: user._id,
     nickNameDetails: {

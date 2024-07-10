@@ -10,14 +10,14 @@ interface INotification {
   userId?: Types.ObjectId
 }
 
-const sendNotification = (message: INotification, roomId: string | Types.ObjectId) => {
+const sendNotification = (message: INotification, roomId: string | Types.ObjectId, notificationTableId: string | Types.ObjectId = "") => {
   const io = getIo()
   if (!io) {
     socketErrorHandler(new Error("Failed to initialize socket.io"), null as unknown as Socket)
     return
   }
   if (roomId) {
-    io.to(roomId.toString()).emit("notification", message)
+    io.to(roomId.toString()).emit("notification", { ...message, notificationTableId })
   }
 }
 export { sendNotification, type INotification }

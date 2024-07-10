@@ -82,7 +82,8 @@ const googleCallback = async (req: Request, res: Response, next: NextFunction): 
           username: user.name,
           email: user.email,
           password: hashPassword
-        }
+        },
+        points: 200
       })
 
       await newUser.save()
