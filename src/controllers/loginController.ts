@@ -169,18 +169,15 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
   const token = generateJWT(jwtPayload)
 
   // token 寫入 cookie
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true
-  })
+  // res.cookie("token", token, {
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true
+  // })
 
-  // Note: 開發環境下，將 token 寫入 response
-  if (process.env.NODE_ENV === "dev") {
-    jwtPayload = {
-      ...jwtPayload,
-      token
-    }
+  jwtPayload = {
+    ...jwtPayload,
+    token
   }
 
   appSuccessHandler(200, "登入成功", jwtPayload, res)
