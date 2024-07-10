@@ -6,7 +6,7 @@ import googleService from "@/services/google"
 import connectDB from "./configs/dbConn"
 import swaggerUI from "swagger-ui-express"
 import swaggerFile from "./swagger-output.json"
-import { corsOptions } from "./configs/corsOptions"
+// import { corsOptions } from "./configs/corsOptions"
 import { credentials } from "@/middlewares/credentials"
 import globalErrorHandler from "@/utils/globalErrorHandler"
 import healthyCheckRouter from "@/routes/healthyCheck"
@@ -42,7 +42,7 @@ process.on("uncaughtException", (err: Error) => {
 })
 /* CORS */
 app.use(credentials)
-app.use(cors(corsOptions))
+app.use(cors())
 
 /* Cookie */
 app.use(cookieParser())
