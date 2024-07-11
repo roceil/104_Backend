@@ -1,0 +1,13 @@
+services:
+  app:
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    ports:
+      - '3001:3001'
+    command: pnpm run dev
+
+networks:
+  app-network:
