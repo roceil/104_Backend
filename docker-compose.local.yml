@@ -8,6 +8,15 @@ services:
     ports:
       - '3001:3001'
     command: pnpm run dev
+    networks:
+      - app-network
+
+  104-docker-mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    networks:
+      - app-network
 
 networks:
   app-network:
